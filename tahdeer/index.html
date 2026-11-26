@@ -959,7 +959,7 @@ function saInit(){ME=(()=>{try{return localStorage.getItem(SN)||''}catch(e){retu
  let sv=0;try{sv=+localStorage.getItem('watad-seedv')||0}catch(e){}
  if(had&&sv<3){const now=Date.now();S.cfg=norm(clone(SEED_CFG));S.students=SEED.slice();S.all=clone(SEED_ALL);S.bonus=[];S.log=[];
   S._ts=S._ts||{};Object.keys(S._ts).forEach(k=>S._ts[k]=now);initPrev();stampAll();lsSave();try{localStorage.setItem('watad-seedv','3')}catch(e){}}
- const h=location.hash.slice(1);if(/^sync-[A-Z0-9]{12}$/.test(h)){const v=h.slice(5),code=v.slice(0,4)+'-'+v.slice(4,8)+'-'+v.slice(8);
+ let h=location.hash.slice(1);try{h=decodeURIComponent(h)}catch(e){}h=toL(h).toUpperCase();const hm=/^SYNC[-_]?(.+)$/.exec(h);const hv=hm?hm[1].replace(/[^A-Z0-9]/g,''):'';if(hv.length===12){const v=hv,code=v.slice(0,4)+'-'+v.slice(4,8)+'-'+v.slice(8);
   setTimeout(async()=>{if(SYNC.code===code){location.hash='take';return}if(await ask('ربط هذا الجهاز برمز المزامنة '+code+'؟ تُستبدل بيانات هذا الجهاز ببيانات الرمز.','ربط')){try{localStorage.removeItem(SG)}catch(e){}S._ts={};await startSync(code,false);toast('جاري جلب البيانات…')}location.hash='take'},300)}
  let c=null;try{c=localStorage.getItem(SK)}catch(e){}if(c)startSync(c,false);
  try{if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
