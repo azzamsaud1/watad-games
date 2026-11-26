@@ -147,6 +147,17 @@ html.tvh{font-size:21px}
 .qr{width:190px;margin:8px auto;background:#fff;border:3px solid var(--line);border-radius:12px;padding:4px}
 .qr svg{width:100%;height:auto;display:block}
 .lnk{font-size:.8rem;word-break:break-all;background:var(--card2);border-radius:10px;padding:6px 8px;margin:6px 0 10px;text-align:left}
+.cat .art{display:block;border:3px solid var(--line,#17121b);border-radius:14px;background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.75),rgba(255,255,255,.25) 70%),var(--k);margin:-2px -2px 10px;overflow:hidden;box-shadow:inset 0 -6px 0 rgba(0,0,0,.08)}
+.cat .art svg{display:block;width:100%;height:auto;transition:transform .25s}
+.cat:hover .art svg{transform:scale(1.05) rotate(-1deg)}
+.cat .em .ic{width:54px;height:54px;display:block;margin:0 auto 2px;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.18))}
+.ic{display:inline-block;vertical-align:middle}
+.ic.sm{width:26px;height:26px;margin-inline-end:6px}
+.ic.hd{width:34px;height:34px;display:block;margin:0 auto 4px;background:#fff;border:2px solid #17121b;border-radius:50%;padding:3px}
+.sjc{display:inline-flex;align-items:center}
+.sjc[disabled]{opacity:.45;cursor:not-allowed}
+.tv .ic.hd{width:52px;height:52px}
+.ic.hero{width:96px;height:96px}.ic.bari{width:40px;height:40px}
 :root{--c1:#3b5bff;--c2:#ff8a1f;--c3:#ffc93c;--c4:#12b886;--c5:#a66bff;--c6:#00a7c4;--c7:#ef4444;--paper:#eaf1ff}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#10172e}}:root[data-theme="dark"]{--paper:#10172e}</style>
 </head>
 <body>
@@ -785,6 +796,72 @@ var EXTRA=[
 
 BANK=BANK.concat(EXTRA.map(function(r){return [r[0],r[1],r[2],r[3]||undefined,undefined,r[4]];}));
 
+var CATN={"ق":"القرآن الكريم","ن":"الأنبياء","ف":"العقيدة والعبادات","م":"السيرة النبوية","ص":"الصحابة","ت":"التاريخ الإسلامي","ك":"السعودية","ه":"تاريخ العالم","و":"العواصم","ل":"العملات","ج":"جغرافيا","ح":"عالم الحيوان","ط":"أسماء وأصوات الحيوانات","ب":"العلوم وجسم الإنسان","ض":"الفضاء والكواكب","أ":"أدب وعلماء","ث":"ثقافة عامة","غ":"ألغاز"};
+function subcat(c,q){
+ if(/لغز/.test(q))return "غ";
+ if(c==="د"){if(/نبي|الرسل|إبراهيم|موسى|عيسى|نوح|يوسف|يونس|لوط|صالح|هود|شعيب|داود|سليمان|زكريا|أيوب|آدم|يعقوب|هارون|إسحاق|إسماعيل|قوم/.test(q))return "ن";
+  if(/سورة|سور |السور|آية|آيات|القرآن|جزء|أجزاء|أحزاب|المثاني|أم الكتاب|البسملة|المقطعة|المصحف|التلاوة/.test(q))return "ق";return "ف";}
+ if(c==="س"){if(/الصحابي|الصحابية|لقب|الخليفة|الخلفاء|خلافة|أسلم|استشهد|قاتل|الصحابة/.test(q))return "ص";return "م";}
+ if(c==="ت"){if(/السعودي|السعودية|المملكة|سعود|عبد العزيز|التأسيس|الوطني|المصمك|النفط/.test(q))return "ك";
+  if(/الحرب العالمية|برلين|الولايات المتحدة|أهرامات|بلفور|النكبة|الانتفاضة|ضحايا|جامعة الدول|رئيس|القمر|الحلفاء|المحور/.test(q))return "ه";return "ت";}
+ if(c==="ج"){if(/عاصمة|العاصمة|عاصمتها/.test(q))return "و";if(/عملة/.test(q))return "ل";
+  if(/السعودي|السعودية|الرياض|جدة|الطائف|الدمام|المدينة المنورة|مكة|الربع الخالي|المسجد النبوي|غرب السعودية|شرق السعودية/.test(q))return "ك";return "ج";}
+ if(c==="ح"){if(/صوت|صغير|بيت|أنثى|ذكر |ذكر\b|كنيته|أمير النحل|اسم الجمل|يُضرب به المثل|يضرب به المثل/.test(q))return "ط";return "ح";}
+ if(c==="ع"){if(/كوكب|كواكب|الشمس|المريخ|عطارد|زحل|المشتري|نبتون|الزهرة|المجموعة الشمسية|نجم|الفضاء|سرعة الضوء/.test(q))return "ض";return "ب";}
+ if(c==="ث"){if(/شاعر|الشعراء|معلقة|المتنبي|العالم المسلم|ابن سينا|الخوارزمي|ابن خلدون|ابن بطوطة|الهيثم|كتاب القانون|غوتنبرغ|أموندسن|حاتم/.test(q))return "أ";return "ث";}
+ return CATN[c]?c:"ث";
+}
+
+BANK.forEach(function(r){r[0]=subcat(r[0],r[1]);});
+var EXTRA2=[
+["ل","ما عملة اليابان؟","الين","",400],["ل","ما عملة الصين؟","اليوان","",400],["ل","ما عملة الهند؟","الروبية الهندية","ر",400],
+["ل","ما عملة بريطانيا؟","الجنيه الإسترليني","ج",400],["ل","ما العملة الموحدة لكثير من دول الاتحاد الأوروبي؟","اليورو","",200],
+["ل","ما عملة الولايات المتحدة؟","الدولار الأمريكي","د",200],["ل","ما عملة الأردن؟","الدينار الأردني","د",400],["ل","ما عملة البحرين؟","الدينار البحريني","د",400],
+["ل","ما عملة قطر؟","الريال القطري","ر",200],["ل","ما عملة اليمن؟","الريال اليمني","ر",400],["ل","ما عملة العراق؟","الدينار العراقي","د",400],
+["ل","ما عملة الجزائر؟","الدينار الجزائري","د",600],["ل","ما عملة تونس؟","الدينار التونسي","د",600],["ل","ما عملة ليبيا؟","الدينار الليبي","د",600],
+["ل","ما عملة روسيا؟","الروبل","",600],["ل","ما عملة كوريا الجنوبية؟","الوون","",600],["ل","ما عملة ماليزيا؟","الرينغيت","",600],
+["ل","ما عملة إندونيسيا؟","الروبية الإندونيسية","ر",600],["ل","ما عملة باكستان؟","الروبية الباكستانية","ر",400],["ل","ما عملة لبنان؟","الليرة اللبنانية","ل",400],["ل","ما عملة سوريا؟","الليرة السورية","ل",400],
+["أ","من مؤلف كتاب صحيح البخاري؟","محمد بن إسماعيل البخاري","ب",200],["أ","من مؤلف كتاب صحيح مسلم؟","مسلم بن الحجاج","",200],
+["أ","من مؤلف كتاب رياض الصالحين؟","الإمام النووي","ن",400],["أ","من صاحب كتاب الأربعين النووية؟","الإمام النووي","ن",200],
+["أ","من مؤلف كتاب الموطأ؟","مالك بن أنس","",400],["أ","من الإمام صاحب المسند المشهور؟","أحمد بن حنبل","",400],
+["أ","من الإمام الذي يُنسب إليه المذهب الحنفي؟","أبو حنيفة النعمان","",200],["أ","من صاحب كتاب الأم في الفقه؟","الإمام الشافعي","ش",600],
+["أ","من مؤلف تفسير القرآن العظيم المشهور؟","ابن كثير","",400],["أ","من صاحب الألفية المشهورة في النحو؟","ابن مالك","",600],
+["أ","من الشاعر الملقب بشاعر النيل؟","حافظ إبراهيم","",600],["أ","من ترجم كتاب كليلة ودمنة إلى العربية؟","ابن المقفع","",600],
+["أ","من العالم المسلم الملقب بأبي الجراحة؟","الزهراوي","",600],["أ","من العالم المسلم الملقب بالمعلم الثاني؟","الفارابي","",600],
+["أ","ما الذي يسمى ديوان العرب؟","الشعر","",400],["أ","من الصحابي الشاعر صاحب قصيدة «بانت سعاد»؟","كعب بن زهير","",600],
+["أ","من الشاعرة الصحابية التي رثت أخاها صخراً؟","الخنساء","",400],["أ","من الشاعر الجاهلي المشهور بالفروسية وحب عبلة؟","عنترة بن شداد","",200],
+["غ","لغز: ما الشيء الذي يتكلم جميع اللغات؟","الصدى","",400],["غ","لغز: ما الشيء الذي له رقبة وليس له رأس؟","الزجاجة","",200],
+["غ","لغز: ما الشيء الذي تراه في الليل ثلاث مرات وفي النهار مرة؟","حرف اللام","ل",600],["غ","لغز: ما الشيء الذي يحملك وتحمله؟","الحذاء","",400],
+["غ","لغز: ما الشيء الذي يقرصك ولا تراه؟","الجوع","",400],["غ","لغز: ما البيت الذي ليس له أبواب ولا نوافذ؟","بيت الشعر","ب",400],
+["غ","لغز: ما الشيء الذي كلما أشعلته قصر؟","الشمعة","",200],["غ","لغز: ما الشيء الموجود في وسط باريس؟","حرف الراء","ر",600],
+["غ","لغز: له أربع أرجل ولا يمشي ويجلس عليه الناس، ما هو؟","الكرسي","",200],["غ","لغز: ما الشيء الذي إذا وضعته في الثلاجة لا يبرد؟","الفلفل الحار","ف",400],
+["غ","لغز: ما الشيء الذي تأكل منه ولا يؤكل؟","الصحن","",200],
+["ض","ما الكوكب الملقب بالكوكب الأزرق؟","الأرض","",200],["ض","كم يستغرق ضوء الشمس ليصل إلى الأرض تقريباً؟","ثماني دقائق تقريباً","-",600],
+["ض","ما اسم المجرة التي تنتمي إليها مجموعتنا الشمسية؟","درب التبانة","",400],["ض","كم يوماً يستغرق القمر في دورته حول الأرض تقريباً؟","٢٧ يوماً تقريباً","-",600],
+["ض","ما اسم الظاهرة عندما يحجب القمر ضوء الشمس عن الأرض؟","كسوف الشمس","ك",200],["ض","ما اسم الظاهرة عندما يقع القمر في ظل الأرض؟","خسوف القمر","خ",400],
+["ض","ما الكوكب الذي يدور حول نفسه عكس اتجاه معظم الكواكب؟","الزهرة","",600],["ض","ما الطبقة التي تحمي الأرض من الأشعة فوق البنفسجية؟","الأوزون","",400],
+["ض","ما اسم وكالة الفضاء الأمريكية؟","ناسا","",200],["ض","كم كوكباً يقع بين الأرض والشمس؟","اثنان: عطارد والزهرة","-",400],
+["ه","في أي عام بدأت الثورة الفرنسية؟","١٧٨٩م","-",600],["ه","من القائد الفرنسي الذي غزا مصر عام ١٧٩٨م؟","نابليون بونابرت","",400],
+["ه","في أي قارة قامت حضارة الإنكا؟","أمريكا الجنوبية","",400],["ه","ما الحضارة التي قامت بين نهري دجلة والفرات؟","بلاد الرافدين","ر",400],
+["ه","من المستكشف الذي وصل إلى الأمريكتين عام ١٤٩٢م؟","كريستوفر كولومبوس","",400],["ه","في أي عام تأسست الأمم المتحدة؟","١٩٤٥م","-",600],
+["ه","ما المدينة اليابانية التي أُلقيت عليها أول قنبلة ذرية؟","هيروشيما","",400],["ه","ما الإمبراطورية التي كانت عاصمتها روما؟","الإمبراطورية الرومانية","ر",200],
+["ه","ما اسم الطريق التجاري القديم الذي ربط الصين بالعالم؟","طريق الحرير","ح",200],["ه","ما الدولة التي أهدت تمثال الحرية للولايات المتحدة؟","فرنسا","",400],
+["ه","في أي عام هبط الإنسان على سطح القمر لأول مرة؟","١٩٦٩م","-",400],
+["ك","ما شعار المملكة العربية السعودية؟","سيفان متقاطعان ونخلة","-",200],["ك","ما لون علم المملكة العربية السعودية؟","الأخضر","",200],
+["ك","ما المكتوب على علم المملكة العربية السعودية؟","الشهادتان","",200],["ك","ما عاصمة منطقة القصيم؟","بريدة","",400],
+["ك","ما عاصمة منطقة عسير؟","أبها","",400],["ك","ما عاصمة المنطقة الشرقية؟","الدمام","",400],["ك","ما عاصمة منطقة الجوف؟","سكاكا","",600],
+["ك","ما عاصمة منطقة الحدود الشمالية؟","عرعر","",600],["ك","ما عاصمة منطقة حائل؟","حائل","",200],["ك","ما عاصمة منطقة تبوك؟","تبوك","",200],
+["ك","ما اسم الرؤية الوطنية للمملكة التي أُطلقت عام ٢٠١٦م؟","رؤية ٢٠٣٠","ر",200],["ك","ما المشروع السعودي في شمال غرب المملكة الذي يضم ذا لاين؟","نيوم","",400],
+["ك","ما الموقع الأثري في العلا المدرج في قائمة التراث العالمي؟","الحِجر","",400],["ك","ما الحي التاريخي في الدرعية المدرج في قائمة التراث العالمي؟","حي الطريف","ط",600],
+["ك","في أي سنة هجرية استعاد الملك عبد العزيز الرياض؟","١٣١٩هـ","-",600],
+["ت","ما اسم التقويم الذي يبدأ بهجرة النبي ﷺ؟","التقويم الهجري","",200],["ت","من الخليفة الذي بدأ التأريخ بالهجرة؟","عمر بن الخطاب","",400],
+["ت","ما المسجد الذي يسمى أولى القبلتين؟","المسجد الأقصى","",200],["ت","ما المدينة التي كانت عاصمة الدولة الأموية في الأندلس؟","قرطبة","",400],
+["ت","ما الدولة التي أسسها صلاح الدين؟","الدولة الأيوبية","",400],["ت","ما المدينة التي فتحها السلطان محمد الفاتح؟","القسطنطينية","",200],
+["ت","ما اسم المركز العلمي والمكتبة الشهيرة في بغداد العباسية؟","بيت الحكمة","",400]
+];
+
+BANK=BANK.concat(EXTRA2.map(function(r){return [r[0],r[1],r[2],r[3]||undefined,undefined,r[4]];}));
+
 var CATS=[
 {t:"زوجات النبي العشر بعد خديجة",q:"رتّب زوجات النبي العشر بعد خديجة مع تاريخ الزواج",i:[["سودة بنت زمعة","٣ ق.هـ"],["عائشة بنت أبي بكر","٢ هـ بنى بها"],["حفصة بنت عمر","٣ هـ"],["زينب بنت خزيمة","٣ هـ"],["أم سلمة","٤ هـ"],["زينب بنت جحش","٥ هـ"],["جويرية بنت الحارث","٥ هـ"],["صفية بنت حيي","٧ هـ"],["أم حبيبة","٧ هـ"],["ميمونة بنت الحارث","٧ هـ"]]},
 {t:"١٠ سور بعد سورة البقرة",q:"رتّب ١٠ سور بعد سورة البقرة بترتيب المصحف",i:[["آل عمران"],["النساء"],["المائدة"],["الأنعام"],["الأعراف"],["الأنفال"],["التوبة"],["يونس"],["هود"],["يوسف"]]},
@@ -957,6 +1034,80 @@ var FEUD=[
  connect();
 })();
 
+/* ===== رسومات الألعاب والتصنيفات ===== */
+var INK="#17121b";
+var ART={
+rank:'<svg viewBox="0 0 320 180" role="img" aria-label="منصة تتويج وكأس"><defs><linearGradient id="rk-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1b3"/><stop offset=".5" stop-color="#f7b52c"/><stop offset="1" stop-color="#b8740a"/></linearGradient><linearGradient id="rk-p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e9e2f5"/></linearGradient><radialGradient id="rk-l" cx=".5" cy=".35" r=".6"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>'
+ +'<rect width="320" height="180" fill="url(#rk-l)"/>'
+ +'<g stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"><path d="M70 120h60v50H70z" fill="url(#rk-p)"/><path d="M70 120l8-8h60l-8 8z" fill="#fff"/><path d="M130 120l8-8v50l-8 8z" fill="#cfc4e3"/>'
+ +'<path d="M130 92h62v78h-62z" fill="url(#rk-p)"/><path d="M130 92l8-8h62l-8 8z" fill="#fff"/><path d="M192 92l8-8v78l-8 8z" fill="#cfc4e3"/>'
+ +'<path d="M192 132h58v38h-58z" fill="url(#rk-p)"/><path d="M192 132l8-8h58l-8 8z" fill="#fff"/><path d="M250 132l8-8v38l-8 8z" fill="#cfc4e3"/></g>'
+ +'<g font-weight="900" text-anchor="middle" fill="'+INK+'"><text x="161" y="140" font-size="34">١</text><text x="100" y="155" font-size="26">٢</text><text x="221" y="161" font-size="22">٣</text></g>'
+ +'<g stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"><path d="M144 26h36v8c0 18-8 30-18 30s-18-12-18-30z" fill="url(#rk-g)"/><path d="M144 32c-12 0-14 16 0 18M180 32c12 0 14 16 0 18" fill="none"/><path d="M158 64h8v10h-8z" fill="url(#rk-g)"/><path d="M150 74h24l3 8h-30z" fill="url(#rk-g)"/></g>'
+ +'<path d="M152 32c2 10 4 16 8 20" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/>'
+ +'<g stroke="'+INK+'" stroke-width="2"><rect x="40" y="40" width="10" height="5" fill="#ef4057" transform="rotate(-25 45 42)"/><rect x="268" y="52" width="10" height="5" fill="#2cc9d0" transform="rotate(30 273 54)"/><rect x="96" y="26" width="9" height="5" fill="#fbc52b" transform="rotate(15 100 28)"/><rect x="226" y="24" width="9" height="5" fill="#ef4057" transform="rotate(-35 230 26)"/><rect x="60" y="88" width="8" height="5" fill="#0f7a99" transform="rotate(40 64 90)"/><rect x="262" y="96" width="8" height="5" fill="#ff8a1f" transform="rotate(-20 266 98)"/><circle cx="214" cy="58" r="4" fill="#bf7db1"/><circle cx="112" cy="62" r="4" fill="#2cc9d0"/></g>'
+ +'<path d="M120 40l3 7 7 3-7 3-3 7-3-7-7-3 7-3z M205 38l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fff" stroke="'+INK+'" stroke-width="2" stroke-linejoin="round"/></svg>',
+
+hex:'<svg viewBox="0 0 320 180" role="img" aria-label="خلية سداسية بالحروف"><defs><linearGradient id="hx-h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset="1" stop-color="#f4b23b"/></linearGradient><linearGradient id="hx-r" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7d8f"/><stop offset="1" stop-color="#d92e46"/></linearGradient><linearGradient id="hx-t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7ee6eb"/><stop offset="1" stop-color="#1fa9b0"/></linearGradient></defs>'
+ +(function(){var s=24,w=Math.sqrt(3)*s,cs=[[0,0,"h","ح"],[1,0,"r","ر"],[-1,0,"h","و"],[0.5,-1,"t","ف"],[-0.5,-1,"h","ب"],[0.5,1,"h","ل"],[-0.5,1,"r","خ"],[1.5,-1,"h","ي"],[-1.5,1,"t","ة"]],o="";
+  cs.forEach(function(c){var cx=160+c[0]*w,cy=92+c[1]*1.5*s,p=[];for(var k=0;k<6;k++){var a=Math.PI/180*(60*k-30);p.push((cx+s*0.96*Math.cos(a)).toFixed(1)+","+(cy+s*0.96*Math.sin(a)).toFixed(1));}
+   o+='<polygon points="'+p.join(" ")+'" fill="url(#hx-'+c[2]+')" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><text x="'+cx.toFixed(1)+'" y="'+(cy+8).toFixed(1)+'" text-anchor="middle" font-size="22" font-weight="900" fill="'+(c[2]==="h"?INK:"#fff")+'">'+c[3]+'</text>';});return o;})()
+ +'<g transform="translate(252 40)" stroke="'+INK+'" stroke-width="2.5" stroke-linejoin="round"><ellipse cx="-6" cy="-10" rx="10" ry="7" fill="#e8f7ff" transform="rotate(-25 -6 -10)"/><ellipse cx="6" cy="-11" rx="9" ry="6" fill="#e8f7ff" transform="rotate(20 6 -11)"/><ellipse cx="0" cy="0" rx="16" ry="11" fill="#fbc52b"/><path d="M-6-10v20M3-11v22" stroke-width="4"/><circle cx="15" cy="-2" r="6" fill="'+INK+'"/><path d="M-16 0l-6 2" /></g>'
+ +'<path d="M232 52c-12 8-20 2-30 10s-6 18-18 20" fill="none" stroke="'+INK+'" stroke-width="2" stroke-dasharray="4 5" stroke-linecap="round"/></svg>',
+
+sj:'<svg viewBox="0 0 320 180" role="img" aria-label="لوحة أسئلة بالنقاط"><defs><linearGradient id="sj-t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ece4f7"/></linearGradient></defs>'
+ +(function(){var o="",cols=["#ef4057","#2cc9d0","#fbc52b"],vals=["٢٠٠","٤٠٠","٦٠٠"];for(var c=0;c<3;c++){var x=34+c*62;o+='<rect x="'+x+'" y="34" width="54" height="22" rx="6" fill="'+cols[c]+'" stroke="'+INK+'" stroke-width="3"/>';
+  for(var r=0;r<3;r++){var y=62+r*36,done=(c===1&&r===0)||(c===2&&r===2);o+='<rect x="'+x+'" y="'+(y+3)+'" width="54" height="30" rx="7" fill="'+INK+'"/><rect x="'+x+'" y="'+y+'" width="54" height="30" rx="7" fill="'+(done?"#d9d2e6":"url(#sj-t)")+'" stroke="'+INK+'" stroke-width="3"/>'+(done?'':'<text x="'+(x+27)+'" y="'+(y+21)+'" text-anchor="middle" font-size="15" font-weight="900" fill="'+INK+'">'+vals[r]+'</text>');}}return o;})()
+ +'<g stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"><path d="M226 30h58a14 14 0 0 1 14 14v26a14 14 0 0 1-14 14h-32l-14 14 2-14h-14a14 14 0 0 1-14-14V44a14 14 0 0 1 14-14z" fill="#ef4057"/><path d="M238 100h50a14 14 0 0 1 14 14v22a14 14 0 0 1-14 14h-8l2 12-14-12h-30a14 14 0 0 1-14-14v-22a14 14 0 0 1 14-14z" fill="#2cc9d0"/></g>'
+ +'<text x="255" y="72" text-anchor="middle" font-size="36" font-weight="900" fill="#fff" stroke="'+INK+'" stroke-width="1.5">س</text><text x="263" y="138" text-anchor="middle" font-size="32" font-weight="900" fill="'+INK+'">ج</text></svg>',
+
+feud:'<svg viewBox="0 0 320 180" role="img" aria-label="لوحة استبيان وإجابات"><defs><linearGradient id="fd-b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a5fd6"/><stop offset="1" stop-color="#173b94"/></linearGradient><linearGradient id="fd-a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset="1" stop-color="#f4b23b"/></linearGradient></defs>'
+ +'<rect x="30" y="22" width="196" height="140" rx="16" fill="url(#fd-b)" stroke="'+INK+'" stroke-width="3"/><rect x="40" y="32" width="176" height="120" rx="10" fill="none" stroke="#fbc52b" stroke-width="2" stroke-dasharray="3 5"/>'
+ +(function(){var o="",ans=[["٣٥",1],["٢٨",1],["",0],["",0]];ans.forEach(function(a,i){var y=42+i*26;o+='<rect x="50" y="'+y+'" width="156" height="20" rx="5" fill="'+(a[1]?"url(#fd-a)":"#0d2766")+'" stroke="'+INK+'" stroke-width="2.5"/>';
+  if(a[1])o+='<rect x="56" y="'+(y+6)+'" width="'+(70-i*14)+'" height="8" rx="4" fill="'+INK+'" opacity=".75"/><rect x="176" y="'+(y+2)+'" width="26" height="16" rx="4" fill="#fff" stroke="'+INK+'" stroke-width="2"/><text x="189" y="'+(y+15)+'" text-anchor="middle" font-size="12" font-weight="900" fill="'+INK+'">'+a[0]+'</text>';
+  else o+='<circle cx="128" cy="'+(y+10)+'" r="8" fill="#2a5fd6" stroke="#fbc52b" stroke-width="2"/><text x="128" y="'+(y+14)+'" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">'+["١","٢","٣","٤"][i]+'</text>';});return o;})()
+ +'<g transform="translate(262 92)"><circle r="40" fill="#ef4057" stroke="'+INK+'" stroke-width="4"/><circle r="31" fill="none" stroke="#fff" stroke-width="3" opacity=".5"/><path d="M-16-16L16 16M16-16L-16 16" stroke="#fff" stroke-width="11" stroke-linecap="round"/><path d="M-16-16L16 16M16-16L-16 16" stroke="'+INK+'" stroke-width="3" stroke-linecap="round" opacity=".25"/></g></svg>',
+
+where:'<svg viewBox="0 0 320 180" role="img" aria-label="مصحف على حامل"><defs><linearGradient id="wh-c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f9d74"/><stop offset="1" stop-color="#0d6b4e"/></linearGradient><linearGradient id="wh-w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c98a4b"/><stop offset="1" stop-color="#8a5326"/></linearGradient><linearGradient id="wh-p" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fffaf0"/><stop offset="1" stop-color="#f3e6c8"/></linearGradient></defs>'
+ +'<g stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"><path d="M110 150l50-36 50 36" fill="none" stroke="url(#wh-w)" stroke-width="10" stroke-linecap="round"/><path d="M110 150l50-36 50 36" fill="none"/>'
+ +'<path d="M160 118c-24-14-50-14-72-6v-62c22-8 48-8 72 6z" fill="url(#wh-c)"/><path d="M160 118c24-14 50-14 72-6v-62c-22-8-48-8-72 6z" fill="url(#wh-c)"/>'
+ +'<path d="M160 112c-20-12-44-12-64-6V54c20-6 44-6 64 6z" fill="url(#wh-p)"/><path d="M160 112c20-12 44-12 64-6V54c-20-6-44-6-64 6z" fill="url(#wh-p)"/><path d="M160 60v52"/></g>'
+ +'<g fill="none" stroke="#c9962a" stroke-width="2"><path d="M104 62c16-4 32-4 48 4M104 72c16-4 32-4 48 4M104 82c16-4 32-4 48 4M104 92c16-4 32-4 48 4M168 66c16-8 32-8 48-4M168 76c16-8 32-8 48-4M168 86c16-8 32-8 48-4M168 96c16-8 32-8 48-4"/></g>'
+ +'<g transform="translate(160 40)" stroke="'+INK+'" stroke-width="2" fill="#fbc52b"><path d="M0-12l3.5 7 7.5 1-5.5 5 1.5 7.5L0 5l-7 3.5 1.5-7.5-5.5-5 7.5-1z"/></g>'
+ +'<g transform="translate(50 60)" stroke="'+INK+'" stroke-width="2.5" stroke-linejoin="round"><ellipse cx="-4" cy="-8" rx="7" ry="5" fill="#e8f7ff"/><ellipse cx="5" cy="-8" rx="6" ry="4" fill="#e8f7ff"/><ellipse rx="12" ry="8" fill="#fbc52b"/><path d="M-4-7v14M3-8v16" stroke-width="3"/><circle cx="11" cy="-1" r="4" fill="'+INK+'"/></g>'
+ +'<g transform="translate(268 58)" stroke="'+INK+'" stroke-width="2.5" stroke-linejoin="round"><path d="M-18 0c8-10 26-10 34 0-8 10-26 10-34 0z" fill="#2cc9d0"/><path d="M16 0l10-8v16z" fill="#2cc9d0"/><circle cx="-8" cy="-2" r="2.5" fill="'+INK+'"/></g>'
+ +'<g transform="translate(270 140)" stroke="'+INK+'" stroke-width="2.5" stroke-linejoin="round" fill="#c98a4b"><path d="M-26 6c0-10 6-14 12-14 2-8 8-10 12-6 4-6 12-4 12 4 6 0 12 4 12 12v6H-26z"/><path d="M-22 12v14M-12 12v14M6 12v14M16 12v14" fill="none"/><path d="M-26 0c-6-8-4-18 4-20" fill="none"/><circle cx="-22" cy="-20" r="4"/></g>'
+ +'<g transform="translate(52 140)" stroke="'+INK+'" stroke-width="2.5" stroke-linejoin="round"><ellipse cx="-6" rx="8" ry="6" fill="#7b2a47"/><ellipse cx="6" rx="7" ry="5" fill="#7b2a47"/><circle cx="16" cy="-1" r="4" fill="#7b2a47"/><path d="M-10 5l-4 7M-4 5l-2 8M4 4l2 8M10 4l4 7M-12-5l-5-6M18-4l5-6" fill="none"/></g></svg>'
+};
+var ICON_D={
+ quran:'<path d="M32 50c-8-5-17-5-24-2V16c7-3 16-3 24 2z" fill="#fff"/><path d="M32 50c8-5 17-5 24-2V16c-7-3-16-3-24 2z" fill="#fff"/><path d="M32 18v32"/><path d="M14 24c5-1 9-1 13 1M14 31c5-1 9-1 13 1M37 25c4-2 8-2 13-1M37 32c4-2 8-2 13-1" stroke-width="2"/><path d="M32 6l2.5 4.5L39 11l-3.5 3 1 5L32 16.5 27.5 19l1-5L25 11l4.5-.5z" fill="#fbc52b" stroke-width="2"/>',
+ ship:'<path d="M8 40h48l-8 12H16z" fill="#c98a4b"/><path d="M30 10v30" /><path d="M30 12l18 22H30z" fill="#fff"/><path d="M28 18L14 34h14z" fill="#fff"/><path d="M4 56c6-3 10-3 14 0s8 3 14 0 10-3 14 0 8 3 14 0" fill="none" stroke="#2cc9d0"/>',
+ mosque:'<path d="M14 54V36h36v18z" fill="#fff"/><path d="M14 36c0-12 8-18 18-20 10 2 18 8 18 20z" fill="#2cc9d0"/><path d="M32 16v-6"/><path d="M29 8a4 4 0 1 0 6 0" fill="none" stroke-width="2"/><path d="M26 54v-9a6 6 0 0 1 12 0v9" fill="#fbc52b"/><path d="M54 54V22h6v32z" fill="#fff"/><path d="M57 22l-4-6h8z" fill="#2cc9d0"/>',
+ dome:'<path d="M10 56h44V40H10z" fill="#fff"/><path d="M16 40c0-14 7-22 16-24 9 2 16 10 16 24z" fill="#1f9d74"/><path d="M32 16v-6"/><path d="M28 6a5 5 0 1 0 7 1" fill="none" stroke-width="2.5"/><path d="M22 56v-8M32 56v-8M42 56v-8" stroke-width="2"/>',
+ people:'<path d="M32 8l4 8 9 1-6.5 6 1.5 9L32 28l-8 4 1.5-9L19 17l9-1z" fill="#fbc52b"/><path d="M14 22c-4 12 0 24 12 30M50 22c4 12 0 24-12 30" fill="none" stroke-width="3"/><path d="M12 30c-4-2-6-6-5-10 4 1 6 5 5 10zM12 40c-5 0-8-3-8-7 4 0 7 3 8 7zM17 49c-5 1-9-1-10-5 4-1 8 1 10 5zM52 30c4-2 6-6 5-10-4 1-6 5-5 10zM52 40c5 0 8-3 8-7-4 0-7 3-8 7zM47 49c5 1 9-1 10-5-4-1-8 1-10 5z" fill="#1f9d74" stroke-width="2"/><path d="M26 54h12" stroke-width="3"/>',
+ scroll:'<path d="M14 14h32a6 6 0 0 1 6 6v30H20a6 6 0 0 1-6-6z" fill="#fff3cf"/><path d="M14 14a6 6 0 0 0-6 6v4h12" fill="#e9d3a4"/><path d="M52 50a6 6 0 0 1-12 0" fill="#e9d3a4"/><path d="M22 24h22M22 31h22M22 38h14" stroke-width="2"/><circle cx="44" cy="44" r="6" fill="#ef4057" stroke-width="2"/>',
+ palm:'<path d="M32 56V26" stroke-width="5" stroke="#8a5326"/><path d="M32 26c-6-8-16-10-24-6 8 0 14 4 18 10M32 26c6-8 16-10 24-6-8 0-14 4-18 10M32 26c-2-10-8-16-16-18 6 4 10 10 12 18M32 26c2-10 8-16 16-18-6 4-10 10-12 18" fill="#1f9d74"/><path d="M14 58l36-14M50 58L14 44" stroke-width="3.5"/>',
+ hourglass:'<path d="M16 8h32M16 56h32" stroke-width="4"/><path d="M20 8c0 14 12 16 12 24S20 42 20 56h24c0-14-12-16-12-24s12-10 12-24z" fill="#fff"/><path d="M24 50c2-6 6-8 8-10 2 2 6 4 8 10z" fill="#fbc52b" stroke-width="2"/><path d="M26 16h12c-1 4-4 6-6 8-2-2-5-4-6-8z" fill="#fbc52b" stroke-width="2"/>',
+ city:'<path d="M6 56h52" /><path d="M10 56V30h12v26M22 56V18h14v38M36 56V34h10v22M46 56V24h10v32" fill="#fff"/><path d="M14 36h4M14 44h4M26 24h6M26 32h6M26 40h6M50 30h3M50 38h3" stroke-width="2"/><path d="M40 6a8 8 0 0 1 8 8c0 6-8 14-8 14s-8-8-8-14a8 8 0 0 1 8-8z" fill="#ef4057"/><circle cx="40" cy="14" r="3" fill="#fff" stroke-width="2"/>',
+ coins:'<ellipse cx="24" cy="44" rx="16" ry="6" fill="#f4b23b"/><path d="M8 44v6c0 3 7 6 16 6s16-3 16-6v-6" fill="#f4b23b"/><ellipse cx="24" cy="36" rx="16" ry="6" fill="#ffe9a8"/><path d="M8 36v8M40 36v8" /><ellipse cx="42" cy="22" rx="14" ry="14" fill="#ffe9a8"/><circle cx="42" cy="22" r="9" fill="none" stroke-width="2"/><path d="M42 16v12M39 19h6" stroke-width="2"/>',
+ globe:'<circle cx="32" cy="32" r="22" fill="#2cc9d0"/><path d="M18 20c6 2 8 6 6 10s2 8 6 8 2 8-2 12M38 12c-2 6 2 8 6 8s8 4 6 10" fill="none" stroke-width="2.5"/><path d="M24 22c3 1 5 4 3 7l-4 1-3-4zM40 34c4-1 8 2 8 6l-5 6-4-4z" fill="#1f9d74" stroke-width="2"/><path d="M32 54v6M24 60h16" />',
+ paw:'<ellipse cx="32" cy="42" rx="12" ry="10" fill="#c98a4b"/><ellipse cx="16" cy="28" rx="6" ry="8" fill="#c98a4b" transform="rotate(-20 16 28)"/><ellipse cx="26" cy="18" rx="6" ry="8" fill="#c98a4b"/><ellipse cx="38" cy="18" rx="6" ry="8" fill="#c98a4b"/><ellipse cx="48" cy="28" rx="6" ry="8" fill="#c98a4b" transform="rotate(20 48 28)"/>',
+ bird:'<path d="M14 40c0-12 10-22 22-20 6 1 10 6 10 10l8 2-8 4c-2 10-12 16-24 14z" fill="#fbc52b"/><path d="M22 36c6 0 12 4 14 10-8 2-14-2-14-10z" fill="#ff8a1f" stroke-width="2"/><circle cx="40" cy="28" r="2.5" fill="'+INK+'" stroke="none"/><path d="M50 14c4 2 6 6 6 10M54 8c6 3 9 9 9 16" fill="none" stroke-width="2.5" stroke-linecap="round"/><path d="M24 52l-2 6M30 52l0 6" stroke-width="2.5"/>',
+ flask:'<path d="M24 8h16M27 8v16L12 50a4 4 0 0 0 4 6h32a4 4 0 0 0 4-6L37 24V8" fill="#fff"/><path d="M16 44l6-10h20l6 10a3 3 0 0 1-3 5H19a3 3 0 0 1-3-5z" fill="#2cc9d0" stroke-width="2"/><circle cx="28" cy="42" r="2.5" fill="#fff" stroke-width="1.5"/><circle cx="36" cy="38" r="2" fill="#fff" stroke-width="1.5"/>',
+ planet:'<circle cx="32" cy="32" r="14" fill="#ff8a1f"/><path d="M18 28c4 4 10 4 14 2s10-2 14 2" fill="none" stroke-width="2"/><ellipse cx="32" cy="34" rx="28" ry="8" fill="none" stroke-width="3" transform="rotate(-18 32 34)"/><path d="M8 12l1.5 3 3 1.5-3 1.5L8 21l-1.5-3-3-1.5 3-1.5zM54 50l1.2 2.4 2.4 1.2-2.4 1.2L54 57l-1.2-2.4-2.4-1.2 2.4-1.2z" fill="#fbc52b" stroke-width="1.5"/>',
+ quill:'<path d="M50 6C30 10 18 26 16 46l6-4c2-14 12-26 28-36z" fill="#fff"/><path d="M22 42c8-10 18-18 28-24" fill="none" stroke-width="2"/><path d="M16 46l-2 8" stroke-width="3"/><path d="M34 46h22v12H34z" fill="#0f7a99"/><path d="M38 46v-4h14v4" fill="#0f7a99"/>',
+ bulb:'<path d="M32 6a16 16 0 0 0-9 29c2 2 3 4 3 7h12c0-3 1-5 3-7A16 16 0 0 0 32 6z" fill="#fbc52b"/><path d="M26 46h12M27 52h10" stroke-width="3"/><path d="M28 30l4-6 4 6" fill="none" stroke-width="2"/><path d="M6 20l5 2M58 20l-5 2M10 6l4 4M54 6l-4 4" stroke-width="2.5" stroke-linecap="round"/>',
+ puzzle:'<path d="M10 22h12a6 6 0 1 1 12 0h12v12a6 6 0 1 1 0 12v12H34a6 6 0 1 0-12 0H10V46a6 6 0 1 0 0-12z" fill="#bf7db1"/>',
+ swords:'<path d="M12 12l28 28M52 12L24 40" stroke-width="5" stroke="#d9d2e6"/><path d="M12 12l28 28M52 12L24 40" fill="none"/><path d="M36 36l10 10M28 36L18 46" stroke-width="4"/><path d="M44 50l6 6M20 50l-6 6" stroke-width="5" stroke="#8a5326"/>',
+ crown:'<path d="M10 46l-2-26 14 12 10-18 10 18 14-12-2 26z" fill="#fbc52b"/><path d="M10 46h44v8H10z" fill="#f4b23b"/><circle cx="32" cy="38" r="4" fill="#ef4057" stroke-width="2"/><circle cx="20" cy="40" r="3" fill="#2cc9d0" stroke-width="2"/><circle cx="44" cy="40" r="3" fill="#2cc9d0" stroke-width="2"/>',
+ pad:'<path d="M16 18h32c8 0 12 8 12 18 0 10-3 16-8 16-6 0-8-8-14-8H26c-6 0-8 8-14 8-5 0-8-6-8-16 0-10 4-18 12-18z" fill="#3b5bff"/><path d="M18 28v12M12 34h12" stroke="#fff" stroke-width="4"/><circle cx="44" cy="30" r="3.5" fill="#fbc52b" stroke-width="2"/><circle cx="50" cy="37" r="3.5" fill="#ef4057" stroke-width="2"/><circle cx="38" cy="37" r="3.5" fill="#12b886" stroke-width="2"/>',
+ bolt:'<path d="M36 4L14 36h14l-4 24 26-36H34z" fill="#fbc52b"/>',
+ tree:'<path d="M32 58V30M32 40l-10-8M32 36l10-8" stroke-width="4" stroke="#8a5326"/><circle cx="32" cy="20" r="14" fill="#1f9d74"/><circle cx="18" cy="30" r="9" fill="#1f9d74"/><circle cx="46" cy="30" r="9" fill="#1f9d74"/><circle cx="28" cy="16" r="3" fill="#ef4057" stroke-width="2"/><circle cx="38" cy="24" r="3" fill="#ef4057" stroke-width="2"/><circle cx="18" cy="30" r="3" fill="#ef4057" stroke-width="2"/><circle cx="46" cy="32" r="3" fill="#ef4057" stroke-width="2"/><path d="M20 58h24" stroke-width="3"/>'
+};
+function icon(k,cls){return '<svg class="'+(cls||"ic")+'" viewBox="0 0 64 64" aria-hidden="true"><g stroke="'+INK+'" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">'+(ICON_D[k]||ICON_D.bulb)+'</g></svg>';}
+var CATICON={"ق":"quran","ن":"ship","ف":"mosque","م":"dome","ص":"people","ت":"scroll","ك":"palm","ه":"hourglass","و":"city","ل":"coins","ج":"globe","ح":"paw","ط":"bird","ب":"flask","ض":"planet","أ":"quill","ث":"bulb","غ":"puzzle"};
+var RANKICON=["dome","quran","tree","swords","bolt","globe","quran","globe","people","crown","ship","city","city"];
+
 var CE=["📿","📖","👶","⚔️","⚡","🏜️","📜","🌍","🌴","👑","🕋","🌐","🕌"];
 var GAMES=[
  {id:"rank",e:"🏆",name:"لعبة الترتيب",desc:"رتّب العناصر وافتح الأغطية واكسب نقاط كل مركز",tags:["أسئلة","جماعي"]},
@@ -987,7 +1138,7 @@ function srcTag(id,r){if(id.charAt(0)==="c")return '<span class="chip" style="ba
 function freshG(){return {v:"setup",game:"rank",teams:[],players:8,open:{},cat:0,
  wh:{d:[],cur:-1,rev:false},
  hx:{on:false,parts:[],n:0,order:[],cells:[],letters:[],pos:0,cur:-1,q:null,rev:false,over:-1,used:{}},
- sj:{on:false,cats:["د","س","ج","ح","ث","ت"],a:0,b:1,turn:0,board:[],cur:null,phase:"",t:60,st:30,qAt:0,helps:[{},{}],pit:-1,used:{},sc:[0,0]},
+ sj:{on:false,cats:["ق","ن","ص","و","ح","ب"],a:0,b:1,turn:0,board:[],cur:null,phase:"",t:60,st:30,qAt:0,helps:[{},{}],pit:-1,used:{},sc:[0,0]},
  fd:{deck:[],cur:-1,rev:{},strikes:0,mult:1,a:0,b:1},
  bz:{round:null,open:false}};}
 var G=freshG();
@@ -1019,7 +1170,7 @@ function adopt(g){G=Object.assign(freshG(),g);LMAP=null;if(G.teams.length&&L.mod
    if(s.exists){var d=s.data();if(d&&d.g&&d.from!==TAB){adopt(d.g);return;}}render();},
    function(){clearTimeout(liveTimer);SYNC="err";render();});
   db.collection("history").onSnapshot(function(snap){HIST=snap.docs.map(function(x){return {id:x.id,r:x.data()||{}};});if(L.hist)render();},function(){});
-  db.collection("bank").onSnapshot(function(snap){CUSTOM=snap.docs.map(function(d){var x=d.data()||{};return {id:"c"+d.id,doc:d.id,row:[x.c||"ث",String(x.q||""),String(x.a||""),x.l||undefined,"c",[200,400,600].indexOf(x.v)>=0?x.v:400]};});LMAP=null;render();},function(){});
+  db.collection("bank").onSnapshot(function(snap){CUSTOM=snap.docs.map(function(d){var x=d.data()||{};return {id:"c"+d.id,doc:d.id,row:[CATN[x.c]?x.c:subcat(x.c||"ث",String(x.q||"")),String(x.q||""),String(x.a||""),x.l||undefined,"c",[200,400,600].indexOf(x.v)>=0?x.v:400]};});LMAP=null;render();},function(){});
  }).catch(function(){});
  cl.use("room").then(function(r){if(!r)return;ROOM=r;
   r.onPeers(function(){scanBuzz();if(L.bzPanel||L.mode==="player"||G.bz.open)render();},function(){ROOM=null;render();});
@@ -1108,7 +1259,7 @@ function syncChip(){
  return m[SYNC]||"";
 }
 function pres(){return '<button class="sm'+(L.presenter?' g':'')+'" data-a="pres" title="يظهر الإجابات على هذا الجهاز فقط">'+(L.presenter?'👁️ وضع المقدم':'🙈 وضع العرض')+'</button>';}
-function logo(){return BR.logo?'<img src="'+BR.logo+'" alt="'+BR.name+'">':'<span class="em">'+BR.emoji+'</span>';}
+function logo(){return BR.logo?'<img src="'+BR.logo+'" alt="'+BR.name+'">':'<span class="em">'+icon("pad","ic hero")+'</span>';}
 function hero(sub){return '<div class="hero">'+logo()+'<h1>'+BR.name+'</h1><p>'+sub+'</p></div>';}
 function vSetup(){
 var h=(window.WSHIM&&CANEDIT?'<div class="bzstrip live"><span>غرفتك: <b dir="ltr">'+esc(WSHIM.room)+'</b></span><div class="sp"></div><button class="sm" data-a="share">🔗 روابط اللاعبين والشاشة</button></div>':'')+hero("جهّز الجلسة وابدأ")+'<div class="card"><h2>👥 عدد الأفرقة</h2><div class="step"><button data-a="nt" data-v="-1">−</button><b>'+ar(L.nTeams)+'</b><button data-a="nt" data-v="1">+</button><span class="muted">من ٢ إلى ٨</span></div><h2 style="margin-top:14px">🙋 عدد اللاعبين كلهم</h2><div class="step"><button data-a="np" data-v="-1">−</button><b>'+ar(G.players)+'</b><button data-a="np" data-v="1">+</button><span class="muted">'+ar(Math.max(1,Math.round(G.players/L.nTeams)))+' لاعبين تقريباً بكل فريق</span></div></div><div class="card"><h2>🏷️ أسماء الأفرقة</h2>';
@@ -1116,20 +1267,20 @@ var h=(window.WSHIM&&CANEDIT?'<div class="bzstrip live"><span>غرفتك: <b dir
  return h+'</div><button class="g" style="width:100%;padding:15px;font-size:1.2rem" data-a="start">🚀 ابدأ</button>'+(G.teams.length?'<button style="width:100%;margin-top:10px" data-a="home">رجوع بدون تغيير</button>':'');
 }
 function vHome(){
- var h='<div class="bar">'+(BR.logo?'<img src="'+BR.logo+'" alt="">':'<span style="font-size:2rem">'+BR.emoji+'</span>')+'<b>'+BR.name+'</b>'+syncChip()+'<div class="sp"></div>'+(window.WSHIM&&CANEDIT?'<button class="sm g" data-a="share">🔗 '+esc(WSHIM.room)+'</button>':'')+'<button class="sm" data-a="setup">👥 الأفرقة</button></div>'+hero(BR.sub);
+ var h='<div class="bar">'+(BR.logo?'<img src="'+BR.logo+'" alt="">':icon("pad","ic bari"))+'<b>'+BR.name+'</b>'+syncChip()+'<div class="sp"></div>'+(window.WSHIM&&CANEDIT?'<button class="sm g" data-a="share">🔗 '+esc(WSHIM.room)+'</button>':'')+'<button class="sm" data-a="setup">👥 الأفرقة</button></div>'+hero(BR.sub);
  h+='<div class="top">'+pres()+'<button class="sm" data-a="tvon">📺 شاشة العرض</button><button class="sm'+(L.snd?' g':'')+'" data-a="snd">'+(L.snd?'🔊 الصوت':'🔇 الصوت')+'</button><button class="sm" data-a="hist">📜 السجل</button><button class="sm" data-a="lbon">🔔 جرس الطاولة</button>'+(DB&&CANEDIT?'<button class="sm" data-a="myq">📝 أسئلتي'+(CUSTOM.length?' ('+ar(CUSTOM.length)+')':'')+'</button>':'')+(ROOM?'<button class="sm" data-a="toplayer">📱 هذا الجهاز للاعب</button>':'')+'</div>';
  if(ROOM&&G.teams.length)h+='<div class="card" style="padding:10px 14px"><b>🔔 الجرس من الجوال</b><div class="muted">اللاعبين يفتحون نفس الرابط من جوالاتهم ويختارون فريقهم. المتصلين الحين: '+ar(players().length)+'</div></div>';
  h+='<h2>اختر لعبتك</h2><div class="chips">';
  FILTERS.forEach(function(f){h+='<button class="'+(L.filter===f?'on':'')+'" data-a="flt" data-f="'+f+'">'+f+'</button>';});
  h+='</div><div class="grid">';
- GAMES.forEach(function(g,i){if(L.filter!=="الكل"&&g.tags.indexOf(L.filter)<0)return;var k=KC[i%KC.length];h+='<button class="cat" style="--k:'+k[0]+';--on:'+k[1]+'" data-a="game" data-id="'+g.id+'"><span class="em">'+g.e+'</span><b>'+g.name+'</b><small>'+g.desc+'</small><div>'+g.tags.map(function(t){return '<span class="tag">'+t+'</span>'}).join('')+'</div></button>';});
+ GAMES.forEach(function(g,i){if(L.filter!=="الكل"&&g.tags.indexOf(L.filter)<0)return;var k=KC[i%KC.length];h+='<button class="cat" style="--k:'+k[0]+';--on:'+k[1]+'" data-a="game" data-id="'+g.id+'"><span class="art">'+(ART[g.id]||"")+'</span><b>'+g.name+'</b><small>'+g.desc+'</small><div>'+g.tags.map(function(t){return '<span class="tag">'+t+'</span>'}).join('')+'</div></button>';});
  return h+'</div><div class="stats"><div><b>'+ar(GAMES.length)+'</b><span class="muted">ألعاب</span></div><div><b>'+ar(BANK.length+CUSTOM.length)+'</b><span class="muted">سؤال في البنك</span></div><div><b>'+ar(CATS.length+FEUD.length)+'</b><span class="muted">فئة واستبيان</span></div></div><div style="height:80px"></div>';
 }
 function topbar(){return '<div class="top"><button class="sm" data-a="home">🏠 الألعاب</button>'+pres()+'<div class="sp"></div><button class="sm" data-a="finish">🏁 إنهاء وإعلان الفائز</button></div>';}
 function cnt(ci){return (G.open[ci]||[]).length;}
 function vHub(){
  var h=topbar()+'<h1>🏆 لعبة الترتيب</h1><p class="muted">اختر الفئة اللي تبي تلعبها</p><div class="grid">';
- CATS.forEach(function(c,ci){var k=KC[ci%KC.length];h+='<button class="cat" style="--k:'+k[0]+';--on:'+k[1]+'" data-a="cat" data-v="'+ci+'"><span class="em">'+CE[ci%CE.length]+'</span><b>'+c.t+'</b><small>'+(cnt(ci)?ar(cnt(ci))+" من "+ar(c.i.length)+" مكشوف":ar(c.i.length)+" مراكز")+'</small></button>';});
+ CATS.forEach(function(c,ci){var k=KC[ci%KC.length];h+='<button class="cat" style="--k:'+k[0]+';--on:'+k[1]+'" data-a="cat" data-v="'+ci+'"><span class="em">'+icon(RANKICON[ci]||"bulb")+'</span><b>'+c.t+'</b><small>'+(cnt(ci)?ar(cnt(ci))+" من "+ar(c.i.length)+" مكشوف":ar(c.i.length)+" مراكز")+'</small></button>';});
  return h+'</div><div style="height:80px"></div>';
 }
 function vQ(){
@@ -1269,7 +1420,7 @@ function vSJS(){
  var h=topbar()+'<h1>❓ سين جيم</h1><p class="muted">لوحة فئات بأسئلة ٢٠٠ و٤٠٠ و٦٠٠. الفريقان يتناوبان على اختيار السؤال، وإذا ما جاوب الفريق تنتقل الفرصة للفريق الثاني. لكل فريق ثلاث وسائل مساعدة تُستعمل مرة وحدة.</p>';
  h+='<div class="card"><div class="opt"><span class="n">الفريق الأول</span>'+sel("a")+'</div><div class="opt"><span class="n">الفريق الثاني</span>'+sel("b")+'</div></div>';
  h+='<div class="card"><h2>اختر الفئات ('+ar(s.cats.length)+' من ٦)</h2><div class="chips">';
- Object.keys(CATN).forEach(function(k){var n=allIds().filter(function(id){var r=Q(id);return r&&r[0]===k;}).length;h+='<button class="'+(s.cats.indexOf(k)>=0?'on':'')+'" data-a="sjcat" data-k="'+k+'">'+CATN[k]+' <small>('+ar(n)+')</small></button>';});
+ Object.keys(CATN).forEach(function(k){var n=allIds().filter(function(id){var r=Q(id);return r&&r[0]===k;}).length;h+='<button class="sjc '+(s.cats.indexOf(k)>=0?'on':'')+'" data-a="sjcat" data-k="'+k+'"'+(n<6&&s.cats.indexOf(k)<0?' disabled title="أسئلة قليلة"':'')+'>'+icon(CATICON[k],"ic sm")+CATN[k]+' <small>('+ar(n)+')</small></button>';});
  h+='</div><div class="opt"><span class="n">⏱ وقت الفريق صاحب الدور</span><button class="sm" data-a="sjt1">'+ar(s.t)+' ثانية</button></div><div class="opt"><span class="n">⏱ وقت الفريق الثاني بعده</span><button class="sm" data-a="sjt2">'+ar(s.st)+' ثانية</button></div></div>';
  var ok=s.cats.length>=2&&s.cats.length<=6&&s.a!==s.b;
  return h+(ok?'':'<p class="muted">اختر من فئتين إلى ٦ فئات، وفريقين مختلفين.</p>')+'<button class="g" style="width:100%;padding:14px;font-size:1.1rem" data-a="sjgo" '+(ok?'':'disabled')+'>ابدأ اللوحة</button><div style="height:80px"></div>';
@@ -1297,7 +1448,7 @@ function vSJ(){
  if(sjDone()){var w=s.sc[0]===s.sc[1]?-1:(s.sc[0]>s.sc[1]?0:1);h+='<div class="win"><span>'+(w<0?'🤝 تعادل':'🏆 فاز في سين جيم')+'</span><b>'+(w<0?esc(tname(s.a))+' و '+esc(tname(s.b)):esc(tname(sjTeam(w))))+'</b><span>'+ar(s.sc[0])+' — '+ar(s.sc[1])+'</span></div><button class="g" style="width:100%;padding:14px" data-a="sjset">🔄 لوحة جديدة</button>';}
  if(s.pit>=0)h+='<p class="peekbox" style="text-align:center">🕳️ '+esc(tname(sjTeam(s.pit)))+' فعّل الحفرة على السؤال الجاي</p>';
  h+='<div class="sjboard" style="grid-template-columns:repeat('+Math.min(s.cats.length,3)+',1fr)">';
- s.cats.forEach(function(cat,ci){var k=KC[ci%KC.length];h+='<div class="sjcol"><div class="sjhead" style="background:'+k[0]+';color:'+k[1]+'">'+CATN[cat]+'</div><div class="sjcells">';
+ s.cats.forEach(function(cat,ci){var k=KC[ci%KC.length];h+='<div class="sjcol"><div class="sjhead" style="background:'+k[0]+';color:'+k[1]+'">'+icon(CATICON[cat],"ic hd")+'<span>'+CATN[cat]+'</span></div><div class="sjcells">';
   [0,3,1,4,2,5].forEach(function(ki){var c=s.board[ci][ki];h+='<button class="sjcell'+(c.d?' done':'')+'" data-a="sjq" data-v="'+(ci*6+ki)+'" '+(c.d?'disabled':'')+'>'+(c.d?(c.w>=0?'<span style="color:'+COL[sjTeam(c.w)%8]+'">●</span>':'—'):ar(c.v))+'</button>';});
   h+='</div></div>';});
  return h+'</div><p class="muted" style="text-align:center">الدور على <b style="color:'+COL[sjTeam(s.turn)%8]+'">'+esc(tname(sjTeam(s.turn)))+'</b> يختار سؤال</p><div style="height:80px"></div>';
@@ -1337,7 +1488,7 @@ function vMyQ(){
 }
 /* ===== وضع اللاعب ===== */
 function vPlayer(){
- var h='<div class="bar">'+(BR.logo?'<img src="'+BR.logo+'" alt="">':'<span style="font-size:2rem">'+BR.emoji+'</span>')+'<b>'+BR.name+'</b>'+(window.WSHIM?'<span class="pill" dir="ltr">'+esc(WSHIM.room)+'</span>'+syncChip():'')+'<div class="sp"></div>'+(CANEDIT&&!L.visitor?'<button class="sm" data-a="tohost">🎛️ وضع المقدم</button>':'')+'</div>';
+ var h='<div class="bar">'+(BR.logo?'<img src="'+BR.logo+'" alt="">':icon("pad","ic bari"))+'<b>'+BR.name+'</b>'+(window.WSHIM?'<span class="pill" dir="ltr">'+esc(WSHIM.room)+'</span>'+syncChip():'')+'<div class="sp"></div>'+(CANEDIT&&!L.visitor?'<button class="sm" data-a="tohost">🎛️ وضع المقدم</button>':'')+'</div>';
  if(!ROOM||!DB)return h+'<div class="card" style="text-align:center"><div style="font-size:3rem">📵</div><h2>جرس الجوال غير متاح على هذا الجهاز</h2><p class="muted">'+(window.WSHIM?'تأكد إنك متصل بالإنترنت ثم حدّث الصفحة.':'جرس الجوال يحتاج حساب Claude. البديل: استخدموا «جرس الطاولة» على جهاز واحد للجميع.')+'</p>'+'<button class="g" style="width:100%;padding:14px" data-a="lbon">🔔 جرس الطاولة</button></div>';
  if(!G.teams.length)return h+'<div class="card" style="text-align:center"><div style="font-size:3rem">⏳</div><h2>بانتظار المقدم يجهز الأفرقة</h2></div>';
  if(L.myTeam<0||L.myTeam>=G.teams.length){h+='<h1 style="text-align:center">اختر فريقك</h1>';
