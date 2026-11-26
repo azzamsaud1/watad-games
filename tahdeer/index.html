@@ -323,7 +323,7 @@ function render(){const a=document.activeElement;
  if(readOnly)h+='<div class="note">وضع القراءة فقط: لا تملك صلاحية التعديل.</div>';
  if(stale)h+='<div class="note">تعذّر الوصول للبيانات حالياً، قد تكون غير محدّثة.</div>';
  h+=({take:vTake,stats:vStats,students:vStudents,settings:vSettings}[ui.view])();
- main.innerHTML=h;applySearch();if(ui.prof)drawProfile();if(ui.view==='settings')resolveNames(allLogs().slice(0,300).map(x=>x.u))}
+ main.innerHTML=h;applySearch();if(ui.view==='take')main.querySelectorAll('.strip .chip.on').forEach(c=>{const st=c.parentElement;st.scrollLeft+=c.getBoundingClientRect().left-st.getBoundingClientRect().left-(st.clientWidth-c.clientWidth)/2});if(ui.prof)drawProfile();if(ui.view==='settings')resolveNames(allLogs().slice(0,300).map(x=>x.u))}
 
 function applySearch(){const q=(ui.q||'').trim();document.querySelectorAll('#main .row[data-n]').forEach(r=>r.hidden=!!q&&!r.dataset.n.includes(q));
  document.querySelectorAll('#main .grp[data-g]').forEach(g=>g.hidden=!!q&&!g.querySelector('.row:not([hidden])'))}
@@ -335,27 +335,27 @@ function vTake(){
   ui.sess=(td||ss.find(s=>!s.cx&&done(n,s.key)<act.length)||ss[0]||{}).key||null}
  let h=termSel()+alertsBox(false)+'<div class="strip">';
  for(let i=1;i<=W;i++){const a=dayDate(i,0),b=dayDate(i,6);
-  h+=`<button class="chip${i===n?' on':''}" data-week="${i}">الأسبوع ${i}<small>${isHol(i)?'إجازة':fmt(a)+' – '+fmt(b)}${!isHol(i)&&weekComplete(i)?' ✓':''}</small></button>`}
+  h+=`<button class="chip${i===n?' on':''}" data-week="${i}">الأسبوع ${i}<small>${isHol(i)?'ملغى':fmt(a)+' – '+fmt(b)}${!isHol(i)&&weekComplete(i)?' ✓':''}</small></button>`}
  if(!readOnly)h+=`<button class="chip add edit" data-act="addweek">+ أسبوع ${W+1}</button>`;
  h+='</div>';
- if(hol)return h+`<div class="hol"><b>الأسبوع ${n} إجازة</b><p class="mut">لا يُحسب في الإحصائيات ولا في التنبيهات.</p>${readOnly?'':'<button class="btn edit" data-act="holiday">إلغاء الإجازة</button>'}</div>`;
+ if(hol)return h+`<div class="hol"><b>الأسبوع ${n} ملغى</b><p class="mut">لا يُحسب في الإحصائيات ولا في التنبيهات.</p>${readOnly?'':'<button class="btn edit" data-act="holiday">استرجاع الأسبوع</button>'}</div>`;
  h+='<div class="strip">';
  if(!ss.length)h+='<div class="mut">لا توجد برامج في هذا الأسبوع.</div>';
  ss.forEach(s=>{const d=done(n,s.key),t=act.length||1;
-  h+=`<button class="chip sess${s.key===ui.sess?' on':''}" data-sess="${esc(s.key)}"><span class="${s.cx?'cx':''}">${esc(s.pname)}</span><small>${DAYS[s.day]} ${fmt(dayDate(n,s.day))} · ${s.cx?'ملغاة':d+'/'+act.length}</small><div class="bar"><i style="width:${s.cx?0:Math.round(d/t*100)}%"></i></div></button>`});
+  h+=`<button class="chip sess${s.key===ui.sess?' on':''}" data-sess="${esc(s.key)}"><span class="${s.cx?'cx':''}">${esc(s.pname)}</span><small>${DAYS[s.day]} ${fmt(dayDate(n,s.day))} · ${s.cx?'ملغى':d+'/'+act.length}</small><div class="bar"><i style="width:${s.cx?0:Math.round(d/t*100)}%"></i></div></button>`});
  h+='</div>';
- if(!readOnly){h+='<details class="edit"><summary>تعديل هذا الأسبوع: أيام البرامج أو إجازة</summary>';
+ if(!readOnly){h+='<details class="edit"><summary>تعديل أيام البرامج لهذا الأسبوع</summary>';
   S.cfg.programs.forEach(p=>{const ds=daysFor(n,p);h+=`<div class="prow"><b>${esc(p.name)}</b><div class="days">${DAYS.map((d,i)=>`<button data-wday="${esc(p.id)}" data-d="${i}" class="${ds.includes(i)?'on':''}">${d}</button>`).join('')}</div></div>`});
-  h+=`<p class="mut">التغيير هنا يخص الأسبوع ${n} فقط. لتغيير الأيام الافتراضية لكل الأسابيع اذهب إلى الإعدادات.</p><button class="btn g s" data-act="holiday">تحديد الأسبوع ${n} كإجازة</button></details>`}
+  h+=`<p class="mut">التغيير هنا يخص الأسبوع ${n} فقط. لتغيير الأيام الافتراضية لكل الأسابيع اذهب إلى الإعدادات.</p></details>`}
  const s=ss.find(x=>x.key===ui.sess);
  if(!act.length)return h+'<div class="empty">لا يوجد طلاب بعد. أضفهم من صفحة <a href="#students">الطلاب</a>.</div>';
  if(!s)return h;
- if(s.cx)return h+`<section class="panel"><h1 class="cx">${esc(s.pname)} · ${DAYS[s.day]} ${fmt(dayDate(n,s.day))}</h1><p>هذه الجلسة ملغاة ولا تُحسب في الإحصائيات.</p>${readOnly?'':'<button class="btn edit" data-act="cancelsess">استرجاع الجلسة</button>'}</section>`;
+ if(s.cx)return h+`<section class="panel"><h1 class="cx">${esc(s.pname)} · ${DAYS[s.day]} ${fmt(dayDate(n,s.day))}</h1><p>هذا اليوم ملغى ولا يُحسب في الإحصائيات.</p>${readOnly?'':'<button class="btn edit" data-act="cancelsess">استرجاع اليوم</button> <button class="btn g edit" data-act="holiday">إلغاء الأسبوع كامل</button>'}</section>`;
  const r=recOf(n,s.key),tz=tasOf(n,s.key);
  const cnt={};let tot=0,ty=0,tn=0;ST.forEach(x=>cnt[x.k]=0);
  act.forEach(st=>{const k=r[st.id];if(k&&cnt[k]!==undefined){cnt[k]++;tot+=ptsOf(k,s.pid)}if(s.tasmee&&ATT.has(k)){if(tz[st.id]==='y')ty++;if(tz[st.id]==='n')tn++;tot+=tasPts(tz[st.id])}});
  h+=`<section class="panel"><div class="phead"><div><h1>${esc(s.pname)} · ${DAYS[s.day]} ${fmt(dayDate(n,s.day))}</h1><div class="mut">الأسبوع ${n} · سُجّل ${done(n,s.key)} من ${act.length}</div></div>
- <div class="acts">${readOnly?'':'<button class="btn edit" data-act="fillall">الكل حاضر</button>'}<button class="btn g" data-act="expsess">صورة / بي دي إف</button>${readOnly?'':'<button class="btn g s edit" data-act="cancelsess">إلغاء الجلسة</button><button class="btn dg s edit" data-act="clearsess">مسح التحضير</button>'}</div></div>
+ <div class="acts">${readOnly?'':'<button class="btn edit" data-act="fillall">الكل حاضر</button>'}<button class="btn g" data-act="expsess">صورة / بي دي إف</button>${readOnly?'':'<button class="btn g s edit" data-act="cancelsess">إلغاء اليوم</button><button class="btn g s edit" data-act="holiday">إلغاء الأسبوع</button><button class="btn dg s edit" data-act="clearsess">مسح التحضير</button>'}</div></div>
  <div class="sum">${ST.map(x=>`<span class="pill" style="--c:${x.hex}"><span class="dot"></span>${x.l}: ${cnt[x.k]}</span>`).join('')}${s.tasmee?TAS.map(x=>`<span class="pill" style="--c:${x.hex}"><span class="dot"></span>${x.l}: ${x.k==='y'?ty:tn}</span>`).join(''):''}<span class="pill">مجموع النقاط: ${tot}</span></div>
  <div class="srch"><input type="text" id="q" placeholder="ابحث عن طالب…" value="${esc(ui.q)}" autocomplete="off" aria-label="بحث"></div>`;
  grouped(act).forEach(g=>{if(!g.items.length)return;
@@ -396,7 +396,7 @@ function vStats(){const {rows,sessCount,weekPct}=calc();
  const T={n:0,att:0,pts:0};rows.forEach(r=>{T.n+=r.n;T.att+=r.sh+r.p+r.l;T.pts+=r.pts});
  const top=rows.find(r=>r.n||r.bp);
  let h=termSel()+'<h1>إحصائيات الحضور</h1>'+alertsBox(true)+'<div class="filters" style="margin-top:12px">';
- h+=`<select id="fW" aria-label="الأسبوع"><option value="all">كل الأسابيع</option>${Array.from({length:NW()},(_,i)=>`<option value="${i+1}"${ui.stW==i+1?' selected':''}>الأسبوع ${i+1}${isHol(i+1)?' (إجازة)':''}</option>`).join('')}</select>`;
+ h+=`<select id="fW" aria-label="الأسبوع"><option value="all">كل الأسابيع</option>${Array.from({length:NW()},(_,i)=>`<option value="${i+1}"${ui.stW==i+1?' selected':''}>الأسبوع ${i+1}${isHol(i+1)?' (ملغى)':''}</option>`).join('')}</select>`;
  h+=`<select id="fP" aria-label="البرنامج"><option value="all">كل البرامج</option>${S.cfg.programs.map(p=>`<option value="${esc(p.id)}"${ui.stP===p.id?' selected':''}>${esc(p.name)}</option>`).join('')}</select>`;
  h+=`<select id="fB" aria-label="الدفعة"><option value="all">كل الدفعات</option>${S.cfg.batches.map(b=>`<option value="${esc(b.id)}"${ui.stB===b.id?' selected':''}>${esc(b.name)}</option>`).join('')}</select>`;
  h+=`<div class="acts"><button class="btn" data-act="expstats">صورة / بي دي إف</button><button class="btn g" data-act="expterm">تقرير الفصل</button><button class="btn g" data-act="xlsx">إكسل</button></div></div>`;
@@ -411,14 +411,14 @@ function vStats(){const {rows,sessCount,weekPct}=calc();
  S.cfg.batches.forEach(b=>{let n=0,a=0;rows.filter(r=>r.s.b===b.id).forEach(r=>{n+=r.n;a+=r.sh+r.p+r.l});if(ui.stB!=='all'&&ui.stB!==b.id)return;
   h+=`<div class="hb"><span>${esc(b.name)}</span><span class="tr"><i style="width:${n?Math.round(a/n*100):0}%"></i></span><span>${pctT(n?a/n:null)}</span></div>`});
  h+='</div><div><h2>الحضور حسب الأسبوع</h2>';
- weekPct.forEach(w=>{h+=`<div class="hb" style="--c:var(--or)"><span>الأسبوع ${w.n}</span><span class="tr"><i style="width:${w.v==null?0:Math.round(w.v*100)}%"></i></span><span>${w.hol?'إجازة':pctT(w.v)}</span></div>`});
+ weekPct.forEach(w=>{h+=`<div class="hb" style="--c:var(--or)"><span>الأسبوع ${w.n}</span><span class="tr"><i style="width:${w.v==null?0:Math.round(w.v*100)}%"></i></span><span>${w.hol?'ملغى':pctT(w.v)}</span></div>`});
  h+='</div></div><h2>أكثر الأيام غياباً</h2>';
  const by={};for(let n=1;n<=NW();n++){if(ui.stW!=='all'&&+ui.stW!==n)continue;active(n).forEach(s=>{if(ui.stP!=='all'&&s.pid!==ui.stP)return;const k=s.pid+'@'+s.day,o=by[k]||(by[k]={l:s.pname+' · '+DAYS[s.day],n:0,a:0,e:0});const r=recOf(n,s.key);
   for(const sid in r){const st=stu(sid);if(!st||(ui.stB!=='all'&&st.b!==ui.stB))continue;o.n++;if(r[sid]==='a')o.a++;if(r[sid]==='e')o.e++}})}
  const bl=Object.values(by).filter(o=>o.n).sort((a,b)=>b.a/b.n-a.a/a.n);
  if(!bl.length)h+='<p class="mut">لا توجد بيانات بعد.</p>';
  bl.forEach(o=>{h+=`<div class="hb ab" style="--c:var(--rd)"><span>${esc(o.l)}</span><span class="tr"><i style="width:${Math.round(o.a/o.n*100)}%"></i></span><span>غياب ${pctT(o.a/o.n)} · عذر ${o.e}</span></div>`});
- return h+'<p class="mut">نسبة الحضور = (بشماغ + حاضر + متأخر) ÷ كل الحالات المسجّلة، بدون أسابيع الإجازة والجلسات الملغاة. «سمّع» = عدد مرات التسميع من عدد مرات تسجيله. النقاط تُحسب بالقيم الحالية في الإعدادات، والإضافية تظهر فقط عند اختيار «كل البرامج».</p>'}
+ return h+'<p class="mut">نسبة الحضور = (بشماغ + حاضر + متأخر) ÷ كل الحالات المسجّلة، بدون الأسابيع والأيام الملغاة. «سمّع» = عدد مرات التسميع من عدد مرات تسجيله. النقاط تُحسب بالقيم الحالية في الإعدادات، والإضافية تظهر فقط عند اختيار «كل البرامج».</p>'}
 
 function vStudents(){const act=AS(),arch=S.students.filter(s=>s.arch);
  let h=`<h1>الطلاب (${act.length})</h1>`;
@@ -454,7 +454,7 @@ function vSettings(){const d=readOnly?' disabled':'',t=TERM();
  if(!readOnly)h+=`<details class="edit" style="margin-top:8px"><summary>بدء فصل دراسي جديد</summary><div class="form" style="grid-template-columns:minmax(0,1fr)"><input type="text" id="ntName" placeholder="اسم الفصل، مثلاً: الفصل الثاني"><div class="lbl" style="margin:4px 0 0">تاريخ البداية</div>${hpick('nts',today0(),'')}<button class="btn" data-act="newterm">بدء</button></div><p class="mut">الطلاب والدفعات والبرامج تبقى كما هي، وسجل الفصل الحالي يُحفظ وتقدر ترجع له من هنا أو من أعلى صفحة التحضير.</p></details>`;
  h+=`<h2>أسابيع «${esc(t.name)}»</h2><div class="ptsg"><div style="grid-column:1/-1"><div class="lbl" style="margin-top:0">بداية الأسبوع الأول (يُضبط على الأحد)</div>${hpick('start',parse(t.start),d)}<div class="mut">يوافق الأحد ${hlong(parse(t.start))}</div></div>
  <div><div class="lbl" style="margin-top:0">عدد الأسابيع: ${t.weeks}</div>${readOnly?'':'<div class="acts"><button class="btn g s" data-act="addweek">+ أسبوع</button><button class="btn dg s" data-act="delweek">حذف آخر أسبوع</button></div>'}</div></div>
- <p class="mut">يُضاف أسبوع جديد تلقائياً عند اكتمال تحضير آخر أسبوع، أو عند دخول أسبوع جديد في التقويم (للفصل الحالي). أسبوع الإجازة يُحسب مكتملاً.</p>
+ <p class="mut">يُضاف أسبوع جديد تلقائياً عند اكتمال تحضير آخر أسبوع، أو عند دخول أسبوع جديد في التقويم (للفصل الحالي). الأسبوع الملغى يُحسب مكتملاً.</p>
  <h2>تصدير ونسخة احتياطية</h2><div class="acts"><button class="btn g" data-act="xlsx">تصدير إكسل</button><button class="btn g" data-act="backup">تنزيل نسخة احتياطية</button>${readOnly?'':'<label class="btn g" style="display:inline-flex;align-items:center">استعادة من نسخة<input type="file" id="restore" accept=".json,application/json" hidden></label>'}</div>
  ${local?vSync():''}<h2>التطبيق</h2><p style="margin:0">على الكمبيوتر: في كروم أو إيدج اضغط «تثبيت كتطبيق» أعلى الصفحة، أو أيقونة التثبيت في شريط العنوان.<br>على الجوال: افتح الرابط في سفاري ثم «مشاركة» ← «إضافة إلى الشاشة الرئيسية»، أو في كروم من القائمة ← «إضافة إلى الشاشة الرئيسية».</p>
  <h2>سجل التعديلات</h2>`;
@@ -480,10 +480,10 @@ function drawProfile(force){const st=stu(ui.prof);if(!st){closeProfile();return}
  <div class="acts" style="margin-top:8px">${readOnly?'':'<button class="btn" data-x="saveinfo">حفظ</button>'}<button class="btn g" data-x="msg">رسالة لولي الأمر</button></div><div id="msgBox"></div>
  <h2>السجل أسبوعاً بأسبوع</h2>`;
  for(let n=NW();n>=1;n--){h+=`<div class="wk"><b>الأسبوع ${n} <span class="mut">${fmt(dayDate(n,0))} – ${fmt(dayDate(n,6))}</span></b>`;
-  if(isHol(n)){h+='<span class="mut">إجازة</span></div>';continue}
+  if(isHol(n)){h+='<span class="mut">ملغى</span></div>';continue}
   const ss=sessions(n);if(!ss.length)h+='<span class="mut">لا جلسات</span>';
   ss.forEach(s=>{const k=recOf(n,s.key)[st.id],x=STM[k],nt=noteOf(n,s.key,st.id),tv=tasOf(n,s.key)[st.id];
-   h+=`<span class="sc${s.cx?' cx':''}">${x?`<span class="dot" style="--c:${x.hex}"></span>`:''}${esc(s.pname)} ${DAYS[s.day]}: ${s.cx?'ملغاة':x?x.l:'—'}${s.tasmee&&ATT.has(k)&&tv?' · '+TASM[tv].l:''}${nt?' · '+esc(nt):''}</span>`});
+   h+=`<span class="sc${s.cx?' cx':''}">${x?`<span class="dot" style="--c:${x.hex}"></span>`:''}${esc(s.pname)} ${DAYS[s.day]}: ${s.cx?'ملغى':x?x.l:'—'}${s.tasmee&&ATT.has(k)&&tv?' · '+TASM[tv].l:''}${nt?' · '+esc(nt):''}</span>`});
   h+='</div>'}
  h+='<h2>النقاط الإضافية</h2>';
  if(!readOnly)h+=`<form class="form" id="bnForm" style="grid-template-columns:110px minmax(0,1fr) auto"><input type="text" inputmode="numeric" id="bnPts" placeholder="١٠ أو -٣" aria-label="النقاط"><input type="text" id="bnWhy" placeholder="السبب" aria-label="السبب"><button class="btn">إضافة</button></form>`;
@@ -565,10 +565,10 @@ main.addEventListener('click',async e=>{const t=e.target.closest('button,[data-a
   case 'delweek':{const m=NW();if(m<=1)return;const w=WK(m);const has=w&&w.rec&&Object.values(w.rec).some(r=>Object.keys(r).length);
    if(has&&!await ask('الأسبوع '+m+' فيه تحضير مسجّل وسيُحذف. متابعة؟','حذف'))return;
    const id=wid(m);delete S.all[id];TERM().weeks=m-1;saveCfg();if(db&&!local)db.doc('weeks/'+id).delete().catch(()=>{});else{stampPath('weeks/'+id);lsSave();syncSoon()}log('حذف الأسبوع '+m);render();break}
-  case 'holiday':{const w=week(n);if(!w.holiday&&Object.values(w.rec).some(r=>Object.keys(r).length)&&!await ask('الأسبوع '+n+' فيه تحضير مسجّل، لن يُحسب وهو إجازة (ويرجع إذا ألغيت الإجازة). متابعة؟','تحديد كإجازة'))return;
-   w.holiday=!w.holiday;saveWk(n);log((w.holiday?'تحديد الأسبوع ':'إلغاء إجازة الأسبوع ')+n+(w.holiday?' إجازة':''));if(w.holiday)checkAdvance(n);toast(w.holiday?'الأسبوع '+n+' إجازة':'أُلغيت الإجازة');render();break}
-  case 'cancelsess':{const w=week(n),s=sessions(n).find(x=>x.key===ui.sess);if(w.cancel[ui.sess]){delete w.cancel[ui.sess];log('استرجاع جلسة '+sessLabel(n,s))}else{
-    if(done(n,ui.sess)&&!await ask('هذه الجلسة فيها تحضير، لن يُحسب وهي ملغاة (ويرجع إذا استرجعتها). متابعة؟','إلغاء الجلسة'))return;w.cancel[ui.sess]=true;log('إلغاء جلسة '+sessLabel(n,s))}
+  case 'holiday':{const w=week(n);if(!w.holiday&&Object.values(w.rec).some(r=>Object.keys(r).length)&&!await ask('إلغاء الأسبوع '+n+' كامل؟ فيه تحضير مسجّل، لن يُحسب وهو ملغى (ويرجع إذا استرجعت الأسبوع).','إلغاء الأسبوع'))return;
+   w.holiday=!w.holiday;saveWk(n);log((w.holiday?'إلغاء الأسبوع ':'استرجاع الأسبوع ')+n);if(w.holiday)checkAdvance(n);toast(w.holiday?'أُلغي الأسبوع '+n:'رجع الأسبوع '+n);render();break}
+  case 'cancelsess':{const w=week(n),s=sessions(n).find(x=>x.key===ui.sess);if(w.cancel[ui.sess]){delete w.cancel[ui.sess];log('استرجاع يوم '+sessLabel(n,s))}else{
+    if(done(n,ui.sess)&&!await ask('هذا اليوم فيه تحضير، لن يُحسب وهو ملغى (ويرجع إذا استرجعته). متابعة؟','إلغاء اليوم'))return;w.cancel[ui.sess]=true;log('إلغاء يوم '+sessLabel(n,s))}
    saveWk(n);checkAdvance(n);render();break}
   case 'clearsess':if(await ask('مسح تحضير هذه الجلسة؟','مسح')){const w=week(n),s=sessions(n).find(x=>x.key===ui.sess);delete w.rec[ui.sess];delete w.tas[ui.sess];saveWk(n);log('مسح تحضير '+sessLabel(n,s));render()}break;
   case 'addprog':S.cfg.programs.push({id:uid(),name:'برنامج جديد',days:[],tasmee:false});saveCfg();log('إضافة برنامج جديد');render();break;
@@ -671,7 +671,7 @@ function expTerm(){const {rows,sessCount}=calc({stW:'all',stP:'all',stB:'all'});
  const hol=Array.from({length:NW()},(_,i)=>isHol(i+1)).filter(Boolean).length,out=[];
  const bp=S.cfg.batches.map(b=>{let bn=0,ba=0;rows.filter(r=>r.s.b===b.id).forEach(r=>{bn+=r.n;ba+=r.sh+r.p+r.l});return {b,v:bn?ba/bn:null}}).filter(x=>x.v!=null).sort((x,y)=>y.v-x.v);
  grouped(rows.map(r=>r.s)).forEach(g=>{if(!g.items.length)return;out.push({group:g.b.name});g.items.forEach(s=>{const r=rows.find(x=>x.s===s);out.push({cells:[s.name+(s.arch?' (مؤرشف)':''),...ST.map(x=>r[x.k]||'—'),r.ty||'—',pctT(r.pct),r.pts]})})});
- openExport({title:'تقرير '+TERM().name,sub:(NW()-hol)+' أسابيع دراسية'+(hol?' و'+hol+' إجازة':'')+' · '+sessCount+' جلسة',
+ openExport({title:'تقرير '+TERM().name,sub:(NW()-hol)+' أسابيع دراسية'+(hol?' و'+hol+' ملغى':'')+' · '+sessCount+' جلسة',
   summary:[{t:'نسبة الحضور '+pctT(n?a/n:null)},{t:'عدد الطلاب '+AS().length},...(bp[0]?[{t:'الأعلى حضوراً: '+bp[0].b.name+' '+pctT(bp[0].v)}]:[])],
   cols:[{t:'الطالب',w:280,a:'r',b:1},...ST.map(x=>({t:x.s,w:66})),{t:'سمّع',w:80},{t:'الحضور',w:90},{t:'النقاط',w:138,b:1,neg:1}],rows:out},'تقرير-'+TERM().name)}
 function expStudent(st){const rows=[];let cur=0;const t=[];for(let n=1;n<=NW();n++){if(isHol(n))continue;active(n).forEach(s=>{const k=recOf(n,s.key)[st.id];if(!k)return;
@@ -702,8 +702,8 @@ async function expXlsx(){toast('جاري تجهيز ملف إكسل…');
  const s1=[['#','الطالب','الدفعة',...ST.map(x=>x.l),'سمّع','لم يسمّع','نسبة الحضور %','نقاط الحضور','نقاط التسميع','نقاط إضافية','المجموع']];
  all.forEach((r,i)=>s1.push([i+1,r.s.name+(r.s.arch?' (مؤرشف)':''),batchName(r.s.b),...ST.map(x=>r[x.k]),r.ty,r.tn,r.pct==null?'':Math.round(r.pct*100),r.ap,r.tp,r.bp,r.pts]));
  const s2=[['الأسبوع','التاريخ','اليوم','البرنامج','الطالب','الدفعة','الحالة','التسميع','النقاط','ملاحظة']];
- for(let n=1;n<=NW();n++){if(isHol(n)){s2.push([n,ar(hfull(dayDate(n,0))),'','إجازة','','','','','','']);continue}
-  sessions(n).forEach(s=>{const r=recOf(n,s.key),tz=tasOf(n,s.key);if(s.cx){s2.push([n,ar(hfull(dayDate(n,s.day))),DAYS[s.day],s.pname,'','','ملغاة','','','']);return}
+ for(let n=1;n<=NW();n++){if(isHol(n)){s2.push([n,ar(hfull(dayDate(n,0))),'','أسبوع ملغى','','','','','','']);continue}
+  sessions(n).forEach(s=>{const r=recOf(n,s.key),tz=tasOf(n,s.key);if(s.cx){s2.push([n,ar(hfull(dayDate(n,s.day))),DAYS[s.day],s.pname,'','','يوم ملغى','','','']);return}
    S.students.forEach(st=>{const k=r[st.id],nt=noteOf(n,s.key,st.id),tv=s.tasmee&&ATT.has(k)?tz[st.id]:null;if(!k&&!nt)return;
     s2.push([n,ar(hfull(dayDate(n,s.day))),DAYS[s.day],s.pname,st.name,batchName(st.b),k?STM[k].l:'',tv?TASM[tv].l:'',k?ptsOf(k,s.pid)+tasPts(tv):'',nt])})})}
  const s3=[['التاريخ','الأسبوع','الطالب','الدفعة','النقاط','السبب']];
