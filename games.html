@@ -1476,7 +1476,10 @@ function resultImg(cb){
   try{cb(c.toDataURL("image/png"));}catch(e){cb(null);}}
  if(BR.logo){var im=new Image();im.onload=function(){draw(im);};im.onerror=function(){draw(null);};im.src=BR.logo;}else draw(null);
 }
-function vImg(){return '<div class="ov" data-a="imgx"><div class="sheet" data-stop="1"><div class="top"><h2 style="margin:0">🖼️ صورة النتيجة</h2><div class="sp"></div><button class="sm" data-a="imgx">إغلاق</button></div>'+(L.img?'<img class="resimg" src="'+L.img+'" alt="صورة النتيجة"><p class="muted" style="text-align:center">في الجوال: اضغط مطولاً على الصورة واحفظها أو أرسلها</p><div class="top"><button class="g" style="flex:1" data-a="imgshare">📤 مشاركة</button><a class="btn" style="flex:1" href="'+L.img+'" download="نتائج-الليلة.png">⬇️ تحميل</a></div>':'<p class="muted">جاري التجهيز…</p>')+'</div></div>';}
+function vImg(){return '<div class="ov" data-a="imgx"><div class="sheet" data-stop="1"><div class="top"><h2 style="margin:0">🖼️ صورة النتيجة</h2><div class="sp"></div><button class="sm" data-a="imgx">إغلاق</button></div>'+(L.img?'<img class="resimg" src="'+L.img+'" alt="صورة النتيجة"><p class="muted" style="text-align:center">في الجوال: اضغط مطولاً على الصورة واحفظها أو أرسلها</p><div class="top"><button class="g" style="flex:1" data-a="imgshare">📤 مشاركة</button><button style="flex:1" data-a="imgdl">⬇️ تحميل</button></div>':'<p class="muted">جاري التجهيز…</p>')+'</div></div>';}
+function imgDl(){if(!L.img)return;fetch(L.img).then(function(r){return r.blob();}).then(function(b){
+ var fb=function(){var u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="نتائج-الليلة.png";document.body.appendChild(a);a.click();setTimeout(function(){a.remove();URL.revokeObjectURL(u);},1000);};
+ if(window.claude&&window.claude.use&&!window.WSHIM)window.claude.use("downloads").then(function(d){if(d)return d.save({filename:"نتائج-الليلة.png",data:b});fb();}).catch(function(){});else fb();});}
 function imgShare(){if(!L.img)return;fetch(L.img).then(function(r){return r.blob();}).then(function(b){var f=new File([b],"نتائج-الليلة.png",{type:"image/png"});if(navigator.canShare&&navigator.canShare({files:[f]}))return navigator.share({files:[f],title:"نتائج الليلة"});throw 0;}).catch(function(){L.imgmsg=1;});}
 
 /* ===== شاشة الانتظار ===== */
@@ -1594,6 +1597,7 @@ function moreAct(a,el,v,t){
  else if(a==="img"){L.img="";L.imgOpen=true;render();resultImg(function(u){L.img=u||"";render();});return "local";}
  else if(a==="imgx"){L.imgOpen=false;render();return "local";}
  else if(a==="imgshare"){imgShare();return "local";}
+ else if(a==="imgdl"){imgDl();return "local";}
  else if(a==="tfa"){if(ROOM&&G.tf.round&&!G.tf.rev){L.tfa={r:G.tf.round,a:v};ROOM.presence({team:L.myTeam,tf:G.tf.round,ta:v}).catch(function(){});if(navigator.vibrate)try{navigator.vibrate(40);}catch(_){}}render();return "local";}
  else return false;
  return true;
