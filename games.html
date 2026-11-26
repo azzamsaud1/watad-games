@@ -198,6 +198,15 @@ html.tvh{font-size:21px}
 a.btn{display:inline-flex;align-items:center;justify-content:center;border:3px solid var(--line);border-radius:14px;padding:10px;font-weight:800;background:var(--card);color:var(--text);text-decoration:none;box-shadow:3px 3px 0 var(--line)}
 .tv .clue{font-size:1.4rem}.tv .lkw{font-size:2rem}.tv .ctnum{font-size:5rem}
 @media (prefers-reduced-motion:reduce){.lteam{animation:none}}
+/* توازن بطاقات الألعاب */
+.ggrid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.ggrid>.cat{flex:0 1 calc(50% - 6px);min-width:0;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start}
+@media (min-width:700px){.ggrid>.cat{flex-basis:calc(33.333% - 8px)}}
+.ggrid>.cat .art{aspect-ratio:16/9;flex:none}
+.ggrid>.cat .art svg{width:100%;height:100%}
+.ggrid>.cat b{min-height:1.4em;display:flex;align-items:center;justify-content:center;line-height:1.3}
+.ggrid>.cat small{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;line-height:1.3}
+.ggrid>.cat>div{margin-top:auto;padding-top:6px}
 :root{--c1:#3b5bff;--c2:#ff8a1f;--c3:#ffc93c;--c4:#12b886;--c5:#a66bff;--c6:#00a7c4;--c7:#ef4444;--paper:#eaf1ff}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#10172e}}:root[data-theme="dark"]{--paper:#10172e}</style>
 </head>
 <body>
@@ -1407,6 +1416,128 @@ ART.count='<svg viewBox="0 0 320 180" role="img" aria-label="عداد وتحدي
  +'<g font-weight="900" fill="'+INK+'" text-anchor="middle" font-size="52"><text x="82" y="109">١</text><text x="148" y="109">٢</text></g>'
  +'<g stroke="'+INK+'" stroke-width="3" stroke-linecap="round"><path d="M50 160v-12M60 160v-12M70 160v-12M80 160v-12M46 158l38-8"/></g></svg>';
 
+/* ===== رسومات فئات لعبة الترتيب ===== */
+var RART=(function(){
+var K='#17121b',S='stroke="'+K+'" stroke-width="3" stroke-linejoin="round"';
+function lg(id,a,b,v){return '<linearGradient id="'+id+'" x1="0" y1="0" x2="'+(v?0:1)+'" y2="'+(v?1:0)+'"><stop offset="0" stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></linearGradient>';}
+function rg(id,a,b){return '<radialGradient id="'+id+'" cx=".5" cy=".4" r=".65"><stop offset="0" stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></radialGradient>';}
+function svg(lbl,defs,body){return '<svg viewBox="0 0 320 180" role="img" aria-label="'+lbl+'"><defs>'+defs+'</defs>'+body+'</svg>';}
+function stars(list){return list.map(function(p){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(p[2]||1.6)+'" fill="#fff" opacity=".9"/>';}).join('');}
+function spark(x,y,r,c){return '<path d="M'+x+' '+(y-r)+'Q'+(x+r*.18)+' '+(y-r*.18)+' '+(x+r)+' '+y+'Q'+(x+r*.18)+' '+(y+r*.18)+' '+x+' '+(y+r)+'Q'+(x-r*.18)+' '+(y+r*.18)+' '+(x-r)+' '+y+'Q'+(x-r*.18)+' '+(y-r*.18)+' '+x+' '+(y-r)+'z" fill="'+c+'"/>';}
+function mushafOpen(p){return '<g '+S+'><path d="M100 150l60-34 60 34" fill="none" stroke="url(#'+p+'w)" stroke-width="12" stroke-linecap="round"/><path d="M100 150l60-34 60 34" fill="none"/>'
+ +'<path d="M160 122c-26-15-54-16-78-7V52c24-9 52-8 78 7z" fill="url(#'+p+'c)"/><path d="M160 122c26-15 54-16 78-7V52c-24-9-52-8-78 7z" fill="url(#'+p+'c)"/>'
+ +'<path d="M160 116c-22-13-46-13-68-6V57c22-7 46-7 68 6z" fill="url(#'+p+'p)"/><path d="M160 116c22-13 46-13 68-6V57c-22-7-46-7-68 6z" fill="url(#'+p+'p2)"/><path d="M160 63v53"/></g>'
+ +'<g fill="none" stroke="#b78a2c" stroke-width="2.2" stroke-linecap="round" opacity=".8"><path d="M100 68c16-4 36-3 52 4M100 78c16-4 36-3 52 4M100 88c16-4 36-3 52 4M100 98c16-4 36-3 52 4M168 72c16-7 36-8 52-4M168 82c16-7 36-8 52-4M168 92c16-7 36-8 52-4M168 102c16-7 36-8 52-4"/></g>'
+ +'<path d="M96 60c20-6 42-5 60 3M224 60c-20-6-42-5-60 3" stroke="#d4a537" stroke-width="3" fill="none"/>';}
+function mDefs(p){return lg(p+'c','#23a37b','#0b5c43',1)+lg(p+'w','#d59a5c','#7c4a20',1)+lg(p+'p','#fffdf6','#efe0bd')+lg(p+'p2','#efe0bd','#fffdf6')+rg(p+'g','#fff6c9','rgba(255,246,201,0)');}
+function globe(p,cx,cy,r){return '<g '+S+'><circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="url(#'+p+'o)"/></g><clipPath id="'+p+'k"><circle cx="'+cx+'" cy="'+cy+'" r="'+(r-1.5)+'"/></clipPath><g clip-path="url(#'+p+'k)" stroke="'+K+'" stroke-width="2" stroke-linejoin="round">'
+ +'<path d="M'+(cx-r*.95)+' '+(cy-r*.35)+'c'+(r*.3)+' '+(-r*.25)+' '+(r*.5)+' '+(-r*.1)+' '+(r*.6)+' '+(r*.15)+'s'+(r*.05)+' '+(r*.45)+' '+(-r*.2)+' '+(r*.6)+'s'+(-r*.5)+' '+(r*.1)+' '+(-r*.55)+' '+(-r*.2)+'z" fill="url(#'+p+'l)"/>'
+ +'<path d="M'+(cx-r*.05)+' '+(cy-r*.55)+'c'+(r*.25)+' '+(-r*.15)+' '+(r*.55)+' '+(-r*.1)+' '+(r*.8)+' '+(r*.05)+'s'+(r*.3)+' '+(r*.35)+' '+(r*.1)+' '+(r*.55)+'s'+(-r*.35)+' '+(r*.05)+' '+(-r*.45)+' '+(r*.4)+'s'+(-r*.35)+' '+(r*.25)+' '+(-r*.45)+' '+(-r*.1)+'s'+(-r*.15)+' '+(-r*.6)+' 0'+' '+(-r*.9)+'z" fill="url(#'+p+'l)"/>'
+ +'<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+r+'" ry="'+(r*.32)+'" fill="none" stroke="#fff" stroke-opacity=".35"/><ellipse cx="'+cx+'" cy="'+cy+'" rx="'+(r*.4)+'" ry="'+r+'" fill="none" stroke="#fff" stroke-opacity=".35"/></g>'
+ +'<circle cx="'+(cx-r*.35)+'" cy="'+(cy-r*.4)+'" r="'+(r*.35)+'" fill="#fff" opacity=".22"/>';}
+function gDefs(p){return rg(p+'o','#7fe0ff','#1767b8')+lg(p+'l','#7ed957','#2f8f3a',1);}
+function sky(p,a,b){return '<rect width="320" height="180" fill="url(#'+p+'s)"/>';}
+var A=[];
+/* ٠ زوجات النبي: المسجد النبوي */
+A[0]=svg("القبة الخضراء",lg('r0s','#1f2b6b','#f39a5a',1)+lg('r0d','#38c98f','#0d7a52',1)+lg('r0b','#fff8ea','#e6d3b0',1)+lg('r0m','#fffaf0','#d9c39b'),
+ sky('r0')+stars([[30,20],[60,40,1.2],[280,24],[250,50,1.2],[200,16]])
+ +'<path d="M270 34a14 14 0 1 0 8 25 11 11 0 1 1-8-25z" fill="#ffe08a"/>'
+ +'<g '+S+'><rect x="40" y="46" width="18" height="118" fill="url(#r0m)"/><path d="M36 46h26l-13-26z" fill="url(#r0d)"/><rect x="36" y="82" width="26" height="8" fill="#d6b56a"/>'
+ +'<rect x="262" y="56" width="16" height="108" fill="url(#r0m)"/><path d="M258 56h24l-12-24z" fill="url(#r0d)"/><rect x="258" y="88" width="24" height="7" fill="#d6b56a"/>'
+ +'<rect x="70" y="112" width="180" height="52" fill="url(#r0b)"/><path d="M104 112c0-40 26-60 56-64 30 4 56 24 56 64z" fill="url(#r0d)"/>'
+ +'<path d="M160 48v-16"/><path d="M155 26a7 7 0 1 0 10 0" fill="none" stroke="#f4c542" stroke-width="3"/></g>'
+ +'<path d="M120 100c4-26 20-40 36-44" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".35"/>'
+ +'<g fill="#7a5a2a" opacity=".55"><path d="M86 164v-22a8 8 0 0 1 16 0v22zM118 164v-22a8 8 0 0 1 16 0v22zM186 164v-22a8 8 0 0 1 16 0v22zM218 164v-22a8 8 0 0 1 16 0v22z"/></g>'
+ +'<path d="M150 164v-28a10 10 0 0 1 20 0v28z" fill="#3b2a12" stroke="'+K+'" stroke-width="3"/><rect y="164" width="320" height="16" fill="#e8d2a6" stroke="'+K+'" stroke-width="3"/>');
+/* ١ سور بعد البقرة: مصحف مفتوح على حامل */
+A[1]=svg("مصحف مفتوح",mDefs('r1')+lg('r1s','#fff1c8','#ffd27a',1),
+ sky('r1')+'<circle cx="160" cy="80" r="90" fill="url(#r1g)"/>'+spark(60,40,10,'#fff')+spark(262,46,8,'#fff')+spark(280,110,6,'#fff6c9')+mushafOpen('r1'));
+/* ٢ أبناء النبي: شجرة مثمرة */
+A[2]=svg("شجرة مثمرة",lg('r2s','#bfeaff','#eafbe8',1)+rg('r2f','#5bd17e','#1d7a43')+lg('r2t','#a0662f','#5b3615')+rg('r2a','#ffe27a','#e0981f'),
+ sky('r2')+'<ellipse cx="160" cy="168" rx="130" ry="16" fill="#9ad27a" stroke="'+K+'" stroke-width="3"/>'
+ +'<g '+S+'><path d="M150 166c4-30 2-50-6-66l12 4 8-20 6 22 12-6c-8 18-12 40-8 66z" fill="url(#r2t)"/>'
+ +'<circle cx="160" cy="62" r="46" fill="url(#r2f)"/><circle cx="114" cy="84" r="32" fill="url(#r2f)"/><circle cx="206" cy="84" r="32" fill="url(#r2f)"/><circle cx="132" cy="44" r="26" fill="url(#r2f)"/><circle cx="190" cy="44" r="26" fill="url(#r2f)"/></g>'
+ +[[120,72],[150,44],[176,70],[206,90],[112,98],[190,36],[160,96]].map(function(q){return '<circle cx="'+q[0]+'" cy="'+q[1]+'" r="7.5" fill="url(#r2a)" stroke="'+K+'" stroke-width="2.5"/><circle cx="'+(q[0]-2.5)+'" cy="'+(q[1]-2.5)+'" r="2" fill="#fff" opacity=".8"/>';}).join('')
+ +'<path d="M136 40c10-10 26-12 38-6" stroke="#fff" stroke-width="4" fill="none" opacity=".35" stroke-linecap="round"/>');
+/* ٣ الغزوات: سيفان ودرع */
+A[3]=svg("سيفان ودرع",lg('r3s','#ffcf8a','#f08a4b',1)+lg('r3b','#f6f8fb','#8a97a8')+rg('r3h','#ffe58a','#c48a14')+rg('r3d','#c9874a','#6e3d16')+lg('r3u','#e9b26a','#c98543',1),
+ sky('r3')+'<circle cx="250" cy="52" r="26" fill="#fff1c2" opacity=".9"/><path d="M0 140c60-20 110-14 160 0s110 16 160-4v44H0z" fill="url(#r3u)" stroke="'+K+'" stroke-width="3"/>'
+ +'<g '+S+'><circle cx="160" cy="98" r="50" fill="url(#r3d)"/><circle cx="160" cy="98" r="36" fill="none" stroke="#e3b072" stroke-width="3"/><circle cx="160" cy="98" r="12" fill="url(#r3h)"/>'
+ +'<path d="M78 28l8-6 98 112-8 6z" fill="url(#r3b)"/><path d="M242 28l-8-6-98 112 8 6z" fill="url(#r3b)"/>'
+ +'<path d="M162 128l22 12M158 128l-22 12" stroke-width="7" stroke="#6e3d16"/><path d="M162 128l22 12M158 128l-22 12" fill="none"/>'
+ +'<rect x="176" y="132" width="26" height="9" rx="3" fill="url(#r3h)" transform="rotate(30 189 136)"/><rect x="118" y="132" width="26" height="9" rx="3" fill="url(#r3h)" transform="rotate(-30 131 136)"/>'
+ +'<circle cx="202" cy="150" r="6" fill="url(#r3h)"/><circle cx="118" cy="150" r="6" fill="url(#r3h)"/></g>'
+ +'<path d="M90 30l88 100M230 30l-88 100" stroke="#fff" stroke-width="2" opacity=".7"/>');
+/* ٤ أسرع الحيوانات: ساعة توقيت وسرعة */
+A[4]=svg("ساعة توقيت",lg('r4s','#2b1a5e','#e2475a',1)+rg('r4f','#ffffff','#dfe6f2')+lg('r4r','#ffd35a','#e08a12',1),
+ sky('r4')+'<g stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".55"><path d="M20 70h70M36 92h60M14 114h80M40 136h50"/></g>'
+ +'<g '+S+'><rect x="180" y="22" width="24" height="14" rx="4" fill="url(#r4r)"/><path d="M226 40l10-10 8 8-10 10z" fill="url(#r4r)"/>'
+ +'<circle cx="192" cy="100" r="60" fill="url(#r4r)"/><circle cx="192" cy="100" r="48" fill="url(#r4f)"/></g>'
+ +[0,1,2,3,4,5,6,7,8,9,10,11].map(function(i){var a=i*Math.PI/6,x1=192+40*Math.sin(a),y1=100-40*Math.cos(a),x2=192+(i%3?44:46)*Math.sin(a),y2=100-(i%3?44:46)*Math.cos(a);return '<path d="M'+x1.toFixed(1)+' '+y1.toFixed(1)+'L'+x2.toFixed(1)+' '+y2.toFixed(1)+'" stroke="'+K+'" stroke-width="'+(i%3?2:4)+'"/>';}).join('')
+ +'<path d="M192 100V60" stroke="#e2475a" stroke-width="5" stroke-linecap="round"/><path d="M192 100l24 14" stroke="'+K+'" stroke-width="5" stroke-linecap="round"/><circle cx="192" cy="100" r="6" fill="'+K+'"/>'
+ +'<path d="M192 100V52A48 48 0 0 1 234 76z" fill="#e2475a" opacity=".18"/><path d="M160 64a44 44 0 0 1 20-10" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/>');
+/* ٥ أكبر الدول العربية مساحة: كرة أرضية ودبوس */
+A[5]=svg("كرة أرضية ومؤشر",lg('r5s','#fff3d6','#ffd6a8',1)+gDefs('r5')+lg('r5p','#ff6b7f','#c51f3b',1),
+ sky('r5')+'<ellipse cx="160" cy="166" rx="70" ry="10" fill="#000" opacity=".12"/>'+globe('r5',160,92,64)
+ +'<g '+S+'><path d="M178 34c-14 0-24 10-24 23 0 17 24 41 24 41s24-24 24-41c0-13-10-23-24-23z" fill="url(#r5p)"/><circle cx="178" cy="57" r="9" fill="#fff"/></g>'
+ +spark(60,40,9,'#fff')+spark(262,120,7,'#fff'));
+/* ٦ سور بعد المعوذتين: مصحف مغلق مزخرف */
+A[6]=svg("مصحف مزخرف",lg('r6s','#123d33','#1f7a5f',1)+lg('r6c','#1fa577','#0b5c43',1)+rg('r6o','#ffe9a0','#c99520')+lg('r6e','#fffdf3','#e9dcbc'),
+ sky('r6')+stars([[30,30],[280,26],[300,90,1.2],[40,140,1.2],[20,90]])+'<circle cx="160" cy="92" r="80" fill="#fff6c9" opacity=".12"/>'
+ +'<g '+S+'><path d="M98 34h128v118H98z" fill="url(#r6e)" transform="translate(6 6)"/><rect x="96" y="30" width="128" height="120" rx="8" fill="url(#r6c)"/>'
+ +'<rect x="106" y="40" width="108" height="100" rx="5" fill="none" stroke="#e8c15a" stroke-width="3"/>'
+ +'<path d="M160 58l9 14 16 2-12 11 3 16-16-8-16 8 3-16-12-11 16-2z" fill="url(#r6o)"/><circle cx="160" cy="84" r="7" fill="#0b5c43"/>'
+ +'<path d="M196 150v24l7-6 7 6v-24" fill="#e2475a"/></g>'
+ +[[116,50],[204,50],[116,130],[204,130]].map(function(q){return '<circle cx="'+q[0]+'" cy="'+q[1]+'" r="5" fill="url(#r6o)" stroke="'+K+'" stroke-width="2"/>';}).join('')
+ +'<path d="M104 40v96" stroke="#fff" stroke-width="3" opacity=".25"/>');
+/* ٧ أكبر دول العالم: كرة أرضية وشريط قياس */
+A[7]=svg("كرة أرضية وقياس",lg('r7s','#d8f3ff','#bfe3ff',1)+gDefs('r7')+lg('r7t','#ffe066','#f0a21b',1),
+ sky('r7')+globe('r7',150,92,62)
+ +'<g '+S+'><path d="M60 128c40 26 140 30 200-6l6 14c-62 40-170 34-212-4z" fill="url(#r7t)"/></g>'
+ +[0,1,2,3,4,5,6,7,8,9,10,11,12,13].map(function(i){var x=70+i*14,y=134+Math.sin((i/13)*Math.PI)*12;return '<path d="M'+x+' '+(y-1)+'v'+(i%2?6:10)+'" stroke="'+K+'" stroke-width="2"/>';}).join('')
+ +'<rect x="250" y="112" width="34" height="30" rx="6" fill="#e2475a" stroke="'+K+'" stroke-width="3"/>'+spark(268,40,10,'#fff'));
+/* ٨ المبشرون بالجنة: باب مقوّس مضيء وعشر نجوم */
+A[8]=svg("باب مضيء وعشر نجوم",lg('r8s','#0f3b4a','#1e7f6b',1)+rg('r8l','#fffbe0','#ffd36a')+lg('r8a','#f6e7c4','#c9a56a',1),
+ sky('r8')+'<g opacity=".25" fill="#fff6c9"><path d="M160 92L20 0h60zM160 92L300 0h-60zM160 92L0 60v40zM160 92L320 60v40z"/></g>'
+ +'<g '+S+'><path d="M100 172V86c0-38 26-62 60-70 34 8 60 32 60 70v86z" fill="url(#r8a)"/><path d="M118 172V92c0-28 18-48 42-56 24 8 42 28 42 56v80z" fill="url(#r8l)"/></g>'
+ +'<path d="M160 50c-14 8-22 20-24 36" stroke="#fff" stroke-width="5" fill="none" opacity=".6" stroke-linecap="round"/>'
+ +[0,1,2,3,4,5,6,7,8,9].map(function(i){var a=Math.PI*(0.1+0.8*i/9),x=160-130*Math.cos(a),y=118-100*Math.sin(a);return '<path transform="translate('+x.toFixed(1)+' '+y.toFixed(1)+')" d="M0-8l2.4 5 5.4.8-3.9 3.8.9 5.4L0 4.4-4.8 7l.9-5.4-3.9-3.8 5.4-.8z" fill="#ffd34d" stroke="'+K+'" stroke-width="1.8"/>';}).join('')
+ +'<rect y="168" width="320" height="12" fill="#c9a56a" stroke="'+K+'" stroke-width="3"/>');
+/* ٩ ملوك السعودية: تاج على وسادة */
+A[9]=svg("تاج",lg('r9s','#0d5c3f','#1fa16c',1)+lg('r9g','#fff0a6','#d79a13',1)+lg('r9v','#2b8f5e','#0e5034',1)+rg('r9j','#ff8a9a','#b3122f')+rg('r9e','#9ff0ff','#1a8fb8'),
+ sky('r9')+'<g fill="#fff" opacity=".12"><path d="M40 170V100c0-10 6-14 10-14s10 4 10 14v70zM260 170V100c0-10 6-14 10-14s10 4 10 14v70z"/></g>'
+ +'<g '+S+'><path d="M70 150c0-22 40-30 90-30s90 8 90 30-40 24-90 24-90-2-90-24z" fill="url(#r9v)"/>'
+ +'<path d="M100 124l-8-66 32 30 36-52 36 52 32-30-8 66z" fill="url(#r9g)"/><path d="M100 124h120v18H100z" fill="url(#r9g)"/></g>'
+ +'<circle cx="160" cy="108" r="10" fill="url(#r9j)" stroke="'+K+'" stroke-width="2.5"/><circle cx="126" cy="112" r="7" fill="url(#r9e)" stroke="'+K+'" stroke-width="2.5"/><circle cx="194" cy="112" r="7" fill="url(#r9e)" stroke="'+K+'" stroke-width="2.5"/>'
+ +[[92,58],[160,36],[228,58]].map(function(q){return '<circle cx="'+q[0]+'" cy="'+q[1]+'" r="6" fill="url(#r9g)" stroke="'+K+'" stroke-width="2.5"/>';}).join('')
+ +'<path d="M108 120l-6-48M160 46v28" stroke="#fff" stroke-width="3" opacity=".6" stroke-linecap="round"/>'+spark(270,40,9,'#fff3b0')+spark(50,46,7,'#fff3b0'));
+/* ١٠ الأنبياء: سفينة على الموج */
+A[10]=svg("سفينة على الموج",lg('r10s','#5a6b8c','#c9d6e6',1)+lg('r10h','#b97a3f','#6b3e17',1)+lg('r10w','#3fb7d9','#0f5f8c',1),
+ sky('r10')+'<g fill="#fff" opacity=".85" stroke="'+K+'" stroke-width="2.5"><path d="M40 46a16 16 0 0 1 30-8 12 12 0 0 1 20 10H40z"/><path d="M220 36a18 18 0 0 1 34-6 13 13 0 0 1 22 12h-56z"/></g>'
+ +'<path d="M250 20l-8 40 12-2-10 34" stroke="#ffe066" stroke-width="3" fill="none" opacity=".9"/>'
+ +'<g '+S+'><path d="M64 112h192l-24 34H88z" fill="url(#r10h)"/><path d="M96 112V84h120v28z" fill="url(#r10h)"/><path d="M90 84h132l-12-16H102z" fill="#8a5326"/></g>'
+ +'<g fill="#3b210c" stroke="'+K+'" stroke-width="2"><rect x="112" y="92" width="14" height="10" rx="2"/><rect x="146" y="92" width="14" height="10" rx="2"/><rect x="180" y="92" width="14" height="10" rx="2"/></g>'
+ +'<path d="M72 124h176M80 134h160" stroke="#3b210c" stroke-width="2" opacity=".5"/>'
+ +'<path d="M0 140c20-10 40-10 60 0s40 10 60 0 40-10 60 0 40 10 60 0 40-10 80 0v40H0z" fill="url(#r10w)" stroke="'+K+'" stroke-width="3"/>'
+ +'<path d="M10 156c14-6 28-6 42 0M110 160c14-6 28-6 42 0M220 154c14-6 28-6 42 0" stroke="#fff" stroke-width="3" fill="none" opacity=".7" stroke-linecap="round"/>');
+/* ١١ أكثر دول العالم سكاناً: مدينة مزدحمة */
+A[11]=svg("مدينة كبيرة",lg('r11s','#1b1f4b','#5b4bb7',1)+lg('r11a','#5d6bd6','#2a2f7a',1)+lg('r11b','#7c8cff','#3b44a6',1)+lg('r11c','#9b7cff','#4b2f9a',1),
+ sky('r11')+stars([[30,24],[90,14,1.2],[150,30],[230,18],[290,40,1.2]])+'<circle cx="262" cy="40" r="14" fill="#fff3c4"/>'
+ +(function(){var o='',B=[[10,90,40,'a'],[46,60,34,'b'],[76,104,30,'c'],[104,40,40,'a'],[140,74,30,'b'],[166,30,38,'c'],[200,84,34,'a'],[230,56,40,'b'],[266,96,30,'c'],[292,70,28,'a']];
+  B.forEach(function(b){o+='<rect x="'+b[0]+'" y="'+b[1]+'" width="'+b[2]+'" height="'+(180-b[1])+'" fill="url(#r11'+b[3]+')" stroke="'+K+'" stroke-width="3"/>';
+   for(var y=b[1]+10;y<172;y+=14)for(var x=b[0]+6;x<b[0]+b[2]-8;x+=10)o+='<rect x="'+x+'" y="'+y+'" width="5" height="7" fill="'+(((x*7+y*3)%5)?'#ffe58a':'#2a2f7a')+'"/>';});return o;})());
+/* ١٢ أكثر الدول العربية سكاناً: مدينة عربية عند الغروب */
+A[12]=svg("مدينة عربية",lg('r12s','#ffb36b','#ffe7b8',1)+lg('r12a','#f3dcb0','#c99a5e',1)+lg('r12d','#3fc9a0','#14805e',1)+lg('r12g','#ffe58a','#d99a1a',1),
+ sky('r12')+'<circle cx="160" cy="92" r="40" fill="#fff4cf" opacity=".9"/>'
+ +'<g '+S+'><rect x="24" y="50" width="14" height="130" fill="url(#r12a)"/><path d="M20 50h22l-11-22z" fill="url(#r12d)"/>'
+ +'<rect x="282" y="62" width="14" height="118" fill="url(#r12a)"/><path d="M278 62h22l-11-20z" fill="url(#r12d)"/>'
+ +'<path d="M50 180v-60h60v60z" fill="url(#r12a)"/><path d="M58 120c0-20 10-30 22-32 12 2 22 12 22 32z" fill="url(#r12g)"/>'
+ +'<path d="M120 180v-46h80v46z" fill="url(#r12a)"/><path d="M128 134c0-26 14-40 32-44 18 4 32 18 32 44z" fill="url(#r12d)"/><path d="M160 90V78"/>'
+ +'<path d="M210 180v-56h60v56z" fill="url(#r12a)"/><path d="M218 124c0-18 10-28 22-30 12 2 22 12 22 30z" fill="url(#r12g)"/></g>'
+ +'<g fill="#6b4a22" opacity=".6"><path d="M62 180v-16a6 6 0 0 1 12 0v16zM86 180v-16a6 6 0 0 1 12 0v16zM136 180v-20a7 7 0 0 1 14 0v20zM170 180v-20a7 7 0 0 1 14 0v20zM222 180v-16a6 6 0 0 1 12 0v16zM246 180v-16a6 6 0 0 1 12 0v16z"/></g>'
+ +'<path d="M155 74a6 6 0 1 0 10 0" fill="none" stroke="#d99a1a" stroke-width="3"/>');
+return A;})();
+
 /* ===== منع التكرار بين الجلسات ===== */
 function hq(s){var h=5381;s=String(s);for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36);}
 var SEENK="wg_seen_"+BR.id,SEEN={},seenT=null;
@@ -1787,15 +1918,15 @@ function vHome(){
  if(ROOM&&G.teams.length)h+='<div class="card" style="padding:10px 14px"><b>🔔 الجرس من الجوال</b><div class="muted">اللاعبين يفتحون نفس الرابط من جوالاتهم ويختارون فريقهم. المتصلين الحين: '+ar(players().length)+'</div></div>';
  h+='<h2>اختر لعبتك</h2><div class="chips">';
  FILTERS.forEach(function(f){h+='<button class="'+(L.filter===f?'on':'')+'" data-a="flt" data-f="'+f+'">'+f+'</button>';});
- h+='</div><div class="grid">';
+ h+='</div><div class="grid ggrid">';
  GAMES.forEach(function(g,i){if(L.filter!=="الكل"&&g.tags.indexOf(L.filter)<0)return;var k=KC[i%KC.length];h+='<button class="cat" style="--k:'+k[0]+';--on:'+k[1]+'" data-a="game" data-id="'+g.id+'"><span class="art">'+(ART[g.id]||"")+'</span><b>'+g.name+'</b><small>'+g.desc+'</small><div>'+g.tags.map(function(t){return '<span class="tag">'+t+'</span>'}).join('')+'</div></button>';});
  return h+'</div><div class="stats"><div><b>'+ar(GAMES.length)+'</b><span class="muted">ألعاب</span></div><div><b>'+ar(BANK.length+CUSTOM.length)+'</b><span class="muted">سؤال في البنك</span></div><div><b>'+ar(CATS.length+FEUD.length)+'</b><span class="muted">فئة واستبيان</span></div></div><div class="card" style="padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="n" style="flex:1">♻️ الموقع يتجنب الأسئلة اللي انسألت قبل. المستعمل لين الحين: <b>'+ar(seenCount())+'</b></span><button class="sm" data-a="seenreset">'+(L.seenAsk?'متأكد؟ صفّرها':'تصفير')+'</button></div>'+(window.WSOLO?'<p class="muted" style="text-align:center">📴 وضع جهاز واحد بدون إنترنت. <a href="#" data-a="online">ارجع للغرف الأونلاين</a></p>':'')+'<div style="height:80px"></div>';
 }
 function topbar(){return '<div class="top"><button class="sm" data-a="home">🏠 الألعاب</button>'+pres()+'<div class="sp"></div><button class="sm" data-a="finish">🏁 إنهاء وإعلان الفائز</button></div>';}
 function cnt(ci){return (G.open[ci]||[]).length;}
 function vHub(){
- var h=topbar()+'<h1>🏆 لعبة الترتيب</h1><p class="muted">اختر الفئة اللي تبي تلعبها</p><div class="grid">';
- CATS.forEach(function(c,ci){var k=KC[ci%KC.length];h+='<button class="cat" style="--k:'+k[0]+';--on:'+k[1]+'" data-a="cat" data-v="'+ci+'"><span class="em">'+icon(RANKICON[ci]||"bulb")+'</span><b>'+c.t+'</b><small>'+(cnt(ci)?ar(cnt(ci))+" من "+ar(c.i.length)+" مكشوف":ar(c.i.length)+" مراكز")+'</small></button>';});
+ var h=topbar()+'<h1>🏆 لعبة الترتيب</h1><p class="muted">اختر الفئة اللي تبي تلعبها</p><div class="grid ggrid">';
+ CATS.forEach(function(c,ci){var k=KC[ci%KC.length];h+='<button class="cat" style="--k:'+k[0]+';--on:'+k[1]+'" data-a="cat" data-v="'+ci+'"><span class="art">'+(RART[ci]||icon(RANKICON[ci]||"bulb"))+'</span><b>'+c.t+'</b><small>'+(cnt(ci)?ar(cnt(ci))+" من "+ar(c.i.length)+" مكشوف":ar(c.i.length)+" مراكز")+'</small></button>';});
  return h+'</div><div style="height:80px"></div>';
 }
 function vQ(){
