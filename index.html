@@ -210,6 +210,9 @@ a.btn{display:inline-flex;align-items:center;justify-content:center;border:3px s
 .ggrid>.cat b{min-height:1.4em;display:flex;align-items:center;justify-content:center;line-height:1.3}
 .ggrid>.cat small{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;line-height:1.3}
 .ggrid>.cat>div{margin-top:auto;padding-top:6px}
+.sjteams{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.fdgive{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:10px}
+.fdgive button{display:flex;align-items:center;justify-content:center;gap:4px;padding:12px}
 </style>
 </head>
 <body>
@@ -1952,7 +1955,7 @@ function vBankEdit(){
 var CE=["📿","📖","👶","⚔️","⚡","🏜️","📜","🌍","🌴","👑","🕋","🌐","🕌"];
 var GAMES=[
  {id:"rank",e:"🏆",name:"لعبة الترتيب",desc:"رتّب العناصر وافتح الأغطية واكسب نقاط كل مركز",tags:["أسئلة","جماعي"]},
- {id:"hex",e:"🔤",name:"خلية الحروف",desc:"حتى ٤ فرق، كل فريق يربط حدّيه بإجابات تبدأ بالحرف",tags:["حروف","جماعي","جرس"]},
+ {id:"hex",e:"🔤",name:"خلية الحروف",desc:"حتى ٦ فرق، كل فريق يربط حدّيه بإجابات تبدأ بالحرف",tags:["حروف","جماعي","جرس"]},
  {id:"sj",e:"❓",name:"سين جيم",desc:"لوحة فئات بأسئلة ٢٠٠ و٤٠٠ و٦٠٠ ووسائل مساعدة لكل فريق",tags:["أسئلة","جماعي","جرس"]},
  {id:"feud",e:"👨‍👩‍👧‍👦",name:BR.feud,desc:"خمّن أكثر إجابات الناس شيوعاً",tags:["استبيان","جماعي"]},
  {id:"where",e:"📖",name:"أين ذُكر في القرآن؟",desc:"يطلع حيوان أو حشرة، وأول فريق يذكر الآية يكسب نقطة",tags:["أسئلة","جرس"]},
@@ -1983,7 +1986,7 @@ function srcTag(id,r){if(id.charAt(0)==="c")return '<span class="chip" style="ba
 function freshG(){return {v:"setup",game:"rank",teams:[],players:8,open:{},cat:0,
  wh:{d:[],cur:-1,rev:false},
  hx:{on:false,parts:[],n:0,order:[],cells:[],letters:[],pos:0,cur:-1,q:null,rev:false,over:-1,used:{},lv:"all"},
- sj:{on:false,cats:["ق","ن","ص","و","ح","ب"],a:0,b:1,turn:0,board:[],cur:null,phase:"",t:60,st:30,qAt:0,helps:[{},{}],pit:-1,used:{},sc:[0,0]},
+ sj:{on:false,cats:["ق","ن","ص","و","ح","ب"],tm:[],po:-1,steal:false,turn:0,board:[],cur:null,phase:"",t:60,st:30,qAt:0,helps:[{},{}],pit:-1,used:{},sc:[0,0]},
  fd:{deck:[],cur:-1,rev:{},strikes:0,mult:1,a:0,b:1},
  bz:{round:null,open:false},by:{},
  wm:{deck:[],cur:-1,k:1,rev:false},lk:{deck:[],cur:-1,k:1,rev:false},
@@ -2175,7 +2178,7 @@ function hxLayout(n){
   for(var r=0;r<5;r++)for(var c=0;c<5;c++){var k=r*5+c;pos.push([R3*(c+r/2),1.5*r]);
    var o=[[r,c-1],[r,c+1],[r-1,c],[r+1,c],[r-1,c+1],[r+1,c-1]],a=[];o.forEach(function(p){if(p[0]>=0&&p[0]<5&&p[1]>=0&&p[1]<5)a.push(p[0]*5+p[1]);});nb.push(a);
    if(r===0)S[0].push(k);if(c===0)S[1].push(k);if(r===4)S[2].push(k);if(c===4)S[3].push(k);}
- }else{N=2*n;for(var j=0;j<N;j++)S.push([]);var RD=3,ax=[],idx={};
+ }else{N=2*n;for(var j=0;j<N;j++)S.push([]);var RD=n>4?4:3,ax=[],idx={};
   for(var q=-RD;q<=RD;q++)for(var rr=-RD;rr<=RD;rr++){var s=-q-rr;if(Math.abs(s)>RD)continue;idx[q+","+rr]=ax.length;ax.push([q,rr]);}
   var dirs=[[1,0],[-1,0],[0,1],[0,-1],[1,-1],[-1,1]];
   ax.forEach(function(p,k){pos.push([R3*(p[0]+p[1]/2),1.5*p[1]]);nb.push(dirs.map(function(d){return idx[(p[0]+d[0])+","+(p[1]+d[1])];}).filter(function(v){return v!==undefined;}));
@@ -2184,14 +2187,14 @@ function hxLayout(n){
  if(n>2){var mn=Math.min.apply(null,S.map(function(s){return s.length;}));S=S.map(function(s){if(s.length<=mn)return s;return s.map(function(c){var x=pos[c][0],y=pos[c][1];return [c,(Math.atan2(y,x)+2*Math.PI+1e-6)%(2*Math.PI)];}).sort(function(a,b){return a[1]-b[1];}).slice(0,mn).map(function(z){return z[0];});});}
  return (LAYC[n]={pos:pos,nb:nb,S:S,N:N,n:Math.max(2,n)});
 }
-function hxParts(){var x=G.hx;if(!x.parts||!x.parts.length)x.parts=G.teams.slice(0,Math.min(4,G.teams.length)).map(function(_,i){return i;});x.parts=x.parts.filter(function(t){return t<G.teams.length;});return x.parts;}
+function hxParts(){var x=G.hx;if(!x.parts||!x.parts.length)x.parts=G.teams.slice(0,Math.min(6,G.teams.length)).map(function(_,i){return i;});x.parts=x.parts.filter(function(t){return t<G.teams.length;});return x.parts;}
 function vHXS(){
  var p=hxParts(),n=p.length;
- var h='<div class="top"><button class="sm" data-a="home">🏠 الألعاب</button></div><h1>🔤 خلية الحروف</h1><p class="muted">كل فريق له لون وحدّين متقابلين في اللوحة، واللي يربط حدّيه بخلايا من لونه يفوز. اختر من ٢ إلى ٤ فرق:</p><div class="card">';
+ var h='<div class="top"><button class="sm" data-a="home">🏠 الألعاب</button></div><h1>🔤 خلية الحروف</h1><p class="muted">كل فريق له لون وحدّين متقابلين في اللوحة، واللي يربط حدّيه بخلايا من لونه يفوز. اختر من ٢ إلى ٦ فرق:</p><div class="card">';
  G.teams.forEach(function(t,i){var on=p.indexOf(i)>=0;h+='<div class="opt"><span class="dot" style="background:'+COL[i%8]+'"></span><span class="n">'+esc(tname(i))+'</span><button class="sm'+(on?' g':'')+'" data-a="hxm" data-v="'+i+'">'+(on?'✓ مشارك':'غير مشارك')+'</button></div>';});
- h+='</div><div class="card"><h2>مستوى الأسئلة</h2><div class="chips">'+[["all","الكل"],["easy","سهلة"],["hard","صعبة"]].map(function(o){return '<button class="'+((G.hx.lv||"all")===o[0]?'on':'')+'" data-a="hxlv" data-k="'+o[0]+'">'+o[1]+'</button>';}).join('')+'</div></div><div class="card" style="text-align:center"><b>'+(n<=2?'⬡ لوحة بأربع حدود: فريقين، كل فريق حدّين':n===3?'⬡ لوحة سداسية بست حدود: ٣ فرق، كل فريق حدّين متقابلين':'⯃ لوحة بثمان حدود: ٤ فرق، كل فريق حدّين متقابلين')+'</b>'+(n>=2?hxSVG(true):'')+'</div>';
- var ok=n>=2&&n<=4;
- return h+(ok?'':'<p class="muted">اختر من فريقين إلى ٤ فرق.</p>')+'<button class="g" style="width:100%;padding:14px;font-size:1.1rem" data-a="hxgo" '+(ok?'':'disabled')+'>ابدأ اللوحة</button><div style="height:80px"></div>';
+ h+='</div><div class="card"><h2>مستوى الأسئلة</h2><div class="chips">'+[["all","الكل"],["easy","سهلة"],["hard","صعبة"]].map(function(o){return '<button class="'+((G.hx.lv||"all")===o[0]?'on':'')+'" data-a="hxlv" data-k="'+o[0]+'">'+o[1]+'</button>';}).join('')+'</div></div><div class="card" style="text-align:center"><b>'+(n<=2?'⬡ لوحة بأربع حدود: فريقين، كل فريق حدّين':'⬡ لوحة بـ'+ar(2*n)+' حدود: '+ar(n)+' فرق، كل فريق حدّين متقابلين')+'</b>'+(n>=2?hxSVG(true):'')+'</div>';
+ var ok=n>=2&&n<=6;
+ return h+(ok?'':'<p class="muted">اختر من فريقين إلى ٦ فرق.</p>')+'<button class="g" style="width:100%;padding:14px;font-size:1.1rem" data-a="hxgo" '+(ok?'':'disabled')+'>ابدأ اللوحة</button><div style="height:80px"></div>';
 }
 function hxNew(){
  var x=G.hx,p=hxParts(),lay=hxLayout(p.length),M=lay.pos.length;
@@ -2226,7 +2229,7 @@ function hxClaim(t){
  x.pos=(x.pos+1)%x.order.length;x.cur=-1;x.q=null;x.rev=false;
 }
 function hxSVG(preview){
- var x=G.hx,p=preview?hxParts():x.parts,n=p.length,lay=hxLayout(n),s=n<=2?30:25;
+ var x=G.hx,p=preview?hxParts():x.parts,n=p.length,lay=hxLayout(n),s=n<=2?30:n<=4?25:21;
  var xs=lay.pos.map(function(q){return q[0]*s;}),ys=lay.pos.map(function(q){return q[1]*s;});
  var mnx=Math.min.apply(null,xs)-s*1.6,mny=Math.min.apply(null,ys)-s*1.6,W=Math.max.apply(null,xs)-mnx+s*1.6,H=Math.max.apply(null,ys)-mny+s*1.6;
  function poly(cx,cy,sc){var pts=[];for(var k=0;k<6;k++){var a=Math.PI/180*(60*k-30);pts.push((cx+s*sc*Math.cos(a)).toFixed(1)+','+(cy+s*sc*Math.sin(a)).toFixed(1));}return pts.join(' ');}
@@ -2265,58 +2268,57 @@ function sjPick(c,v){var s=G.sj,ids=allIds().filter(function(id){var r=Q(id);ret
  var any=ids.filter(function(id){return qLv(id)===v;});if(!any.length)any=ids;return any.length?any[Math.floor(Math.random()*any.length)]:null;}
 function sjBuild(){var s=G.sj;s.board=s.cats.map(function(c){return SJV.map(function(v){return {v:v,q:sjPick(c,v),d:0,w:-1,pit:-1,h:[]};});});
  if(s.board.length)s.board[Math.floor(Math.random()*s.board.length)][Math.floor(Math.random()*6)].g=1;
- s.on=true;s.cur=null;s.phase="";s.turn=0;s.sc=[0,0];s.helps=[{},{}];s.pit=-1;}
+ sjNorm();s.on=true;s.cur=null;s.phase="";s.steal=false;s.turn=0;s.sc=s.tm.map(function(){return 0;});s.helps=s.tm.map(function(){return {};});s.pit=-1;s.po=-1;}
 function sjVal(c){return c.v*(c.g?2:1);}
 function sjT(){return G.sj.phase==="steal"?G.sj.st:G.sj.t;}
 function sjLeft(){var s=G.sj;return Math.max(0,sjT()-Math.floor((Date.now()-s.qAt)/1000));}
 function sjTick(){var el=document.getElementById("tm");if(!el){clearInterval(tick);tick=null;return;}var l=tLeft();el.textContent=l>0?ar(l):"انتهى الوقت ⏰";el.className="tl"+(l<=5?" hot":"");if(l<=0){clearInterval(tick);tick=null;sfx("end");}}
-function sjTeam(k){return k===0?G.sj.a:G.sj.b;}
+function sjNorm(){var s=G.sj,n=G.teams.length;if(!s.tm||!s.tm.length)s.tm=G.teams.map(function(_,i){return i;});s.tm=s.tm.filter(function(t){return t<n;});if(s.tm.length<2)s.tm=G.teams.map(function(_,i){return i;}).slice(0,Math.max(2,n));return s.tm;}
+function sjTeam(k){return G.sj.tm[k];}
 function sjDone(){var s=G.sj;return s.board.length&&s.board.every(function(col){return col.every(function(c){return c.d;});});}
 function vSJS(){
- var s=G.sj;if(s.a>=G.teams.length)s.a=0;if(s.b>=G.teams.length||s.b===s.a)s.b=s.a===0?1:0;
- function sel(k){var o='<select data-sj="'+k+'">';G.teams.forEach(function(t,i){o+='<option value="'+i+'"'+(s[k]===i?' selected':'')+'>'+esc(tname(i))+'</option>';});return o+'</select>';}
- var h=topbar()+'<h1>❓ سين جيم</h1><p class="muted">لوحة فئات بأسئلة ٢٠٠ و٤٠٠ و٦٠٠. الفريقان يتناوبان على اختيار السؤال، وإذا ما جاوب الفريق تنتقل الفرصة للفريق الثاني. لكل فريق ثلاث وسائل مساعدة تُستعمل مرة وحدة.</p>';
- h+='<div class="card"><div class="opt"><span class="n">الفريق الأول</span>'+sel("a")+'</div><div class="opt"><span class="n">الفريق الثاني</span>'+sel("b")+'</div></div>';
- h+='<div class="card"><h2>📦 باقات جاهزة</h2><div class="chips">'+PACKS.map(function(pk,i){return '<button class="sjc" data-a="sjpack" data-v="'+i+'">'+icon(pk[1],"ic sm")+pk[0]+'</button>';}).join('')+'</div></div>';
+ var s=G.sj,tm=sjNorm();
+ var h=topbar()+'<h1>❓ سين جيم</h1><p class="muted">لوحة فئات بأسئلة ٢٠٠ و٤٠٠ و٦٠٠. الفرق تتناوب على اختيار السؤال، وإذا ما جاوب الفريق صاحب الدور تنفتح الفرصة لباقي الفرق. لكل فريق ثلاث وسائل مساعدة تُستعمل مرة وحدة.</p>';
+ h+='<div class="card"><h2>الفرق المشاركة ('+ar(tm.length)+')</h2>';
+ G.teams.forEach(function(t,i){var on=tm.indexOf(i)>=0;h+='<div class="opt">'+emb(i)+'<span class="n">'+esc(tname(i))+'</span><button class="sm'+(on?' g':'')+'" data-a="sjm" data-v="'+i+'">'+(on?'✓ مشارك':'غير مشارك')+'</button></div>';});
+ h+='</div><div class="card"><h2>📦 باقات جاهزة</h2><div class="chips">'+PACKS.map(function(pk,i){return '<button class="sjc" data-a="sjpack" data-v="'+i+'">'+icon(pk[1],"ic sm")+pk[0]+'</button>';}).join('')+'</div></div>';
  h+='<div class="card"><h2>اختر الفئات ('+ar(s.cats.length)+' من ٦)</h2><div class="chips">';
  Object.keys(CATN).forEach(function(k){var n=allIds().filter(function(id){var r=Q(id);return r&&r[0]===k;}).length;h+='<button class="sjc '+(s.cats.indexOf(k)>=0?'on':'')+'" data-a="sjcat" data-k="'+k+'"'+(n<6&&s.cats.indexOf(k)<0?' disabled title="أسئلة قليلة"':'')+'>'+icon(CATICON[k],"ic sm")+CATN[k]+' <small>('+ar(n)+')</small></button>';});
- h+='</div><div class="opt"><span class="n">⏱ وقت الفريق صاحب الدور</span><button class="sm" data-a="sjt1">'+tLbl(s.t)+'</button></div><div class="opt"><span class="n">⏱ وقت الفريق الثاني بعده</span><button class="sm" data-a="sjt2">'+tLbl(s.st)+'</button></div></div>';
- var ok=s.cats.length>=2&&s.cats.length<=6&&s.a!==s.b;
- return h+(ok?'':'<p class="muted">اختر من فئتين إلى ٦ فئات، وفريقين مختلفين.</p>')+'<button class="g" style="width:100%;padding:14px;font-size:1.1rem" data-a="sjgo" '+(ok?'':'disabled')+'>ابدأ اللوحة</button><div style="height:80px"></div>';
+ h+='</div><div class="opt"><span class="n">⏱ وقت الفريق صاحب الدور</span><button class="sm" data-a="sjt1">'+tLbl(s.t)+'</button></div><div class="opt"><span class="n">⏱ وقت الفرصة لباقي الفرق</span><button class="sm" data-a="sjt2">'+tLbl(s.st)+'</button></div></div>';
+ var ok=s.cats.length>=2&&s.cats.length<=6&&tm.length>=2;
+ return h+(ok?'':'<p class="muted">اختر من فئتين إلى ٦ فئات، وفريقين أو أكثر.</p>')+'<button class="g" style="width:100%;padding:14px;font-size:1.1rem" data-a="sjgo" '+(ok?'':'disabled')+'>ابدأ اللوحة</button><div style="height:80px"></div>';
 }
-function sjTeamCard(k){var s=G.sj,ti=sjTeam(k),on=s.turn===k&&!s.cur,h='<div class="sjteam'+(s.turn===k?' turn':'')+'" style="--c:'+COL[ti%8]+'"><div class="top" style="margin:0"><b>'+esc(tname(ti))+'</b><div class="sp"></div><span class="sjsc">'+ar(s.sc[k])+'</span></div><div class="helps">';
- HELPS.forEach(function(hp){var used=s.helps[k][hp[0]],armed=hp[0]==="pit"&&s.pit===k;h+='<button class="sm hp'+(used?' used':'')+(armed?' g':'')+'" data-a="sjh" data-k="'+hp[0]+'" data-v="'+k+'" '+(used||(hp[0]==="pit"&&!on)||(hp[0]!=="pit"&&!(s.cur&&sjAnswering()===k))?'disabled':'')+' title="'+hp[2]+'">'+hp[1]+' '+hp[2]+'</button>';});
+function sjTeamCard(k){var s=G.sj,ti=sjTeam(k),on=s.turn===k&&!s.cur,hl=s.helps[k]||(s.helps[k]={}),h='<div class="sjteam'+(s.turn===k?' turn':'')+'" style="--c:'+COL[ti%8]+'"><div class="top" style="margin:0">'+emb(ti)+'<b>'+esc(tname(ti))+'</b><div class="sp"></div><span class="sjsc">'+ar(s.sc[k]||0)+'</span></div><div class="helps">';
+ HELPS.forEach(function(hp){var used=hl[hp[0]],armed=hp[0]==="pit"&&s.pit===k;h+='<button class="sm hp'+(used?' used':'')+(armed?' g':'')+'" data-a="sjh" data-k="'+hp[0]+'" data-v="'+k+'" '+(used||(hp[0]==="pit"&&!on)||(hp[0]!=="pit"&&!(s.cur&&s.phase==="ans"&&s.turn===k))?'disabled':'')+' title="'+hp[2]+'">'+hp[1]+' '+hp[2]+'</button>';});
  return h+'</div>'+(s.turn===k&&!s.cur?'<div class="muted">دوره يختار سؤال</div>':'')+'</div>';}
-function sjAnswering(){var s=G.sj;return s.phase==="steal"?1-s.turn:s.turn;}
 function vSJ(){
- var s=G.sj;if(!s.on)return vSJS();
- var h='<div class="top"><button class="sm" data-a="home">🏠</button><button class="sm" data-a="sjset">⚙️ إعداد</button>'+pres()+'<div class="sp"></div><button class="sm" data-a="finish">🏁 الفائز</button></div>';
- h+='<div class="sjteams">'+sjTeamCard(0)+sjTeamCard(1)+'</div>';
- if(s.cur){var c=s.board[s.cur[0]][s.cur[1]],b=Q(c.q),cat=s.cats[s.cur[0]],ans=sjAnswering(),l=sjLeft();
-  h+='<div class="card sjq" style="text-align:center"><div><span class="chip">'+CATN[cat]+'</span> <span class="chip" style="background:var(--c3)">'+ar(sjVal(c))+' نقطة</span>'+(c.g?' <span class="chip gold">⭐ سؤال ذهبي ×٢</span>':'')+(c.pit>=0?' <span class="chip" style="background:var(--c1);color:#fff">🕳️ حفرة</span>':'')+edBtn(c.q)+c.h.map(function(x){var hp=HELPS.filter(function(y){return y[0]===x;})[0];return hp?' <span class="chip">'+hp[1]+' '+hp[2]+'</span>':'';}).join('')+'</div>';
-  h+='<div class="muted" style="margin-top:8px">'+(s.phase==="steal"?'الفرصة الحين لـ':'يجاوب')+': <b style="color:'+COL[sjTeam(ans)%8]+'">'+esc(tname(sjTeam(ans)))+'</b></div>';
+ var s=G.sj;if(!s.on||!s.tm||s.sc.length!==s.tm.length)return vSJS();
+ var n=s.tm.length,h='<div class="top"><button class="sm" data-a="home">🏠</button><button class="sm" data-a="sjset">⚙️ إعداد</button>'+pres()+'<div class="sp"></div><button class="sm" data-a="finish">🏁 الفائز</button></div>';
+ h+='<div class="sjteams">'+s.tm.map(function(_,k){return sjTeamCard(k);}).join('')+'</div>';
+ if(s.cur){var c=s.board[s.cur[0]][s.cur[1]],b=Q(c.q),cat=s.cats[s.cur[0]],V=sjVal(c),A=sjTeam(s.turn);
+  h+='<div class="card sjq" style="text-align:center"><div><span class="chip">'+CATN[cat]+'</span> <span class="chip" style="background:var(--c3)">'+ar(V)+' نقطة</span>'+(c.g?' <span class="chip gold">⭐ سؤال ذهبي ×٢</span>':'')+(c.pit>=0?' <span class="chip" style="background:var(--c1);color:#fff">🕳️ حفرة على '+esc(tname(sjTeam(c.po)))+'</span>':'')+edBtn(c.q)+c.h.map(function(x){var hp=HELPS.filter(function(y){return y[0]===x;})[0];return hp?' <span class="chip">'+hp[1]+' '+hp[2]+'</span>':'';}).join('')+'</div>';
+  h+='<div class="muted" style="margin-top:8px">'+(s.phase==="steal"?'الفرصة الحين لباقي الفرق، أول من يجاوب':'يجاوب: <b style="color:'+COL[A%8]+'">'+esc(tname(A))+'</b>')+'</div>';
   h+='<h2 style="font-size:1.5rem;margin:14px 0">'+(b?srcTag(c.q,b)+esc(b[1]):'ما فيه سؤال لهذه الخانة')+'</h2>';
   if(s.phase!=="rev")h+=(sjT()>0?tmHtml():'')+(b?peekBox(esc(b[2])):'');
   else h+='<div class="win" style="margin:10px 0 0"><b style="font-size:1.5rem">'+(b?esc(b[2]):'')+'</b></div>';
   h+='</div>'+bzStrip();
-  var A=sjTeam(s.turn),B=sjTeam(1-s.turn);
-  if(s.phase==="ans")h+='<button class="g" style="width:100%;padding:14px;margin-bottom:8px" data-a="sjrv">👀 اعرض الجواب</button><button style="width:100%;padding:12px" data-a="sjsteal">⏭️ ما جاوب، الفرصة لـ '+esc(tname(B))+'</button>';
+  if(s.phase==="ans")h+='<button class="g" style="width:100%;padding:14px;margin-bottom:8px" data-a="sjrv">👀 اعرض الجواب</button><button style="width:100%;padding:12px" data-a="sjsteal">⏭️ ما جاوب، الفرصة '+(n===2?'لـ '+esc(tname(sjTeam(1-s.turn))):'لباقي الفرق')+'</button>';
   else if(s.phase==="steal")h+='<button class="g" style="width:100%;padding:14px" data-a="sjrv">👀 اعرض الجواب</button>';
-  else{h+='<p class="muted">مين جاوب صح؟</p><button class="g" style="width:100%;padding:13px;margin-bottom:8px;background:'+COL[A%8]+';color:#17121b" data-a="sjw" data-v="0">✓ '+esc(tname(A))+' +'+ar(sjVal(c))+(c.pit>=0?' و −'+ar(sjVal(c))+' على '+esc(tname(B)):'')+'</button><button class="g" style="width:100%;padding:13px;margin-bottom:8px;background:'+COL[B%8]+';color:#17121b" data-a="sjw" data-v="1">✓ '+esc(tname(B))+' +'+ar(sjVal(c))+'</button><button style="width:100%;padding:12px" data-a="sjw" data-v="-1">✗ ما أحد جاوب</button>';}
+  else{h+='<p class="muted">مين جاوب صح؟</p>';
+   s.tm.forEach(function(ti,k){if(s.steal&&k===s.turn)return;h+='<button class="g" style="width:100%;padding:13px;margin-bottom:8px;background:'+COL[ti%8]+';color:#17121b" data-a="sjw" data-v="'+k+'">✓ '+esc(tname(ti))+' +'+ar(V)+(k===s.turn&&c.pit>=0?' و −'+ar(V)+' على '+esc(tname(sjTeam(c.po))):'')+'</button>';});
+   h+='<button style="width:100%;padding:12px" data-a="sjw" data-v="-1">✗ ما أحد جاوب</button>';}
   return h+'<div style="height:80px"></div>';}
- if(sjDone()){var w=s.sc[0]===s.sc[1]?-1:(s.sc[0]>s.sc[1]?0:1);h+='<div class="win"><span>'+(w<0?'🤝 تعادل':'🏆 فاز في سين جيم')+'</span><b>'+(w<0?esc(tname(s.a))+' و '+esc(tname(s.b)):esc(tname(sjTeam(w))))+'</b><span>'+ar(s.sc[0])+' — '+ar(s.sc[1])+'</span></div><button class="g" style="width:100%;padding:14px" data-a="sjset">🔄 لوحة جديدة</button>';}
- if(s.pit>=0)h+='<p class="peekbox" style="text-align:center">🕳️ '+esc(tname(sjTeam(s.pit)))+' فعّل الحفرة على السؤال الجاي</p>';
+ if(sjDone()){var mx=Math.max.apply(null,s.sc),ws=s.tm.filter(function(_,k){return s.sc[k]===mx;});h+='<div class="win"><span>'+(ws.length>1?'🤝 تعادل':'🏆 فاز في سين جيم')+'</span><b>'+ws.map(function(t){return esc(tname(t));}).join(' و ')+'</b><span>'+ar(mx)+' نقطة</span></div><button class="g" style="width:100%;padding:14px" data-a="sjset">🔄 لوحة جديدة</button>';}
+ if(s.pit>=0){h+='<div class="peekbox" style="text-align:center">🕳️ '+esc(tname(sjTeam(s.pit)))+' فعّل الحفرة على السؤال الجاي'+(n>2?'، على مين؟<div class="chips" style="justify-content:center;margin-top:6px">'+s.tm.map(function(ti,k){return k===s.pit?'':'<button class="sm'+(s.po===k?' g':'')+'" data-a="sjpo" data-v="'+k+'">'+esc(tname(ti))+'</button>';}).join('')+'</div>':'')+'</div>';}
  h+='<div class="sjboard" style="grid-template-columns:repeat('+Math.min(s.cats.length,3)+',1fr)">';
  s.cats.forEach(function(cat,ci){var k=KC[ci%KC.length];h+='<div class="sjcol"><div class="sjhead" style="background:'+k[0]+';color:'+k[1]+'">'+icon(CATICON[cat],"ic hd")+'<span>'+CATN[cat]+'</span></div><div class="sjcells">';
   [0,3,1,4,2,5].forEach(function(ki){var c=s.board[ci][ki];h+='<button class="sjcell'+(c.d?' done':'')+'" data-a="sjq" data-v="'+(ci*6+ki)+'" '+(c.d?'disabled':'')+'>'+(c.d?(c.w>=0?'<span style="color:'+COL[sjTeam(c.w)%8]+'">●</span>':'—'):ar(c.v))+'</button>';});
   h+='</div></div>';});
  return h+'</div><p class="muted" style="text-align:center">الدور على <b style="color:'+COL[sjTeam(s.turn)%8]+'">'+esc(tname(sjTeam(s.turn)))+'</b> يختار سؤال</p><div style="height:80px"></div>';
 }
-function sjWin(k){var s=G.sj,c=s.board[s.cur[0]][s.cur[1]];
- var V=sjVal(c);
- if(k===0){var A=s.turn;s.sc[A]+=V;addPts(sjTeam(A),V);if(c.pit>=0){s.sc[1-A]-=V;addPts(sjTeam(1-A),-V);}c.w=A;}
- else if(k===1){var B=1-s.turn;s.sc[B]+=V;addPts(sjTeam(B),V);c.w=B;}
- c.d=1;s.cur=null;s.phase="";s.turn=1-s.turn;}
+function sjWin(k){var s=G.sj,c=s.board[s.cur[0]][s.cur[1]],V=sjVal(c);
+ if(k>=0){s.sc[k]+=V;addPts(sjTeam(k),V);if(k===s.turn&&c.pit>=0&&c.po>=0){s.sc[c.po]-=V;addPts(sjTeam(c.po),-V);}c.w=k;}
+ c.d=1;s.cur=null;s.phase="";s.steal=false;s.turn=(s.turn+1)%s.tm.length;}
 /* ===== فيود ===== */
 function fdNext(){var f=G.fd;if(!f.deck.length)f.deck=freshDeck(FEUD.length,function(i){return "f"+hq(FEUD[i][0]);});f.cur=f.deck.pop();f.rev={};f.strikes=0;markSeen("f"+hq(FEUD[f.cur][0]));}
 function fdBank(){var f=G.fd,s=0;FEUD[f.cur][1].forEach(function(a,i){if(f.rev[i])s+=a[1];});return s*f.mult;}
@@ -2325,12 +2327,12 @@ function vFD(){
  if(f.a>=G.teams.length)f.a=0;if(f.b>=G.teams.length)f.b=Math.min(1,G.teams.length-1);
  var q=FEUD[f.cur];
  function sel(k){var o='<select data-fd="'+k+'">';G.teams.forEach(function(t,i){o+='<option value="'+i+'"'+(f[k]===i?' selected':'')+'>'+esc(tname(i))+'</option>';});return o+'</select>';}
- var h=topbar()+'<h1>👨‍👩‍👧‍👦 '+BR.feud+'</h1><div class="card"><div class="opt"><span class="n">الفريق الأول</span>'+sel('a')+'</div><div class="opt"><span class="n">الفريق الثاني</span>'+sel('b')+'</div></div>';
+ var h=topbar()+'<h1>👨‍👩‍👧‍👦 '+BR.feud+'</h1>';
  h+='<div class="card" style="text-align:center"><h2 style="font-size:1.35rem">'+q[0]+'</h2><div class="x">'+(f.strikes?'❌'.repeat(f.strikes):'')+'</div><div class="muted">رصيد الجولة: <b style="color:var(--c1);font-size:1.3rem">'+ar(fdBank())+'</b></div></div>'+bzStrip();
  q[1].forEach(function(a,i){var o=f.rev[i],peek=!o&&L.presenter;h+='<div class="fdrow'+(o||peek?' open':'')+'"><span class="no">'+ar(i+1)+'</span><span class="a">'+a[0]+(peek?' <small class="peek">مخفي</small>':'')+'</span><span class="p">'+ar(a[1])+'</span>'+(peek?'<button class="sm" style="margin-inline-end:8px" data-a="fdrv" data-v="'+i+'">👁️</button>':'')+(o||peek?'':'<button class="cv" data-a="fdrv" data-v="'+i+'">❓ إجابة رقم '+ar(i+1)+'</button>')+'</div>';});
  h+='<div class="top" style="margin-top:10px"><button data-a="fdx" '+(f.strikes>=3?'disabled':'')+'>❌ خطأ</button><button data-a="fdall">👁️ اكشف الكل</button><div class="sp"></div>';
  [1,2,3].forEach(function(m){h+='<button class="sm'+(f.mult===m?' g':'')+'" data-a="fdm" data-v="'+m+'">×'+ar(m)+'</button>';});
- h+='</div><p class="muted">أعطِ رصيد الجولة لـ:</p><div class="top"><button class="g" style="flex:1;background:'+COL[f.a%8]+';color:#17121b" data-a="fdg" data-v="'+f.a+'">'+esc(tname(f.a))+'</button><button class="g" style="flex:1;background:'+COL[f.b%8]+';color:#17121b" data-a="fdg" data-v="'+f.b+'">'+esc(tname(f.b))+'</button></div><button style="width:100%" data-a="fdn">السؤال التالي ⬅️</button><p class="muted" style="text-align:center">الإجابات والنقاط تقديرية لتسلية الجلسة</p><div style="height:80px"></div>';
+ h+='</div><p class="muted">أعطِ رصيد الجولة لـ:</p><div class="fdgive">'+G.teams.map(function(t,i){return '<button class="g" style="background:'+COL[i%8]+';color:#17121b" data-a="fdg" data-v="'+i+'">'+emb(i)+esc(tname(i))+'</button>';}).join('')+'</div><button style="width:100%" data-a="fdn">السؤال التالي ⬅️</button><p class="muted" style="text-align:center">الإجابات والنقاط تقديرية لتسلية الجلسة</p><div style="height:80px"></div>';
  return h;
 }
 /* ===== أسئلتي ===== */
@@ -2498,7 +2500,7 @@ app.addEventListener("click",function(e){
  else if(a==="none"){G.open[G.cat]=[];}
  else if(a==="wdraw"){wdraw();}
  else if(a==="wr"){G.wh.rev=true;}
- else if(a==="hxm"){var pp=hxParts(),ix=pp.indexOf(v);if(ix>=0)pp.splice(ix,1);else if(pp.length<4){pp.push(v);pp.sort(function(a1,b1){return a1-b1;});}}
+ else if(a==="hxm"){var pp=hxParts(),ix=pp.indexOf(v);if(ix>=0)pp.splice(ix,1);else if(pp.length<6){pp.push(v);pp.sort(function(a1,b1){return a1-b1;});}}
  else if(a==="hxgo"){hxNew();}
  else if(a==="hxset"){x.on=false;}
  else if(a==="hxc"){hxClick(v);}
@@ -2513,9 +2515,11 @@ app.addEventListener("click",function(e){
  else if(a==="sjpack"){var pk=PACKS[v][2].filter(function(k){return allIds().some(function(id){var r=Q(id);return r&&r[0]===k;});});if(pk.length>=2)G.sj.cats=pk.slice(0,6);}
  else if(a==="sjgo"){G.sj.used=G.sj.used||{};sjBuild();}
  else if(a==="sjset"){G.sj.on=false;G.sj.cur=null;}
- else if(a==="sjq"){var s=G.sj;if(!s.cur){var ci=Math.floor(v/6),ki=v%6,c=s.board[ci][ki];if(!c.d){s.cur=[ci,ki];s.phase="ans";s.qAt=Date.now();c.h=[];if(s.pit===s.turn){c.pit=s.turn;s.helps[s.turn].pit=1;s.pit=-1;}}}}
- else if(a==="sjh"){var s2=G.sj,hk=el.dataset.k;if(hk==="pit"){if(!s2.helps[v].pit&&!s2.cur&&s2.turn===v)s2.pit=s2.pit===v?-1:v;}else if(s2.cur&&!s2.helps[v][hk]){s2.helps[v][hk]=1;s2.board[s2.cur[0]][s2.cur[1]].h.push(hk);}}
- else if(a==="sjsteal"){G.sj.phase="steal";G.sj.qAt=Date.now();}
+ else if(a==="sjq"){var s=G.sj;if(!s.cur){var ci=Math.floor(v/6),ki=v%6,c=s.board[ci][ki];if(!c.d){s.cur=[ci,ki];s.phase="ans";s.qAt=Date.now();c.h=[];if(s.pit===s.turn){c.pit=s.turn;c.po=s.po>=0&&s.po!==s.turn?s.po:(s.turn+1)%s.tm.length;s.helps[s.turn].pit=1;s.pit=-1;s.po=-1;}}}}
+ else if(a==="sjh"){var s2=G.sj,hk=el.dataset.k;if(hk==="pit"){if(!s2.helps[v].pit&&!s2.cur&&s2.turn===v){s2.pit=s2.pit===v?-1:v;s2.po=(v+1)%s2.tm.length;}}else if(s2.cur&&!s2.helps[v][hk]){s2.helps[v][hk]=1;s2.board[s2.cur[0]][s2.cur[1]].h.push(hk);}}
+ else if(a==="sjsteal"){G.sj.phase="steal";G.sj.steal=true;G.sj.qAt=Date.now();}
+ else if(a==="sjpo"){G.sj.po=v;}
+ else if(a==="sjm"){var tmm=sjNorm(),ix3=tmm.indexOf(v);if(ix3>=0){if(tmm.length>2)tmm.splice(ix3,1);}else{tmm.push(v);tmm.sort(function(a1,b1){return a1-b1;});}}
  else if(a==="sjrv"){G.sj.phase="rev";}
  else if(a==="sjw"){sjWin(v);}
  else if(a==="fdrv"){G.fd.rev[v]=1;}
