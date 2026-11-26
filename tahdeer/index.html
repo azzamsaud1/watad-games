@@ -777,14 +777,11 @@ async function saSettingsClick(D){
  return false}
 function saInit(){ME=(()=>{try{return localStorage.getItem(SN)||''}catch(e){return ''}})();
  let had=false;try{had=!!localStorage.getItem(LS)}catch(e){}
- if(had)lsLoad();else{S.cfg=norm(clone(SEED_CFG));S.students=SEED.slice();S.all=clone(SEED_ALL);S._ts={};lsSave();try{localStorage.setItem('watad-seedv','2')}catch(e){}}
+ if(had)lsLoad();else{S.cfg=norm(clone(SEED_CFG));S.students=SEED.slice();S.all=clone(SEED_ALL);S._ts={};lsSave();try{localStorage.setItem('watad-seedv','3')}catch(e){}}
  S.cfg=norm(S.cfg);S.bonus=S.bonus||[];S.all=S.all||{};S.log=S.log||[];
  let sv=0;try{sv=+localStorage.getItem('watad-seedv')||0}catch(e){}
- if(had&&sv<2){const now=Date.now(),ch=[];S._ts=S._ts||{};const t=S.cfg.terms[0];
-  if(t&&t.start==='2026-11-22'){const moved={};Object.keys(S.all).forEach(id=>{const m=/^w(\d+)$/.exec(id);if(m){const nid='w'+(+m[1]+13);moved[nid]=S.all[id];ch.push('w:'+id,'w:'+nid)}else moved[id]=S.all[id]});S.all=moved;
-   t.start=SEED_CFG.terms[0].start;t.name=SEED_CFG.terms[0].name;t.weeks=Math.max(SEED_CFG.terms[0].weeks,t.weeks+13);ch.push('cfg')}
-  Object.keys(SEED_ALL).forEach(id=>{const w=S.all[id];if(!w||!w.rec||!Object.values(w.rec).some(r=>Object.keys(r).length)){S.all[id]=clone(SEED_ALL[id]);ch.push('w:'+id)}});
-  ch.forEach(k=>S._ts[k]=now);lsSave();try{localStorage.setItem('watad-seedv','2')}catch(e){}}
+ if(had&&sv<3){const now=Date.now();S.cfg=norm(clone(SEED_CFG));S.students=SEED.slice();S.all=clone(SEED_ALL);S.bonus=[];S.log=[];
+  S._ts=S._ts||{};Object.keys(S._ts).forEach(k=>S._ts[k]=now);stampAll();lsSave();try{localStorage.setItem('watad-seedv','3')}catch(e){}}
  const h=location.hash.slice(1);if(/^sync-[A-Z0-9]{12}$/.test(h)){const v=h.slice(5),code=v.slice(0,4)+'-'+v.slice(4,8)+'-'+v.slice(8);
   setTimeout(async()=>{if(SYNC.code===code){location.hash='take';return}if(await ask('ربط هذا الجهاز برمز المزامنة '+code+'؟ تُستبدل بيانات هذا الجهاز ببيانات الرمز.','ربط')){try{localStorage.removeItem(SG)}catch(e){}S._ts={};await startSync(code,false);toast('جاري جلب البيانات…')}location.hash='take'},300)}
  let c=null;try{c=localStorage.getItem(SK)}catch(e){}if(c)startSync(c,false);
