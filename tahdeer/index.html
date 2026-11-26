@@ -189,8 +189,8 @@ const sunday=d=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.se
 const addD=(d,k)=>{const x=new Date(d);x.setDate(x.getDate()+k);return x};
 const today0=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())};
 
-const sgn=p=>'\u200E'+(p>0?'+':'')+p;
-const num=v=>'\u200E'+v;
+const sgn=p=>'\u2066'+(p>0?'+':'')+p+'\u2069';
+const num=v=>'\u2066'+v+'\u2069';
 
 const DEF={points:{sh:8,p:5,l:3,e:0,m:0,a:-5,ty:0,tn:0},alerts:{streak:3,pct:70,exc:4},
  terms:[{id:'t1',name:'الفصل الحالي',start:iso(sunday(new Date())),weeks:1}],cur:'t1',
@@ -202,6 +202,13 @@ let ui={view:'take',term:null,week:null,sess:null,stW:'all',stP:'all',stB:'all',
 let db=null,U=null,ME=null,local=false,readOnly=false,ready=false,stale=false,dl=null,deferRender=false;
 const loaded={cfg:false,st:false,wk:false,bn:false};
 const $=s=>document.querySelector(s);
+const AD='٠١٢٣٤٥٦٧٨٩';
+const ar=s=>String(s).replace(/[0-9]/g,d=>AD[d]).replace(/%/g,'٪');
+const toL=s=>String(s??'').replace(/[٠-٩]/g,d=>d.charCodeAt(0)-1632).replace(/[۰-۹]/g,d=>d.charCodeAt(0)-1776).replace(/[−–]/g,'-');
+function arabize(root){if(root.nodeType===3){const n=root;if(/[0-9%]/.test(n.nodeValue)&&n.parentElement&&!n.parentElement.closest('script,style,textarea'))n.nodeValue=ar(n.nodeValue);return}
+ if(root.nodeType!==1||root.closest&&root.closest('script,style'))return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){if(/[0-9%]/.test(n.nodeValue)&&!n.parentElement.closest('script,style,textarea'))n.nodeValue=ar(n.nodeValue)}}
+new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')arabize(m.target);else m.addedNodes.forEach(arabize)}}).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+arabize(document.body);
 const HF=(()=>{try{return new Intl.DateTimeFormat('en-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric'})}catch(e){return null}})();
 const HM=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
 function hj(d){if(!HF)return null;const p={};for(const x of HF.formatToParts(d))p[x.type]=x.value;return {d:+p.day,m:+p.month,y:parseInt(p.year,10)}}
@@ -210,11 +217,11 @@ const hfull=d=>{const h=hj(d);return h?h.d+'/'+h.m+'/'+h.y+'هـ':iso(d)};
 const hlong=d=>{const h=hj(d);return h?h.d+' '+HM[h.m-1]+' '+h.y+'هـ':iso(d)};
 function h2g(y,m,d){let g=new Date(2026,5,16+Math.round((y-1448)*354.367+(m-1)*29.53+(d-1)));
  for(let k=0;k<15;k++){const h=hj(g);if(!h)return g;if(h.y===y&&h.m===m&&h.d===d)return g;const diff=(h.y-y)*354+(h.m-m)*29.5+(h.d-d);const st=Math.round(diff);if(Math.abs(diff)<1.5&&h.m!==m&&d===30)return addD(g,-1);g=addD(g,-(st||(diff>0?1:-1)))}return g}
-function hpick(id,date,dis){const h=hj(date)||{d:1,m:1,y:1448};return `<span class="hp"><select id="${id}d" aria-label="اليوم"${dis}>${Array.from({length:30},(_,i)=>`<option${i+1===h.d?' selected':''}>${i+1}</option>`).join('')}</select><select id="${id}m" aria-label="الشهر"${dis}>${HM.map((n,i)=>`<option value="${i+1}"${i+1===h.m?' selected':''}>${n}</option>`).join('')}</select><select id="${id}y" aria-label="السنة"${dis}>${[h.y-1,h.y,h.y+1,h.y+2].map(y=>`<option${y===h.y?' selected':''}>${y}</option>`).join('')}</select></span>`}
+function hpick(id,date,dis){const h=hj(date)||{d:1,m:1,y:1448};return `<span class="hp"><select id="${id}d" aria-label="اليوم"${dis}>${Array.from({length:30},(_,i)=>`<option value="${i+1}"${i+1===h.d?' selected':''}>${i+1}</option>`).join('')}</select><select id="${id}m" aria-label="الشهر"${dis}>${HM.map((n,i)=>`<option value="${i+1}"${i+1===h.m?' selected':''}>${n}</option>`).join('')}</select><select id="${id}y" aria-label="السنة"${dis}>${[h.y-1,h.y,h.y+1,h.y+2].map(y=>`<option value="${y}"${y===h.y?' selected':''}>${y}</option>`).join('')}</select></span>`}
 const readH=id=>h2g(+$('#'+id+'y').value,+$('#'+id+'m').value,+$('#'+id+'d').value);
 const main=$('#main');
 
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2600)}
+function toast(m){const t=$('#toast');t.textContent=ar(m);t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2600)}
 function ask(msg,ok='تأكيد'){return new Promise(res=>{const o=document.createElement('div');o.className='ov';o.style.zIndex=25;
  o.innerHTML='<div class="dlg"><p style="margin:0 0 16px;font-size:17px;white-space:pre-line"></p><div class="acts"><button class="btn dg" data-a="1"></button><button class="btn g" data-a="0">إلغاء</button></div></div>';
  o.querySelector('p').textContent=msg;o.querySelector('[data-a="1"]').textContent=ok;
@@ -348,7 +355,7 @@ function vTake(){
  const cnt={};let tot=0,ty=0,tn=0;ST.forEach(x=>cnt[x.k]=0);
  act.forEach(st=>{const k=r[st.id];if(k&&cnt[k]!==undefined){cnt[k]++;tot+=ptsOf(k,s.pid)}if(s.tasmee&&ATT.has(k)){if(tz[st.id]==='y')ty++;if(tz[st.id]==='n')tn++;tot+=tasPts(tz[st.id])}});
  h+=`<section class="panel"><div class="phead"><div><h1>${esc(s.pname)} · ${DAYS[s.day]} ${fmt(dayDate(n,s.day))}</h1><div class="mut">الأسبوع ${n} · سُجّل ${done(n,s.key)} من ${act.length}</div></div>
- <div class="acts">${readOnly?'':'<button class="btn edit" data-act="fillall">الكل حاضر</button>'}<button class="btn g" data-act="expsess">صورة / PDF</button>${readOnly?'':'<button class="btn g s edit" data-act="cancelsess">إلغاء الجلسة</button><button class="btn dg s edit" data-act="clearsess">مسح التحضير</button>'}</div></div>
+ <div class="acts">${readOnly?'':'<button class="btn edit" data-act="fillall">الكل حاضر</button>'}<button class="btn g" data-act="expsess">صورة / بي دي إف</button>${readOnly?'':'<button class="btn g s edit" data-act="cancelsess">إلغاء الجلسة</button><button class="btn dg s edit" data-act="clearsess">مسح التحضير</button>'}</div></div>
  <div class="sum">${ST.map(x=>`<span class="pill" style="--c:${x.hex}"><span class="dot"></span>${x.l}: ${cnt[x.k]}</span>`).join('')}${s.tasmee?TAS.map(x=>`<span class="pill" style="--c:${x.hex}"><span class="dot"></span>${x.l}: ${x.k==='y'?ty:tn}</span>`).join(''):''}<span class="pill">مجموع النقاط: ${tot}</span></div>
  <div class="srch"><input type="text" id="q" placeholder="ابحث عن طالب…" value="${esc(ui.q)}" autocomplete="off" aria-label="بحث"></div>`;
  grouped(act).forEach(g=>{if(!g.items.length)return;
@@ -392,7 +399,7 @@ function vStats(){const {rows,sessCount,weekPct}=calc();
  h+=`<select id="fW" aria-label="الأسبوع"><option value="all">كل الأسابيع</option>${Array.from({length:NW()},(_,i)=>`<option value="${i+1}"${ui.stW==i+1?' selected':''}>الأسبوع ${i+1}${isHol(i+1)?' (إجازة)':''}</option>`).join('')}</select>`;
  h+=`<select id="fP" aria-label="البرنامج"><option value="all">كل البرامج</option>${S.cfg.programs.map(p=>`<option value="${esc(p.id)}"${ui.stP===p.id?' selected':''}>${esc(p.name)}</option>`).join('')}</select>`;
  h+=`<select id="fB" aria-label="الدفعة"><option value="all">كل الدفعات</option>${S.cfg.batches.map(b=>`<option value="${esc(b.id)}"${ui.stB===b.id?' selected':''}>${esc(b.name)}</option>`).join('')}</select>`;
- h+=`<div class="acts"><button class="btn" data-act="expstats">صورة / PDF</button><button class="btn g" data-act="expterm">تقرير الفصل</button><button class="btn g" data-act="xlsx">Excel</button></div></div>`;
+ h+=`<div class="acts"><button class="btn" data-act="expstats">صورة / بي دي إف</button><button class="btn g" data-act="expterm">تقرير الفصل</button><button class="btn g" data-act="xlsx">إكسل</button></div></div>`;
  h+=`<div class="kpis"><div class="kpi"><b>${pctT(T.n?T.att/T.n:null)}</b>نسبة الحضور</div><div class="kpi"><b>${sessCount}</b>جلسة مسجّلة</div><div class="kpi"><b>${rows.length?Math.round(T.pts/rows.length):0}</b>متوسط النقاط للطالب</div><div class="kpi"><b style="font-size:24px;line-height:1.5">${top?esc(top.s.name):'—'}</b>الأعلى نقاطاً${top?' ('+top.pts+')':''}</div></div>`;
  if(!T.n)h+='<div class="empty">لا يوجد تحضير مسجّل لهذا الاختيار بعد.</div>';
  h+=`<div class="scroll"><table><thead><tr><th>#</th><th class="n">الطالب</th><th>الدفعة</th>${ST.map(x=>`<th>${x.s}</th>`).join('')}<th>سمّع</th><th>الحضور</th><th>إضافي</th><th>النقاط</th></tr></thead><tbody>`;
@@ -432,15 +439,15 @@ function vStudents(){const act=AS(),arch=S.students.filter(s=>s.arch);
 
 function vSettings(){const d=readOnly?' disabled':'',t=TERM();
  let h='<h1>الإعدادات</h1><h2>النقاط العامة</h2><div class="ptsg">';
- ST.forEach(x=>{h+=`<label><span><span class="dot" style="--c:${x.hex};display:inline-block"></span> ${x.l}</span><input type="number" step="1" value="${+P()[x.k]||0}" data-pt="${x.k}"${d}></label>`});
- TAS.forEach(x=>{h+=`<label><span><span class="dot" style="--c:${x.hex};display:inline-block"></span> ${x.l} (تُضاف)</span><input type="number" step="1" value="${+P()['t'+x.k]||0}" data-pt="t${x.k}"${d}></label>`});
+ ST.forEach(x=>{h+=`<label><span><span class="dot" style="--c:${x.hex};display:inline-block"></span> ${x.l}</span><input type="text" inputmode="numeric" value="${ar(+P()[x.k]||0)}" data-pt="${x.k}"${d}></label>`});
+ TAS.forEach(x=>{h+=`<label><span><span class="dot" style="--c:${x.hex};display:inline-block"></span> ${x.l} (تُضاف)</span><input type="text" inputmode="numeric" value="${ar(+P()['t'+x.k]||0)}" data-pt="t${x.k}"${d}></label>`});
  h+='</div><p class="mut">تغيير النقاط يُطبّق على كل التحضير المسجّل. البرنامج الذي له نقاط خاصة لا يتأثر بنقاط الحضور العامة. نقاط التسميع تُضاف فوق نقاط الحضور.</p><h2>البرامج</h2>';
  S.cfg.programs.forEach(p=>{h+=`<div class="prow" style="align-items:start"><input type="text" value="${esc(p.name)}" data-pren="${esc(p.id)}" aria-label="اسم البرنامج"${d}><div><div class="days">${DAYS.map((dn,i)=>`<button data-pday="${esc(p.id)}" data-d="${i}" class="${p.days.includes(i)?'on':''}"${d}>${dn}</button>`).join('')}${readOnly?'':`<button class="btn dg s" data-pdel="${esc(p.id)}">حذف</button>`}</div>
   <label class="chk"><input type="checkbox" data-ptas="${esc(p.id)}"${p.tasmee?' checked':''}${d}> فيه تسميع (سمّع / لم يسمّع)</label>
   <label class="chk"><input type="checkbox" data-pown="${esc(p.id)}"${p.points?' checked':''}${d}> نقاط خاصة لهذا البرنامج</label>
-  ${p.points?`<div class="pp" style="grid-template-columns:repeat(6,minmax(0,1fr))">${ST.map(x=>`<label>${x.l}<input type="number" step="1" value="${+(p.points[x.k]??P()[x.k])||0}" data-ppt="${esc(p.id)}" data-k="${x.k}"${d}></label>`).join('')}</div>`:''}</div></div>`});
+  ${p.points?`<div class="pp" style="grid-template-columns:repeat(6,minmax(0,1fr))">${ST.map(x=>`<label>${x.l}<input type="text" inputmode="numeric" value="${ar(+(p.points[x.k]??P()[x.k])||0)}" data-ppt="${esc(p.id)}" data-k="${x.k}"${d}></label>`).join('')}</div>`:''}</div></div>`});
  if(!readOnly)h+='<div class="acts" style="margin-top:10px"><button class="btn g" data-act="addprog">+ برنامج جديد</button></div>';
- h+=`<h2>التنبيهات</h2><div class="ptsg"><label>غياب متتالٍ (عدد المرات)<input type="number" min="0" step="1" value="${+S.cfg.alerts.streak}" data-al="streak"${d}></label><label>نسبة حضور أقل من (%)<input type="number" min="0" max="100" step="1" value="${+S.cfg.alerts.pct}" data-al="pct"${d}></label><label>أعذار خلال ٣٠ يوماً (عدد)<input type="number" min="0" step="1" value="${+S.cfg.alerts.exc}" data-al="exc"${d}></label></div>
+ h+=`<h2>التنبيهات</h2><div class="ptsg"><label>غياب متتالٍ (عدد المرات)<input type="text" inputmode="numeric" value="${ar(+S.cfg.alerts.streak)}" data-al="streak"${d}></label><label>نسبة حضور أقل من (%)<input type="text" inputmode="numeric" value="${ar(+S.cfg.alerts.pct)}" data-al="pct"${d}></label><label>أعذار خلال ٣٠ يوماً (عدد)<input type="text" inputmode="numeric" value="${ar(+S.cfg.alerts.exc)}" data-al="exc"${d}></label></div>
  <p class="mut">ضع 0 لإيقاف أي تنبيه. النسبة تبدأ بعد ٣ جلسات مسجّلة للطالب.</p>
  <h2>الفصول الدراسية</h2>`;
  S.cfg.terms.forEach(x=>{h+=`<div class="srow" style="grid-template-columns:minmax(0,1fr) auto auto"><input type="text" value="${esc(x.name)}" data-tren="${esc(x.id)}" aria-label="اسم الفصل"${d}><span class="mut">${x.weeks} أسابيع · من ${esc(hlong(parse(x.start)))}${x.id===S.cfg.cur?' · الحالي':''}</span>${x.id===t.id?'<span class="tag">معروض</span>':`<button class="btn g s" data-tview="${esc(x.id)}">عرض</button>`}</div>`});
@@ -448,8 +455,8 @@ function vSettings(){const d=readOnly?' disabled':'',t=TERM();
  h+=`<h2>أسابيع «${esc(t.name)}»</h2><div class="ptsg"><div style="grid-column:1/-1"><div class="lbl" style="margin-top:0">بداية الأسبوع الأول (يُضبط على الأحد)</div>${hpick('start',parse(t.start),d)}<div class="mut">يوافق الأحد ${hlong(parse(t.start))}</div></div>
  <div><div class="lbl" style="margin-top:0">عدد الأسابيع: ${t.weeks}</div>${readOnly?'':'<div class="acts"><button class="btn g s" data-act="addweek">+ أسبوع</button><button class="btn dg s" data-act="delweek">حذف آخر أسبوع</button></div>'}</div></div>
  <p class="mut">يُضاف أسبوع جديد تلقائياً عند اكتمال تحضير آخر أسبوع، أو عند دخول أسبوع جديد في التقويم (للفصل الحالي). أسبوع الإجازة يُحسب مكتملاً.</p>
- <h2>تصدير ونسخة احتياطية</h2><div class="acts"><button class="btn g" data-act="xlsx">تصدير Excel</button><button class="btn g" data-act="backup">تنزيل نسخة (JSON)</button>${readOnly?'':'<label class="btn g" style="display:inline-flex;align-items:center">استعادة من نسخة<input type="file" id="restore" accept=".json,application/json" hidden></label>'}</div>
- ${local?vSync():''}<h2>التطبيق</h2><p style="margin:0">على الكمبيوتر: في Chrome أو Edge اضغط «تثبيت كتطبيق» أعلى الصفحة، أو أيقونة التثبيت في شريط العنوان.<br>على الجوال: افتح الرابط في Safari ثم «مشاركة» ← «إضافة إلى الشاشة الرئيسية»، أو في Chrome من القائمة ← «إضافة إلى الشاشة الرئيسية».</p>
+ <h2>تصدير ونسخة احتياطية</h2><div class="acts"><button class="btn g" data-act="xlsx">تصدير إكسل</button><button class="btn g" data-act="backup">تنزيل نسخة احتياطية</button>${readOnly?'':'<label class="btn g" style="display:inline-flex;align-items:center">استعادة من نسخة<input type="file" id="restore" accept=".json,application/json" hidden></label>'}</div>
+ ${local?vSync():''}<h2>التطبيق</h2><p style="margin:0">على الكمبيوتر: في كروم أو إيدج اضغط «تثبيت كتطبيق» أعلى الصفحة، أو أيقونة التثبيت في شريط العنوان.<br>على الجوال: افتح الرابط في سفاري ثم «مشاركة» ← «إضافة إلى الشاشة الرئيسية»، أو في كروم من القائمة ← «إضافة إلى الشاشة الرئيسية».</p>
  <h2>سجل التعديلات</h2>`;
  const L=allLogs().slice(0,300);
  if(!L.length)h+='<p class="mut">لا توجد تعديلات مسجّلة بعد.</p>';
@@ -469,7 +476,7 @@ function drawProfile(force){const st=stu(ui.prof);if(!st){closeProfile();return}
  if(al)h+=`<div class="note" style="border-color:var(--rd)">${al.r.map(esc).join(' · ')}</div>`;
  h+=`<div class="kpis"><div class="kpi"><b>${pctT(r.pct)}</b>نسبة الحضور</div><div class="kpi"><b>${num((r.ap||0)+(r.tp||0))}</b>نقاط الحضور والتسميع</div><div class="kpi"><b>${sgn(r.bp||0)}</b>نقاط إضافية</div><div class="kpi"><b>${num(r.pts||0)}</b>المجموع</div></div>
  <div class="sum">${ST.map(x=>`<span class="pill" style="--c:${x.hex};background:var(--card)"><span class="dot"></span>${x.l}: ${r[x.k]||0}</span>`).join('')}${TAS.map(x=>`<span class="pill" style="--c:${x.hex};background:var(--card)"><span class="dot"></span>${x.l}: ${r['t'+x.k]||0}</span>`).join('')}</div>
- <h2>ولي الأمر والملاحظات</h2><div class="form" style="grid-template-columns:minmax(0,1fr)"><input type="text" id="pPhone" inputmode="tel" placeholder="جوال ولي الأمر، مثلاً 05xxxxxxxx" value="${esc(st.phone||'')}" aria-label="جوال ولي الأمر"${ro}><textarea id="pNote" style="min-height:80px" placeholder="ملاحظات عامة: يحتاج متابعة في الحفظ، ظرف عائلي…" aria-label="ملاحظات عامة"${ro}>${esc(st.note||'')}</textarea></div>
+ <h2>ولي الأمر والملاحظات</h2><div class="form" style="grid-template-columns:minmax(0,1fr)"><input type="text" id="pPhone" inputmode="tel" placeholder="جوال ولي الأمر، مثلاً ٠٥٠٠٠٠٠٠٠٠" value="${esc(ar(st.phone||''))}" aria-label="جوال ولي الأمر"${ro}><textarea id="pNote" style="min-height:80px" placeholder="ملاحظات عامة: يحتاج متابعة في الحفظ، ظرف عائلي…" aria-label="ملاحظات عامة"${ro}>${esc(st.note||'')}</textarea></div>
  <div class="acts" style="margin-top:8px">${readOnly?'':'<button class="btn" data-x="saveinfo">حفظ</button>'}<button class="btn g" data-x="msg">رسالة لولي الأمر</button></div><div id="msgBox"></div>
  <h2>السجل أسبوعاً بأسبوع</h2>`;
  for(let n=NW();n>=1;n--){h+=`<div class="wk"><b>الأسبوع ${n} <span class="mut">${fmt(dayDate(n,0))} – ${fmt(dayDate(n,6))}</span></b>`;
@@ -479,7 +486,7 @@ function drawProfile(force){const st=stu(ui.prof);if(!st){closeProfile();return}
    h+=`<span class="sc${s.cx?' cx':''}">${x?`<span class="dot" style="--c:${x.hex}"></span>`:''}${esc(s.pname)} ${DAYS[s.day]}: ${s.cx?'ملغاة':x?x.l:'—'}${s.tasmee&&ATT.has(k)&&tv?' · '+TASM[tv].l:''}${nt?' · '+esc(nt):''}</span>`});
   h+='</div>'}
  h+='<h2>النقاط الإضافية</h2>';
- if(!readOnly)h+=`<form class="form" id="bnForm" style="grid-template-columns:110px minmax(0,1fr) auto"><input type="number" step="1" id="bnPts" placeholder="10 أو -3" aria-label="النقاط"><input type="text" id="bnWhy" placeholder="السبب" aria-label="السبب"><button class="btn">إضافة</button></form>`;
+ if(!readOnly)h+=`<form class="form" id="bnForm" style="grid-template-columns:110px minmax(0,1fr) auto"><input type="text" inputmode="numeric" id="bnPts" placeholder="١٠ أو -٣" aria-label="النقاط"><input type="text" id="bnWhy" placeholder="السبب" aria-label="السبب"><button class="btn">إضافة</button></form>`;
  if(!bl.length)h+='<p class="mut">لا توجد نقاط إضافية.</p>';
  bl.forEach(b=>{h+=`<div class="al"><span class="bon">${sgn(b.pts)}</span><span>${esc(b.reason||'بدون سبب')}</span><span class="mut">الأسبوع ${b.week||'—'} · ${esc(b.date?hfull(parse(b.date)):'')}</span>${readOnly?'':`<button class="xb" data-bx="${esc(b.id)}">حذف</button>`}</div>`});
  profEl.innerHTML=h+'</div>';if(keepMsg)profEl.querySelector('#msgBox').replaceWith(keepMsg.parentElement);profEl.firstElementChild.scrollTop=sc}
@@ -489,18 +496,18 @@ function guardianMsg(st){const t=timeline(st.id),from=addD(today0(),-29),abs=t.f
  if(abs.length){m+='نفيدكم بغياب ابنكم عن:\n'+abs.map(x=>'- '+x.s.pname+' يوم '+DAYS[x.s.day]+' '+hfull(x.date)).join('\n')+'\n\n'}
  else m+='نطمئنكم بأنه لا يوجد غياب مسجّل على ابنكم خلال آخر ٣٠ يوماً.\n\n';
  if(t.length)m+='نسبة حضوره هذا الفصل: '+Math.round(att/t.length*100)+'%\n\n';
- return m+(abs.length?'نأمل متابعته والحرص على حضوره، وجزاكم الله خيراً.':'جزاكم الله خيراً على حرصكم.')+'\nوتد'}
+ return ar(m+(abs.length?'نأمل متابعته والحرص على حضوره، وجزاكم الله خيراً.':'جزاكم الله خيراً على حرصكم.')+'\nوتد')}
 async function profClick(e){if(e.target===profEl){closeProfile();return}const t=e.target.closest('button');if(!t)return;const st=stu(ui.prof);
  if(t.dataset.x==='close'){closeProfile();return}
  if(t.dataset.x==='rep'){expStudent(st);return}
- if(t.dataset.x==='saveinfo'&&!readOnly){const ph=profEl.querySelector('#pPhone').value.trim(),nt=profEl.querySelector('#pNote').value.trim();
+ if(t.dataset.x==='saveinfo'&&!readOnly){const ph=toL(profEl.querySelector('#pPhone').value.trim()),nt=profEl.querySelector('#pNote').value.trim();
   if(ph!==(st.phone||'')||nt!==(st.note||'')){st.phone=ph;st.note=nt;saveSt();log('تحديث بيانات '+st.name)}document.activeElement.blur();toast('تم الحفظ');drawProfile(true);return}
- if(t.dataset.x==='msg'){const txt=guardianMsg(st),num=waNum(profEl.querySelector('#pPhone').value);const box=profEl.querySelector('#msgBox');
+ if(t.dataset.x==='msg'){const txt=guardianMsg(st),num=waNum(toL(profEl.querySelector('#pPhone').value));const box=profEl.querySelector('#msgBox');
   box.innerHTML=`<div class="msg panel"><textarea readonly aria-label="نص الرسالة"></textarea><div class="acts" style="margin-top:8px"><button class="btn" data-x="copy">نسخ الرسالة</button>${num?`<a class="btn g" style="display:inline-flex;align-items:center;text-decoration:none" href="https://wa.me/${num}?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener">فتح واتساب</a>`:'<span class="mut">أضف جوال ولي الأمر واحفظه لفتح واتساب مباشرة.</span>'}</div></div>`;
   box.querySelector('textarea').value=txt;return}
  if(t.dataset.x==='copy'){const ta=profEl.querySelector('.msg textarea');try{await navigator.clipboard.writeText(ta.value);toast('نُسخت الرسالة')}catch(x){ta.select();toast('حدّد النص وانسخه')}return}
  if(t.dataset.bx&&!readOnly){if(await ask('حذف هذه النقاط؟','حذف')){const b=S.bonus.find(x=>x.id===t.dataset.bx);S.bonus=S.bonus.filter(b=>b.id!==t.dataset.bx);saveBn();log('حذف نقاط إضافية '+sgn(b?b.pts:0)+' من '+st.name);render();drawProfile(true)}}}
-function profSubmit(e){e.preventDefault();if(readOnly)return;const p=Math.round(+$('#bnPts').value||0);if(!p){toast('اكتب عدد النقاط');return}const st=stu(ui.prof),why=$('#bnWhy').value.trim();
+function profSubmit(e){e.preventDefault();if(readOnly)return;const p=Math.round(+toL($('#bnPts').value)||0);if(!p){toast('اكتب عدد النقاط');return}const st=stu(ui.prof),why=$('#bnWhy').value.trim();
  S.bonus.push({id:uid(),sid:ui.prof,pts:p,reason:why,week:Math.min(weekByDate(),NW()),key:'',term:TERM().id,date:iso(new Date())});saveBn();log('نقاط إضافية '+sgn(p)+' لـ'+st.name+(why?' ('+why+')':''));
  document.activeElement.blur();toast('أُضيفت '+sgn(p));render();drawProfile(true)}
 
@@ -509,7 +516,7 @@ function openNote(sid){const st=stu(sid),n=ui.week,key=ui.sess,s=sessions(n).fin
  const o=document.createElement('div');o.className='ov';
  o.innerHTML=`<div class="dlg"><h2 style="margin:0 0 4px">${esc(st.name)}</h2><div class="mut">${esc(s.pname)} · ${DAYS[s.day]} ${fmt(dayDate(n,s.day))}</div>
  <div class="lbl">ملاحظة على هذه الجلسة</div><textarea id="nNote" style="min-height:80px" placeholder="مثلاً: استأذن بدري، سبب الاعتذار…"></textarea>
- <div class="lbl">نقاط إضافية لهذه الجلسة</div><div class="form" style="grid-template-columns:110px minmax(0,1fr)"><input type="number" step="1" id="nPts" placeholder="10 أو -3"><input type="text" id="nWhy" placeholder="السبب"></div>
+ <div class="lbl">نقاط إضافية لهذه الجلسة</div><div class="form" style="grid-template-columns:110px minmax(0,1fr)"><input type="text" inputmode="numeric" id="nPts" placeholder="١٠ أو -٣"><input type="text" id="nWhy" placeholder="السبب"></div>
  ${bl.map(b=>`<div class="al"><span class="bon">${sgn(b.pts)}</span><span>${esc(b.reason||'بدون سبب')}</span><button class="xb" data-bx="${esc(b.id)}">حذف</button></div>`).join('')}
  <div class="acts" style="margin-top:14px"><button class="btn" data-x="save">حفظ</button><button class="btn g" data-x="close">إلغاء</button></div></div>`;
  o.querySelector('#nNote').value=noteOf(n,key,sid);
@@ -517,7 +524,7 @@ function openNote(sid){const st=stu(sid),n=ui.week,key=ui.sess,s=sessions(n).fin
   if(t.dataset.bx){S.bonus=S.bonus.filter(b=>b.id!==t.dataset.bx);saveBn();log('حذف نقاط إضافية من '+st.name);t.closest('.al').remove();render();return}
   if(t.dataset.x==='save'){const w=week(n),v=o.querySelector('#nNote').value.trim(),old=noteOf(n,key,sid);w.notes[key]=w.notes[key]||{};
    if(v)w.notes[key][sid]=v;else delete w.notes[key][sid];if(v!==old){saveWk(n);log('ملاحظة على '+st.name+' — '+sessLabel(n,s))}
-   const p=Math.round(+o.querySelector('#nPts').value||0),why=o.querySelector('#nWhy').value.trim();if(p){S.bonus.push({id:uid(),sid,pts:p,reason:why,week:n,key,term:TERM().id,date:iso(dayDate(n,s.day))});saveBn();log('نقاط إضافية '+sgn(p)+' لـ'+st.name+(why?' ('+why+')':''))}
+   const p=Math.round(+toL(o.querySelector('#nPts').value)||0),why=o.querySelector('#nWhy').value.trim();if(p){S.bonus.push({id:uid(),sid,pts:p,reason:why,week:n,key,term:TERM().id,date:iso(dayDate(n,s.day))});saveBn();log('نقاط إضافية '+sgn(p)+' لـ'+st.name+(why?' ('+why+')':''))}
    o.remove();render();toast('تم الحفظ')}});
  document.body.appendChild(o);setTimeout(()=>o.querySelector('#nNote').focus(),0)}
 
@@ -579,7 +586,7 @@ main.addEventListener('click',async e=>{const t=e.target.closest('button,[data-a
   case 'expstats':expStats();break;
   case 'expterm':expTerm();break;
   case 'xlsx':expXlsx();break;
-  case 'backup':save('watad-backup-'+iso(new Date())+'.json',JSON.stringify({cfg:S.cfg,students:S.students,all:S.all,bonus:S.bonus},null,1));break}
+  case 'backup':save('نسخة-تحضير-وتد-'+ar(iso(new Date()))+'.json',JSON.stringify({cfg:S.cfg,students:S.students,all:S.all,bonus:S.bonus},null,1));break}
 });
 main.addEventListener('submit',e=>{e.preventDefault();if(readOnly)return;
  if(e.target.id==='addSt'){const v=$('#stName').value.trim();if(!v)return;const b=$('#stB').value;S.students.push({id:uid(),name:v,b});saveSt();log('إضافة الطالب '+v+' إلى '+batchName(b));
@@ -594,11 +601,11 @@ main.addEventListener('change',async e=>{const t=e.target,D=t.dataset;
  if(D.bren){const b=S.cfg.batches.find(x=>x.id===D.bren),v=t.value.trim();if(b&&v&&v!==b.name){log('تغيير اسم '+b.name+' إلى '+v);b.name=v;saveCfg()}return}
  if(D.pren){const p=prog(D.pren),v=t.value.trim();if(p&&v&&v!==p.name){log('تغيير اسم '+p.name+' إلى '+v);p.name=v;saveCfg()}return}
  if(D.tren){const x=S.cfg.terms.find(y=>y.id===D.tren),v=t.value.trim();if(x&&v&&v!==x.name){log('تغيير اسم الفصل إلى '+v);x.name=v;saveCfg()}return}
- if(D.pt){const v=Math.round(+t.value||0);S.cfg.points[D.pt]=v;saveCfg();log('نقاط '+(STM[D.pt]?STM[D.pt].l:TASM[D.pt.slice(1)].l)+' = '+v);return}
+ if(D.pt){const v=Math.round(+toL(t.value)||0);S.cfg.points[D.pt]=v;saveCfg();log('نقاط '+(STM[D.pt]?STM[D.pt].l:TASM[D.pt.slice(1)].l)+' = '+v);return}
  if(D.ptas){const p=prog(D.ptas);p.tasmee=t.checked;saveCfg();log((t.checked?'تفعيل':'إيقاف')+' التسميع في '+p.name);return}
  if(D.pown){const p=prog(D.pown);if(t.checked)p.points=Object.assign({},P());else delete p.points;saveCfg();log((t.checked?'نقاط خاصة لـ':'إلغاء النقاط الخاصة لـ')+p.name);render();return}
- if(D.ppt){const p=prog(D.ppt),v=Math.round(+t.value||0);if(p&&p.points){p.points[D.k]=v;saveCfg();log('نقاط '+STM[D.k].l+' في '+p.name+' = '+v)}return}
- if(D.al){S.cfg.alerts[D.al]=Math.max(0,Math.round(+t.value||0));saveCfg();return}
+ if(D.ppt){const p=prog(D.ppt),v=Math.round(+toL(t.value)||0);if(p&&p.points){p.points[D.k]=v;saveCfg();log('نقاط '+STM[D.k].l+' في '+p.name+' = '+v)}return}
+ if(D.al){S.cfg.alerts[D.al]=Math.max(0,Math.round(+toL(t.value)||0));saveCfg();return}
  if(/^start[dmy]$/.test(t.id)){TERM().start=iso(sunday(readH('start')));saveCfg();log('بداية '+TERM().name+': '+hlong(parse(TERM().start)));toast('بداية الأسبوع الأول: الأحد '+hlong(parse(TERM().start)));render();return}
  if(t.id==='restore'&&t.files[0]){try{const v=JSON.parse(await t.files[0].text());if(!v.cfg||!Array.isArray(v.students))throw 0;
   if(!await ask('استبدال كل البيانات الحالية بالنسخة؟','استعادة'))return;
@@ -608,13 +615,13 @@ main.addEventListener('change',async e=>{const t=e.target,D=t.dataset;
 main.addEventListener('focusout',()=>setTimeout(()=>{if(deferRender&&!main.contains(document.activeElement))render()},0));
 main.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('[data-ren],[data-bren],[data-pren],[data-tren],#q'))e.target.blur()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ui.prof&&document.querySelectorAll('.ov').length===1)closeProfile()});
-function route(){const h=location.hash.slice(1);ui.view=['take','stats','students','settings'].includes(h)?h:'take';render();window.scrollTo(0,0)}
+function route(){const ae=document.activeElement;if(ae&&main.contains(ae)&&ae.blur)ae.blur();deferRender=false;const h=location.hash.slice(1);ui.view=['take','stats','students','settings'].includes(h)?h:'take';render();window.scrollTo(0,0)}
 window.addEventListener('hashchange',route);
 
 /* ---------- export (image / PDF / Excel) ---------- */
 let logoImg=null;
 async function getLogo(){if(logoImg)return logoImg;const i=new Image();i.src='logo.png';try{await i.decode();logoImg=i}catch(e){}return logoImg}
-function fit(ctx,s,w){s=String(s);if(ctx.measureText(s).width<=w)return s;while(s.length>1&&ctx.measureText(s+'…').width>w)s=s.slice(0,-1);return s+'…'}
+function fit(ctx,s,w){s=ar(String(s));if(ctx.measureText(s).width<=w)return s;while(s.length>1&&ctx.measureText(s+'…').width>w)s=s.slice(0,-1);return s+'…'}
 function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 async function drawReport({title,sub,summary,cols,rows}){
  const F='"IBM Plex Sans Arabic",Tahoma,sans-serif';
@@ -623,7 +630,7 @@ async function drawReport({title,sub,summary,cols,rows}){
  const c0=document.createElement('canvas').getContext('2d');c0.font='700 20px '+F;let sy=0;
  if(summary){let x=W-pad,lines=1;summary.forEach(s=>{const w=c0.measureText(s.t).width+(s.hex?50:30);if(x-w<pad){lines++;x=W-pad}x-=w+8});sy=lines*48+12}
  const H=HH+20+sy+TH+rows.reduce((a,r)=>a+(r.group?GH:RH),0)+90;const sc=H*2>30000?1:2;
- const cv=document.createElement('canvas');cv.width=W*sc;cv.height=H*sc;cv._k=.75/sc;const c=cv.getContext('2d');c.scale(sc,sc);c.direction='rtl';
+ const cv=document.createElement('canvas');cv.width=W*sc;cv.height=H*sc;cv._k=.75/sc;const c=cv.getContext('2d');c.scale(sc,sc);c.direction='rtl';const _ft=c.fillText.bind(c);c.fillText=(t,x,y)=>{const u=String(t).replace(/[\u200E\u2066\u2069]/g,'');if(/^[+-]/.test(u)){const d=c.direction;c.direction='ltr';_ft(ar(u),x,y);c.direction=d}else _ft(ar(t),x,y)};
  c.fillStyle='#fff';c.fillRect(0,0,W,H);c.fillStyle='#383735';c.fillRect(0,0,W,HH);
  c.fillStyle='#FCBE14';c.fillRect(0,HH-8,W/3,8);c.fillStyle='#2FBFCB';c.fillRect(W/3,HH-8,W/3,8);c.fillStyle='#F6941F';c.fillRect(2*W/3,HH-8,W/3,8);
  const lg=await getLogo();let tx=W-pad;if(lg){const lh=140,lw=lh*lg.naturalWidth/lg.naturalHeight;c.drawImage(lg,W-pad-lw,(HH-8-lh)/2,lw,lh);tx=W-pad-lw-24}
@@ -675,11 +682,11 @@ function expStudent(st){const rows=[];let cur=0;const t=[];for(let n=1;n<=NW();n
   cols:[{t:'اليوم',w:180,a:'r'},{t:'البرنامج',w:300,a:'r',b:1},{t:'الحالة',w:220},{t:'التسميع',w:170},{t:'النقاط',w:114,b:1,neg:1}],rows:rows.length?rows:[{cells:['لا يوجد تحضير مسجّل','','','','']}]},'تقرير-'+st.name)}
 async function openExport(spec,name){toast('جاري تجهيز الصورة…');const cv=await drawReport(spec);const url=cv.toDataURL('image/png');
  const o=document.createElement('div');o.className='ov';o.style.zIndex=22;
- o.innerHTML=`<div class="dlg"><h2 style="margin:0">جاهز للنشر</h2><img alt="معاينة التقرير"><div class="acts"><button class="btn" data-x="png">حفظ صورة PNG</button><button class="btn" data-x="pdf">حفظ PDF</button><button class="btn g" data-x="close">إغلاق</button></div><p class="mut">إذا لم يعمل الحفظ: اضغط مطولاً على الصورة لحفظها.</p></div>`;
+ o.innerHTML=`<div class="dlg"><h2 style="margin:0">جاهز للنشر</h2><img alt="معاينة التقرير"><div class="acts"><button class="btn" data-x="png">حفظ كصورة</button><button class="btn" data-x="pdf">حفظ بي دي إف</button><button class="btn g" data-x="close">إغلاق</button></div><p class="mut">إذا لم يعمل الحفظ: اضغط مطولاً على الصورة لحفظها.</p></div>`;
  o.querySelector('img').src=url;
  o.addEventListener('click',async e=>{const x=e.target.dataset.x;if(e.target===o||x==='close'){o.remove();return}
   if(x==='png'){const b=await new Promise(r=>cv.toBlob(r,'image/png'));save(name+'.png',b)}
-  if(x==='pdf'){try{await loadLib('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',()=>window.jspdf);save(name+'.pdf',makePdf(cv))}catch(err){toast('تعذّر إنشاء PDF')}}});
+  if(x==='pdf'){try{await loadLib('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',()=>window.jspdf);save(name+'.pdf',makePdf(cv))}catch(err){toast('تعذّر إنشاء ملف بي دي إف')}}});
  document.body.appendChild(o)}
 function makePdf(cv){const {jsPDF}=window.jspdf,k=cv._k,pw=cv.width,ph=Math.round(pw*1.414);
  if(cv.height<=ph*1.15){const d=new jsPDF({orientation:'p',unit:'pt',format:[pw*k,cv.height*k]});d.addImage(cv.toDataURL('image/png'),'PNG',0,0,pw*k,cv.height*k);return d.output('blob')}
@@ -688,19 +695,19 @@ function makePdf(cv){const {jsPDF}=window.jspdf,k=cv._k,pw=cv.width,ph=Math.roun
   if(i)d.addPage([pw*k,ph*k],'p');d.addImage(pc.toDataURL('image/jpeg',.92),'JPEG',0,0,pw*k,ph*k)}
  return d.output('blob')}
 function loadLib(src,has){if(has())return Promise.resolve();return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
-async function expXlsx(){toast('جاري تجهيز ملف Excel…');
- try{await loadLib('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',()=>window.XLSX)}catch(e){toast('تعذّر تحميل أداة Excel');return}
+async function expXlsx(){toast('جاري تجهيز ملف إكسل…');
+ try{await loadLib('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',()=>window.XLSX)}catch(e){toast('تعذّر تحميل أداة إكسل');return}
  const X=window.XLSX,wb=X.utils.book_new();wb.Workbook={Views:[{RTL:true}]};
  const all=calc({stW:'all',stP:'all',stB:'all'}).rows;
  const s1=[['#','الطالب','الدفعة',...ST.map(x=>x.l),'سمّع','لم يسمّع','نسبة الحضور %','نقاط الحضور','نقاط التسميع','نقاط إضافية','المجموع']];
  all.forEach((r,i)=>s1.push([i+1,r.s.name+(r.s.arch?' (مؤرشف)':''),batchName(r.s.b),...ST.map(x=>r[x.k]),r.ty,r.tn,r.pct==null?'':Math.round(r.pct*100),r.ap,r.tp,r.bp,r.pts]));
  const s2=[['الأسبوع','التاريخ','اليوم','البرنامج','الطالب','الدفعة','الحالة','التسميع','النقاط','ملاحظة']];
- for(let n=1;n<=NW();n++){if(isHol(n)){s2.push([n,hfull(dayDate(n,0)),'','إجازة','','','','','','']);continue}
-  sessions(n).forEach(s=>{const r=recOf(n,s.key),tz=tasOf(n,s.key);if(s.cx){s2.push([n,hfull(dayDate(n,s.day)),DAYS[s.day],s.pname,'','','ملغاة','','','']);return}
+ for(let n=1;n<=NW();n++){if(isHol(n)){s2.push([n,ar(hfull(dayDate(n,0))),'','إجازة','','','','','','']);continue}
+  sessions(n).forEach(s=>{const r=recOf(n,s.key),tz=tasOf(n,s.key);if(s.cx){s2.push([n,ar(hfull(dayDate(n,s.day))),DAYS[s.day],s.pname,'','','ملغاة','','','']);return}
    S.students.forEach(st=>{const k=r[st.id],nt=noteOf(n,s.key,st.id),tv=s.tasmee&&ATT.has(k)?tz[st.id]:null;if(!k&&!nt)return;
-    s2.push([n,hfull(dayDate(n,s.day)),DAYS[s.day],s.pname,st.name,batchName(st.b),k?STM[k].l:'',tv?TASM[tv].l:'',k?ptsOf(k,s.pid)+tasPts(tv):'',nt])})})}
+    s2.push([n,ar(hfull(dayDate(n,s.day))),DAYS[s.day],s.pname,st.name,batchName(st.b),k?STM[k].l:'',tv?TASM[tv].l:'',k?ptsOf(k,s.pid)+tasPts(tv):'',nt])})})}
  const s3=[['التاريخ','الأسبوع','الطالب','الدفعة','النقاط','السبب']];
- S.bonus.filter(b=>(b.term||'t1')===TERM().id).forEach(b=>{const st=stu(b.sid);if(st)s3.push([b.date?hfull(parse(b.date)):'',b.week||'',st.name,batchName(st.b),b.pts,b.reason||''])});
+ S.bonus.filter(b=>(b.term||'t1')===TERM().id).forEach(b=>{const st=stu(b.sid);if(st)s3.push([b.date?ar(hfull(parse(b.date))):'',b.week||'',st.name,batchName(st.b),b.pts,b.reason||''])});
  const s4=[['الطالب','الدفعة','جوال ولي الأمر','ملاحظات','الحالة']];S.students.forEach(s=>s4.push([s.name,batchName(s.b),s.phone||'',s.note||'',s.arch?(s.grad?'متخرّج':'مؤرشف'):'نشط']));
  const add=(rows,name,w)=>{const ws=X.utils.aoa_to_sheet(rows);ws['!cols']=w.map(x=>({wch:x}));X.utils.book_append_sheet(wb,ws,name)};
  add(s1,'الملخص',[5,26,14,10,8,8,8,8,8,8,10,12,12,12,12,10]);add(s2,'سجل التحضير',[8,12,10,20,24,14,12,10,8,30]);add(s3,'النقاط الإضافية',[12,8,24,14,8,30]);add(s4,'الطلاب',[26,14,16,40,10]);
@@ -768,20 +775,20 @@ async function startSync(code,creator){stopSync();if(!window.crypto||!crypto.sub
  SYNC.code=code;try{localStorage.setItem(SK,code)}catch(e){}SYNC.got=creator||localStorage.getItem(SG)==='1';if(creator){try{localStorage.setItem(SG,'1')}catch(e){}stampAll();lsSave()}
  await prepKey(code);SYNC.conns=BROKERS.map(mqtt);syncStatus();syncSoon()}
 function stopSync(){SYNC.conns.forEach(c=>c.close());SYNC.conns=[];SYNC.code=null;SYNC.key=null;syncStatus()}
-function newCode(){const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',r=crypto.getRandomValues(new Uint8Array(12));let s='';r.forEach((b,i)=>{s+=A[b%A.length];if(i===3||i===7)s+='-'});return s}
+function newCode(){const A='0123456789',r=crypto.getRandomValues(new Uint8Array(12));let s='';r.forEach((b,i)=>{s+=A[b%A.length];if(i===3||i===7)s+='-'});return s}
 function vSync(){const d=readOnly?' disabled':'';
  let h=`<h2>المزامنة بين الأجهزة</h2><p style="margin:0 0 8px">البيانات محفوظة في هذا الجهاز دائماً. فعّل المزامنة إذا تبي نفس البيانات على جوالك وكمبيوترك، أو مع شخص يحضّر معك. البيانات تُشفَّر قبل إرسالها، ولا يقرأها إلا من عنده الرمز.</p>`;
- if(SYNC.code)h+=`<div class="panel" style="margin-top:6px"><div class="mut">رمز المزامنة لهذا الجهاز</div><b style="font-size:26px;letter-spacing:2px;direction:ltr;display:block;text-align:start">${esc(SYNC.code)}</b>
+ if(SYNC.code)h+=`<div class="panel" style="margin-top:6px"><div class="mut">رمز المزامنة لهذا الجهاز</div><b style="font-size:26px;letter-spacing:2px;direction:ltr;display:block;text-align:right">${esc(SYNC.code)}</b>
   <div class="acts" style="margin-top:8px"><button class="btn" data-act="copysync">نسخ رابط الربط</button><button class="btn dg s" data-act="stopsync">إيقاف المزامنة هنا</button></div>
   <p class="mut">افتح الرابط المنسوخ في الجهاز الثاني، أو أدخل الرمز في إعداداته. احفظ الرمز عندك، ولا تعطيه إلا لمن يحضّر معك.</p></div>`;
  else h+=`<div class="acts"><button class="btn" data-act="mksync"${d}>إنشاء رمز مزامنة (من الجهاز اللي فيه بياناتك)</button></div>
-  <div class="form" style="grid-template-columns:minmax(0,1fr) auto;margin-top:8px"><input type="text" id="syncIn" placeholder="عندك رمز؟ اكتبه هنا: XXXX-XXXX-XXXX" autocomplete="off" style="direction:ltr"><button class="btn g" data-act="joinsync">ربط</button></div>
+  <div class="form" style="grid-template-columns:minmax(0,1fr) auto;margin-top:8px"><input type="text" id="syncIn" placeholder="عندك رمز؟ اكتبه هنا (١٢ رقماً)" autocomplete="off" style="direction:ltr"><button class="btn g" data-act="joinsync">ربط</button></div>
   <p class="mut">عند الربط برمز موجود، تُستبدل بيانات هذا الجهاز ببيانات الرمز.</p>`;
  h+=`<label style="display:grid;gap:4px;margin-top:12px;font-weight:500">اسمك (يظهر في سجل التعديلات)<input type="text" id="meName" value="${esc(ME||'')}" placeholder="مثلاً: أبو سعود"></label>`;
  return h}
 async function saSettingsClick(D){
  if(D.act==='mksync'){if(!await ask('سيتم إنشاء رمز مزامنة ورفع بيانات هذا الجهاز (مشفّرة). استخدمه من الجهاز اللي فيه بياناتك الصحيحة.','إنشاء'))return true;await startSync(newCode(),true);render();return true}
- if(D.act==='joinsync'){const v=($('#syncIn').value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(v.length!==12){toast('الرمز ١٢ حرفاً');return true}
+ if(D.act==='joinsync'){const v=toL($('#syncIn').value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(v.length!==12){toast('الرمز ١٢ رقماً');return true}
   const code=v.slice(0,4)+'-'+v.slice(4,8)+'-'+v.slice(8);try{localStorage.removeItem(SG)}catch(e){}S._ts={};await startSync(code,false);toast('جاري جلب البيانات…');render();return true}
  if(D.act==='stopsync'){if(await ask('إيقاف المزامنة على هذا الجهاز؟ البيانات تبقى فيه.','إيقاف')){stopSync();try{localStorage.removeItem(SK);localStorage.removeItem(SG)}catch(e){}render()}return true}
  if(D.act==='copysync'){const u=location.href.split('#')[0]+'#sync-'+SYNC.code.replace(/-/g,'');try{await navigator.clipboard.writeText(u);toast('نُسخ الرابط')}catch(e){toast(u)}return true}
