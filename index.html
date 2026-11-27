@@ -237,6 +237,11 @@ a.btn{display:inline-flex;align-items:center;justify-content:center;border:3px s
 .tv .ihl{font-size:6rem}.tv .pvtxt{font-size:2.6rem}
 .tbcard{text-align:center}.ihc.p10,.ihc.p5{color:#17121b!important}
 .moremenu{display:flex;flex-wrap:wrap;gap:8px;padding:10px}
+.tmctl{position:relative;display:inline-flex}
+.tmpop{position:absolute;top:calc(100% + 6px);inset-inline-start:0;z-index:30;background:var(--card);color:var(--text);border:3px solid var(--line);border-radius:14px;box-shadow:4px 4px 0 var(--line);padding:10px;display:flex;flex-direction:column;gap:8px;width:250px}
+.tmopts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tv .tmctl{display:none}
+.tmpop{position:fixed!important;top:64px!important;left:50%!important;right:auto!important;inset-inline-start:auto!important;transform:translateX(-50%);width:min(300px,92vw)!important;z-index:60!important}
 </style>
 </head>
 <body>
@@ -1968,8 +1973,8 @@ function vLobby(){
 
 /* ===== المؤقت العام ===== */
 function secs(at,t){return Math.max(0,t-Math.floor((Date.now()-at)/1000));}
-function tActive(){return (G.v==="sj"&&G.sj.cur&&G.sj.phase!=="rev"&&sjT()>0)||(G.v==="tf"&&G.tf.on&&G.tf.i>=0&&!G.tf.rev&&G.tf.t>0)||(G.v==="ct"&&G.ct.st==="go"&&G.ct.t>0)||(G.v==="ih"&&G.ih.on&&!G.ih.rev&&G.ih.t>0)||(G.v==="tb"&&G.tb.st==="go"&&G.tb.t>0)||(G.v==="bl"&&G.bl.st==="go");}
-function tLeft(){if(G.v==="sj")return sjLeft();if(G.v==="tf")return secs(G.tf.qAt,G.tf.t);if(G.v==="ct")return secs(G.ct.qAt,G.ct.t);if(G.v==="ih")return secs(G.ih.qAt,G.ih.t);if(G.v==="tb")return secs(G.tb.qAt,G.tb.t);if(G.v==="bl")return secs(G.bl.qAt,G.bl.t||60);return 0;}
+function tActive(){return genActive()||(G.v==="sj"&&G.sj.cur&&G.sj.phase!=="rev"&&sjT()>0)||(G.v==="tf"&&G.tf.on&&G.tf.i>=0&&!G.tf.rev&&G.tf.t>0)||(G.v==="ct"&&G.ct.st==="go"&&G.ct.t>0)||(G.v==="ih"&&G.ih.on&&!G.ih.rev&&G.ih.t>0)||(G.v==="tb"&&G.tb.st==="go"&&G.tb.t>0)||(G.v==="bl"&&G.bl.st==="go"&&G.bl.t>0);}
+function tLeft(){if(genActive())return genLeft();if(G.v==="sj")return sjLeft();if(G.v==="tf")return secs(G.tf.qAt,G.tf.t);if(G.v==="ct")return secs(G.ct.qAt,G.ct.t);if(G.v==="ih")return secs(G.ih.qAt,G.ih.t);if(G.v==="tb")return secs(G.tb.qAt,G.tb.t);if(G.v==="bl")return secs(G.bl.qAt,G.bl.t);return 0;}
 function tmHtml(){var l=tLeft();return '<div class="tl'+(l<=5?' hot':'')+'" id="tm">'+(l>0?ar(l):"انتهى الوقت ⏰")+'</div>';}
 function cyc(v,arr){var i=arr.indexOf(v);return arr[(i+1)%arr.length];}
 function tLbl(t){return t?ar(t)+' ثانية':'بدون وقت';}
@@ -2178,10 +2183,10 @@ function vBL(){
  var b=G.bl,h=topbar()+'<h1>⚡ جولة البرق</h1>';if(b.team>=G.teams.length)b.team=0;
  if(b.st!=="go"){h+='<p class="muted">لكل فريق وقت محدد يجاوب فيه أكبر عدد من الأسئلة ورا بعض. المقدم يضغط صح أو تخطي بسرعة.</p>';
   if(b.st==="end")h+='<div class="win"><span>انتهى دور</span><b>'+esc(tname(b.team))+'</b><span>'+ar(b.n)+' إجابات صح</span></div>';
-  h+='<div class="card"><h2>الدور على</h2><div class="top">'+G.teams.map(function(_,t){return '<button class="sm'+(b.team===t?' g':'')+'" data-a="blteam" data-t="'+t+'">'+emb(t)+esc(tname(t))+'</button>';}).join('')+'</div><div class="opt"><span class="n">⏱ وقت كل فريق</span><button class="sm" data-a="blt">'+tLbl(b.t||60)+'</button></div></div>';
+  h+='<div class="card"><h2>الدور على</h2><div class="top">'+G.teams.map(function(_,t){return '<button class="sm'+(b.team===t?' g':'')+'" data-a="blteam" data-t="'+t+'">'+emb(t)+esc(tname(t))+'</button>';}).join('')+'</div><div class="opt"><span class="n">⏱ وقت كل فريق</span><button class="sm" data-a="blt">'+tLbl(b.t)+'</button></div></div>';
   return h+bigBtn("blgo","⚡ ابدأ دور "+esc(tname(b.team)))+'<div style="height:80px"></div>';}
  var r=Q(b.q);
- h+='<div class="card" style="text-align:center"><div class="muted">يجاوب: <b style="color:'+COL[b.team%8]+'">'+esc(tname(b.team))+'</b> · صح: <b>'+ar(b.n)+'</b></div>'+tmHtml()+'<h2 style="font-size:1.6rem;margin:12px 0">'+(r?esc(r[1]):'')+'</h2>'+(r?peekBox(esc(r[2])):'')+(b.prev?'<div class="muted">الجواب السابق: <b>'+esc(b.prev)+'</b></div>':'')+'</div>';
+ h+='<div class="card" style="text-align:center"><div class="muted">يجاوب: <b style="color:'+COL[b.team%8]+'">'+esc(tname(b.team))+'</b> · صح: <b>'+ar(b.n)+'</b></div>'+(b.t>0?tmHtml():'')+'<h2 style="font-size:1.6rem;margin:12px 0">'+(r?esc(r[1]):'')+'</h2>'+(r?peekBox(esc(r[2])):'')+(b.prev?'<div class="muted">الجواب السابق: <b>'+esc(b.prev)+'</b></div>':'')+'</div>';
  h+='<div class="top"><button class="g" style="flex:2;padding:18px;font-size:1.3rem" data-a="blok">✓ صح</button><button style="flex:1;padding:18px" data-a="blsk">⏭️ تخطي</button></div><button style="width:100%;margin-top:8px" data-a="blend">⏹️ انتهى الدور</button>';
  return h+'<div style="height:80px"></div>';}
 
@@ -2271,7 +2276,7 @@ function more2Act(a,el,v,t){
  else if(a==="tbend"){G.tb.st="end";G.tb.round="";}
  else if(a==="nmrv"){nmReveal();}else if(a==="nmn"){nmNext();}
  else if(a==="pvr"){G.pv.rev=true;}else if(a==="pvn"){pvNext();}
- else if(a==="blteam"){G.bl.team=t;}else if(a==="blt"){G.bl.t=cyc(G.bl.t||60,[60,90,45,30]);}
+ else if(a==="blteam"){G.bl.team=t;}else if(a==="blt"){G.bl.t=cyc(G.bl.t,[60,90,45,30,0]);}
  else if(a==="blgo"){var b=G.bl;b.st="go";b.n=0;b.prev="";b.qAt=Date.now();blDraw();}
  else if(a==="blok"){var b2=G.bl;if(b2.st==="go"){var r2=Q(b2.q);b2.n++;addPts(b2.team,1);qsAdd(b2.q,1);b2.prev=r2?r2[2]:"";blDraw();}}
  else if(a==="blsk"){var b3=G.bl;if(b3.st==="go"){var r3=Q(b3.q);qsAdd(b3.q,0);b3.prev=r3?r3[2]:"";blDraw();}}
@@ -2294,10 +2299,41 @@ function more2Act(a,el,v,t){
  else if(a==="prshuf"){L.prrows=null;render();return "local";}
  else if(a==="prgo"){try{window.print();}catch(_){}return "local";}
  else if(a==="prdl"){saveFile("بطاقات-الأسئلة.html",new Blob([printHTML(L.prrows||printRows())],{type:"text/html"}));return "local";}
+ else if(a==="tmpop"){L.tmpop=!L.tmpop;render();return "local";}
+ else if(a==="tmset"){tmSet(gameOfView(),v);L.tmpop=false;tmRestart();}
+ else if(a==="tmre"){tmRestart();L.tmpop=false;}
  else if(a==="setname"){var ni=document.querySelector("[data-pname]");var nm=ni?String(ni.value).trim().slice(0,24):"";if(nm){L.pname=nm;try{localStorage.setItem("wg_pname",nm);}catch(_){}if(ROOM)ROOM.presence({name:nm}).catch(function(){});}render();return "local";}
  else if(a==="rename"){L.pname="";render();return "local";}
  else return false;
  return true;}
+
+/* ===== مؤقت موحّد لكل الألعاب ===== */
+var TMDEF={rank:60,where:30,hex:20,feud:45,whoami:30,link:30,num:30,proverb:20};
+var TMOPT=[0,10,15,20,30,45,60,90,120];
+function gameOfView(){var v=G.v;return {q:"rank",hub:"rank",wh:"where",hx:"hex",fd:"feud",wm:"whoami",lk:"link",nm:"num",pv:"proverb",sj:"sj",tf:"tf",ct:"count",ih:"ihj",tb:"taboo",bl:"blitz"}[v]||"";}
+function tmOwn(g){return {sj:[G.sj,"t"],tf:[G.tf,"t"],count:[G.ct,"t"],ihj:[G.ih,"t"],taboo:[G.tb,"t"],blitz:[G.bl,"t"]}[g]||null;}
+function tmGet(g){var o=tmOwn(g);if(o)return o[0][o[1]]||0;G.tmx=G.tmx||{};return G.tmx[g]!=null?G.tmx[g]:(TMDEF[g]||0);}
+function tmSet(g,v){var o=tmOwn(g);if(o){o[0][o[1]]=v;return;}G.tmx=G.tmx||{};G.tmx[g]=v;G.tmat=Date.now();}
+function genKey(){var v=G.v,x;
+ if(v==="q"){var op=(G.open[G.cat]||[]).length,n=CATS[G.cat]?CATS[G.cat].i.length:0;return op<n?"q:"+G.cat:"";}
+ if(v==="hx"){x=G.hx;return x.q&&!x.rev?"hx:"+x.q:"";}
+ if(v==="wh"){x=G.wh;return x.cur>=0&&!x.rev?"wh:"+x.cur:"";}
+ if(v==="fd"){x=G.fd;var q=FEUD[x.cur];if(!q)return "";var all=q[1].every(function(_,i){return x.rev[i];});return all||x.strikes>=3?"":"fd:"+x.cur;}
+ if(v==="wm"){x=G.wm;return x.cur>=0&&!x.rev?"wm:"+x.cur+":"+x.k:"";}
+ if(v==="lk"){x=G.lk;return x.cur>=0&&!x.rev?"lk:"+x.cur+":"+x.k:"";}
+ if(v==="nm"){x=G.nm;return x.round&&!x.rev?"nm:"+x.round:"";}
+ if(v==="pv"){x=G.pv;return x.cur>=0&&!x.rev?"pv:"+x.cur:"";}
+ return "";}
+function genActive(){var g=gameOfView();return !tmOwn(g)&&!!G.tmk&&G.tmk===genKey()&&tmGet(g)>0;}
+function genLeft(){return secs(G.tmat||0,tmGet(gameOfView()));}
+function tmTouch(){var k=genKey();if(k!==G.tmk){G.tmk=k;G.tmat=Date.now();}}
+function tmRestart(){var g=gameOfView(),o=tmOwn(g),now=Date.now();
+ if(!o){G.tmat=now;G.tmk=genKey();return;}
+ if(g==="sj"){if(G.sj.cur)G.sj.qAt=now;}else if(g==="tf")G.tf.qAt=now;else if(g==="count")G.ct.qAt=now;else if(g==="ihj")G.ih.qAt=now;else if(g==="taboo")G.tb.qAt=now;else if(g==="blitz")G.bl.qAt=now;}
+function tmCtl(){var g=gameOfView();if(!g||L.mode==="player")return "";var t=tmGet(g),h='<span class="tmctl"><button class="sm'+(t?' g':'')+'" data-a="tmpop" title="المؤقت">⏱ '+(t?ar(t)+'ث':'مقفل')+'</button>';
+ if(L.tmpop)h+='<span class="tmpop"><b>⏱ مؤقت هذي اللعبة</b><span class="tmopts">'+TMOPT.map(function(s){return '<button class="sm'+(s===t?' g':'')+'" data-a="tmset" data-v="'+s+'">'+(s?ar(s)+' ثانية':'⛔ إيقاف')+'</button>';}).join('')+'</span>'+(t?'<button class="sm" data-a="tmre">⟲ ابدأ العدّ من جديد</button>':'')+'</span>';
+ return h+'</span>';}
+function genTimer(){return genActive()?tmHtml():"";}
 
 var CE=["📿","📖","👶","⚔️","⚡","🏜️","📜","🌍","🌴","👑","🕋","🌐","🕌"];
 var GAMES=[
@@ -2501,7 +2537,7 @@ function vHome(){
  GAMES.forEach(function(g,i){if(L.filter!=="الكل"&&g.tags.indexOf(L.filter)<0)return;var k=KC[i%KC.length];h+='<button class="cat" style="--k:'+k[0]+';--on:'+k[1]+'" data-a="game" data-id="'+g.id+'"><span class="art">'+(ART[g.id]||"")+'</span><b>'+g.name+'</b><small>'+g.desc+'</small><div>'+g.tags.map(function(t){return '<span class="tag">'+t+'</span>'}).join('')+'</div></button>';});
  return h+'</div><div class="stats"><div><b>'+ar(GAMES.length)+'</b><span class="muted">ألعاب</span></div><div><b>'+ar(BANK.length+CUSTOM.length)+'</b><span class="muted">سؤال في البنك</span></div><div><b>'+ar(CATS.length+FEUD.length)+'</b><span class="muted">فئة واستبيان</span></div></div><div class="card" style="padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="n" style="flex:1">♻️ الموقع يتجنب الأسئلة اللي انسألت قبل. المستعمل لين الحين: <b>'+ar(seenCount())+'</b></span><button class="sm" data-a="seenreset">'+(L.seenAsk?'متأكد؟ صفّرها':'تصفير')+'</button></div>'+(window.WSOLO?'<p class="muted" style="text-align:center">📴 وضع جهاز واحد بدون إنترنت. <a href="#" data-a="online">ارجع للغرف الأونلاين</a></p>':'')+'<div style="height:80px"></div>';
 }
-function topbar(){return '<div class="top"><button class="sm" data-a="home">🏠 الألعاب</button>'+pres()+'<div class="sp"></div><button class="sm" data-a="finish">🏁 إنهاء وإعلان الفائز</button></div>';}
+function topbar(){return '<div class="top"><button class="sm" data-a="home">🏠 الألعاب</button>'+pres()+tmCtl()+'<div class="sp"></div><button class="sm" data-a="finish">🏁 إنهاء وإعلان الفائز</button></div>'+genTimer();}
 function cnt(ci){return (G.open[ci]||[]).length;}
 function vHub(){
  var h=topbar()+'<h1>🏆 لعبة الترتيب</h1><p class="muted">اختر الفئة اللي تبي تلعبها</p><div class="grid ggrid">';
@@ -2509,7 +2545,7 @@ function vHub(){
  return h+'</div><div style="height:80px"></div>';
 }
 function vQ(){
- var c=CATS[G.cat],h='<div class="top"><button class="sm" data-a="hub">⬅️ الفئات</button>'+pres()+'<div class="sp"></div><button class="sm" data-a="all">👁️ كشف الكل</button><button class="sm" data-a="none">🙈 إخفاء الكل</button></div><h2>'+c.q+'</h2>';
+ var c=CATS[G.cat],h='<div class="top"><button class="sm" data-a="hub">⬅️ الفئات</button>'+pres()+tmCtl()+'<div class="sp"></div><button class="sm" data-a="all">👁️ كشف الكل</button><button class="sm" data-a="none">🙈 إخفاء الكل</button></div>'+genTimer()+'<h2>'+c.q+'</h2>';
  var op=G.open[G.cat]||[];
  c.i.forEach(function(it,k){
   var o=op.indexOf(k)>-1,peek=!o&&L.presenter,col=COL[k%8];
@@ -2612,14 +2648,14 @@ function hxSVG(preview){
 }
 function vHX(){
  var x=G.hx;if(!x.on||!x.parts||x.n!==x.parts.length||x.cells.length!==hxLayout(x.n||2).pos.length)return vHXS();
- var cur=x.order[x.pos],h='<div class="top"><button class="sm" data-a="home">🏠</button><button class="sm" data-a="hxset">⚙️ الفرق</button>'+pres()+'<div class="sp"></div><button class="sm" data-a="hxgo">🔄 لوحة جديدة</button><button class="sm" data-a="finish">🏁 الفائز</button></div><h2>🔤 خلية الحروف</h2>';
+ var cur=x.order[x.pos],h='<div class="top"><button class="sm" data-a="home">🏠</button><button class="sm" data-a="hxset">⚙️ الفرق</button>'+pres()+tmCtl()+'<div class="sp"></div><button class="sm" data-a="hxgo">🔄 لوحة جديدة</button><button class="sm" data-a="finish">🏁 الفائز</button></div><h2>🔤 خلية الحروف</h2>';
  h+='<div class="card" style="padding:10px"><div class="muted" style="text-align:center">الدور على: <b style="color:'+COL[cur%8]+'">'+esc(tname(cur))+'</b></div>'+hxSVG(false)+'<div class="chips" style="justify-content:center">'+x.parts.map(function(t){var c=x.cells.filter(function(v){return v===t;}).length;return '<span class="chip" style="background:'+COL[t%8]+'"><bdi>'+esc(tname(t))+'</bdi>: <b>'+ar(c)+'</b> خلية</span>';}).join('')+'</div><div class="muted" style="text-align:center">كل فريق يربط حدّيه المتقابلين بلونه</div></div>';
  if(x.over>=0)h+='<div class="win"><span>🏆 فاز بالربط</span><b>'+esc(tname(x.parts[x.over]))+'</b><span>+٥ نقاط</span></div>';
  else if(x.over===-2){var best=-1,bc=-1;x.parts.forEach(function(t){var c=x.cells.filter(function(v){return v===t;}).length;if(c>bc){bc=c;best=t;}});h+='<div class="win"><span>امتلأت اللوحة بدون ربط، الأكثر خلايا</span><b>'+esc(tname(best))+'</b><span>'+ar(bc)+' خلية</span></div>';}
  var b=Q(x.q);
  if(x.q&&!b){x.q=null;x.cur=-1;}
  if(x.q&&b){var Lt=x.letters[x.cur];
-  h+='<div class="ov"><div class="sheet" data-stop="1"><div class="top">'+srcTag(x.q,b)+'<span class="chip">'+CATN[b[0]]+'</span>'+edBtn(x.q)+'<div class="sp"></div><span class="word" style="margin:0;font-size:2.4rem">'+Lt+'</span></div><h2 style="font-size:1.35rem">'+esc(b[1])+'</h2><p class="muted">الإجابة تبدأ بحرف «'+Lt+'»</p>'+bzStrip();
+  h+='<div class="ov"><div class="sheet" data-stop="1">'+genTimer()+'<div class="top">'+srcTag(x.q,b)+'<span class="chip">'+CATN[b[0]]+'</span>'+edBtn(x.q)+tmCtl()+'<div class="sp"></div><span class="word" style="margin:0;font-size:2.4rem">'+Lt+'</span></div><h2 style="font-size:1.35rem">'+esc(b[1])+'</h2><p class="muted">الإجابة تبدأ بحرف «'+Lt+'»</p>'+bzStrip();
   if(!x.rev)h+=peekBox(esc(b[2]))+'<button class="g" style="width:100%;padding:14px" data-a="hxrv">👀 اعرض الجواب</button><button style="width:100%;margin-top:8px" data-a="hxsk">🔁 سؤال آخر بنفس الحرف</button><button style="width:100%;margin-top:8px" data-a="hxlt">🔤 غيّر الحرف</button><button style="width:100%;margin-top:8px" data-a="hxcl" data-v="-1">إلغاء السؤال</button>';
   else{h+='<div class="win"><b style="font-size:1.6rem">'+esc(b[2])+'</b></div><p class="muted">من أجاب أولاً؟</p>';
    x.order.forEach(function(t){h+='<button class="g" style="width:100%;margin-bottom:8px;padding:12px;background:'+COL[t%8]+';color:#17121b" data-a="hxcl" data-v="'+t+'">✓ '+esc(tname(t))+'</button>';});
@@ -2662,7 +2698,7 @@ function sjTeamCard(k){var s=G.sj,ti=sjTeam(k),on=s.turn===k&&!s.cur,hl=s.helps[
  return h+'</div>'+(s.turn===k&&!s.cur?'<div class="muted">دوره يختار سؤال</div>':'')+'</div>';}
 function vSJ(){
  var s=G.sj;if(!s.on||!s.tm||s.sc.length!==s.tm.length)return vSJS();
- var n=s.tm.length,h='<div class="top"><button class="sm" data-a="home">🏠</button><button class="sm" data-a="sjset">⚙️ إعداد</button>'+pres()+'<div class="sp"></div><button class="sm" data-a="finish">🏁 الفائز</button></div>';
+ var n=s.tm.length,h='<div class="top"><button class="sm" data-a="home">🏠</button><button class="sm" data-a="sjset">⚙️ إعداد</button>'+pres()+tmCtl()+'<div class="sp"></div><button class="sm" data-a="finish">🏁 الفائز</button></div>';
  h+='<div class="sjteams">'+s.tm.map(function(_,k){return sjTeamCard(k);}).join('')+'</div>';
  if(s.cur){var c=s.board[s.cur[0]][s.cur[1]],b=Q(c.q),cat=s.cats[s.cur[0]],V=sjVal(c),A=sjTeam(s.turn);
   h+='<div class="card sjq" style="text-align:center"><div><span class="chip">'+CATN[cat]+'</span> <span class="chip" style="background:var(--c3)">'+ar(V)+' نقطة</span>'+(c.g?' <span class="chip gold">⭐ سؤال ذهبي ×٢</span>':'')+(c.pit>=0?' <span class="chip" style="background:var(--c1);color:#fff">🕳️ حفرة على '+esc(tname(sjTeam(c.po)))+'</span>':'')+edBtn(c.q)+c.h.map(function(x){var hp=HELPS.filter(function(y){return y[0]===x;})[0];return hp?' <span class="chip">'+hp[1]+' '+hp[2]+'</span>':'';}).join('')+'</div>';
@@ -2928,7 +2964,7 @@ app.addEventListener("click",function(e){
  else if(a==="solo"){location.hash="solo";location.reload();return;}
  else if(a==="online"){e.preventDefault();location.hash="";location.reload();return;}
  else{var mr=moreAct(a,el,v,t);if(!mr)mr=more2Act(a,el,v,t);if(mr==="local")return;if(!mr)ch=false;}
- if(ch)commit();else saveLocal();
+ if(ch){try{tmTouch();}catch(_){}commit();}else saveLocal();
  render();
 });
 render();
