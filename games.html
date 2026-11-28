@@ -2735,7 +2735,7 @@ function offlinePrep(){if(!window.WSHIM||offReady()||OFFP||!("serviceWorker" in 
   fetch(fcss).then(function(r){return r.text();}).then(function(t){var m=t.match(/url\((https:[^)]+)\)/g)||[];return Promise.all(m.map(function(u){return fetch(u.slice(4,-1)).catch(function(){});}));}).catch(function(){}).then(function(){OFFP.d++;});
   var k=0,fails=0;(function next(){if(k>=U.length){if(fails<5){try{localStorage.setItem("wg_off",OFFV);}catch(e){}}OFFP=null;render();return;}
    var u=U[k++];fetch(u,{mode:u.indexOf("cdnjs")>0?"no-cors":"cors"}).then(function(r){if(!r.ok&&r.type!=="opaque")fails++;},function(){fails++;}).then(function(){OFFP.d++;if(OFFP.d%8===0)render();setTimeout(next,260);});})();});}
-function offChip(){if(!window.WSHIM)return '';if(OFFP)return '<div class="offchip">📥 جاري تجهيز الموقع للاستخدام بدون نت… '+ar(Math.round(OFFP.d*100/OFFP.n))+'٪</div>';return offReady()?'<div class="offchip ok">✅ جاهز يشتغل بدون نت، حتى ألعاب القرآن</div>':'';}
+function offChip(){if(!window.WSHIM)return '';if(OFFP)return '<div class="offchip">📥 جاري تجهيز الموقع للاستخدام بدون نت… '+ar(Math.round(OFFP.d*100/OFFP.n))+'٪</div>';return offReady()?'<div class="offchip ok">✅ جاهز يشتغل بدون نت</div>':'';}
 setTimeout(function(){try{offlinePrep();}catch(e){}},3500);
 window.addEventListener("online",function(){setTimeout(function(){try{offlinePrep();}catch(e){}},2000);});
 
