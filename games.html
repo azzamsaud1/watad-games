@@ -1417,6 +1417,7 @@ var PROV=[
 /* ===== النسخة المستقلة: مزامنة عبر MQTT عام، بدون حسابات ===== */
 (function(){
  if(window.claude&&window.claude.use)return;
+ window.addEventListener("hashchange",function(){location.reload();});
  try{if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="127.0.0.1"))navigator.serviceWorker.register("sw.js").catch(function(){});}catch(e){}
  var BROKERS=["wss://broker.hivemq.com:8884/mqtt","wss://broker.emqx.io:8084/mqtt","wss://test.mosquitto.org:8081/mqtt"];
  try{var qb=new URLSearchParams(location.search).get("broker");if(qb)BROKERS=[qb];}catch(e){}
@@ -3121,8 +3122,10 @@ function syncChip(){
 function pres(){return '<button class="sm'+(L.presenter?' g':'')+'" data-a="pres" title="يظهر الإجابات على هذا الجهاز فقط">'+(L.presenter?'👁️ وضع المقدم':'🙈 وضع العرض')+'</button>';}
 function logo(){return BR.logo?'<img src="'+BR.logo+'" alt="'+BR.name+'">':'<span class="em">'+icon("pad","ic hero")+'</span>';}
 function hero(sub){return '<div class="hero">'+logo()+'<h1>'+BR.name+'</h1><p>'+sub+'</p></div>';}
+function canLand(){return !!(window.WSHIM||(window.WSOLO&&!window.WOFFILE));}
+function landBtn(){return canLand()?'<button class="sm" data-a="toland">⬅️ رجوع للبداية</button>':'';}
 function vSetup(){
-var ind=!!G.indiv,h=(window.WSHIM&&CANEDIT?'<div class="bzstrip live"><span>غرفتك: <b dir="ltr">'+esc(WSHIM.room)+'</b></span><div class="sp"></div><button class="sm" data-a="share">🔗 روابط اللاعبين والشاشة</button></div>':'')+hero("جهّز الجلسة وابدأ");
+var ind=!!G.indiv,h=(canLand()?'<div class="top">'+landBtn()+'</div>':'')+(window.WSHIM&&CANEDIT?'<div class="bzstrip live"><span>غرفتك: <b dir="ltr">'+esc(WSHIM.room)+'</b></span><div class="sp"></div><button class="sm" data-a="share">🔗 روابط اللاعبين والشاشة</button></div>':'')+hero("جهّز الجلسة وابدأ");
  h+='<div class="card"><h2>🎮 طريقة اللعب</h2><div class="modes"><button class="'+(ind?'':'on')+'" data-a="indiv" data-v="0"><span>👥</span><b>فرق</b><small>كل مجموعة فريق</small></button><button class="'+(ind?'on':'')+'" data-a="indiv" data-v="1"><span>🙋</span><b>فردي</b><small>كل شخص يلعب لنفسه</small></button></div></div>';
  h+='<div class="card"><h2>'+(ind?'🙋 عدد اللاعبين':'👥 عدد الأفرقة')+'</h2><div class="step"><button data-a="nt" data-v="-1">−</button><b>'+ar(L.nTeams)+'</b><button data-a="nt" data-v="1">+</button><span class="muted">من ٢ إلى '+(ind?'٣٠':'٨')+'</span></div>';
  if(!ind)h+='<h2 style="margin-top:14px">🙋 عدد اللاعبين كلهم</h2><div class="step"><button data-a="np" data-v="-1">−</button><b>'+ar(G.players)+'</b><button data-a="np" data-v="1">+</button><span class="muted">'+ar(Math.max(1,Math.round(G.players/L.nTeams)))+' لاعبين تقريباً بكل فريق</span></div>';
@@ -3132,7 +3135,7 @@ var ind=!!G.indiv,h=(window.WSHIM&&CANEDIT?'<div class="bzstrip live"><span>غر
 }
 function vHome(){
  var h='<div class="bar">'+(BR.logo?'<img src="'+BR.logo+'" alt="">':icon("pad","ic bari"))+'<b>'+BR.name+'</b>'+syncChip()+'<div class="sp"></div>'+(window.WSHIM&&CANEDIT?'<button class="sm g" data-a="share">🔗 '+esc(WSHIM.room)+'</button>':'')+'<button class="sm" data-a="setup">👥 الأفرقة</button></div>'+hero(BR.sub);
- h+=evtBanner()+'<div class="top">'+pres()+'<button class="sm" data-a="tvon">📺 شاشة العرض</button><button class="sm'+(L.snd?' g':'')+'" data-a="snd">'+(L.snd?'🔊 الصوت':'🔇 الصوت')+'</button><button class="sm" data-a="lobby">🖥️ شاشة الانتظار</button><button class="sm g" data-a="prog">🎬 السهرة الجاهزة</button><button class="sm'+(L.more?' g':'')+'" data-a="moremenu">☰ المزيد</button></div>';
+ h+=evtBanner()+'<div class="top">'+landBtn()+pres()+'<button class="sm" data-a="tvon">📺 شاشة العرض</button><button class="sm'+(L.snd?' g':'')+'" data-a="snd">'+(L.snd?'🔊 الصوت':'🔇 الصوت')+'</button><button class="sm" data-a="lobby">🖥️ شاشة الانتظار</button><button class="sm g" data-a="prog">🎬 السهرة الجاهزة</button><button class="sm'+(L.more?' g':'')+'" data-a="moremenu">☰ المزيد</button></div>';
  if(L.more)h+='<div class="card moremenu"><button class="sm" data-a="hist">📜 السجل</button><button class="sm" data-a="league">🏆 الدوري</button><button class="sm'+(L.tts?' g':'')+'" data-a="ttson" title="الجهاز يقرأ السؤال بصوت">'+(L.tts?'🗣️ القراءة شغّالة':'🗣️ قراءة الأسئلة')+'</button><button class="sm" data-a="lbon">🔔 جرس الطاولة</button><button class="sm" data-a="print">🖨️ بطاقات للطباعة</button><button class="sm" data-a="thpop">🎨 ثيم المناسبة</button><button class="sm'+(studioOn()?' g':'')+'" data-a="studio">🎬 الاستوديو '+(studioOn()?'شغّال':'مقفل')+'</button><button class="sm" data-a="daily">📅 مسابقة اليوم</button><button class="sm" data-a="a11">👓 الوضوح</button><button class="sm" data-a="prac">🎯 تدرّب لحالك</button>'+installBtn()+''+(CANEDIT?'<button class="sm" data-a="myq">📝 أسئلتي'+(CUSTOM.length?' ('+ar(CUSTOM.length)+')':'')+'</button>':'')+(ROOM?'<button class="sm" data-a="toplayer">📱 هذا الجهاز للاعب</button>':'')+'</div>';
  if(ROOM&&G.teams.length)h+='<div class="card" style="padding:10px 14px"><b>🔔 الجرس من الجوال</b><div class="muted">اللاعبين يفتحون نفس الرابط من جوالاتهم ويختارون فريقهم. المتصلين الحين: '+ar(players().length)+'</div></div>';
  h+='<h2>اختر لعبتك</h2><div class="chips">';
@@ -3570,6 +3573,7 @@ app.addEventListener("click",function(e){
  else if(a==="finish"){fxSet("conf");G.v="win";L.confirmNew=false;L.saved=false;}
  else if(a==="newask"){L.confirmNew=true;ch=false;}
  else if(a==="newgo"){G.teams.forEach(function(y){y.s=0});G.open={};G.by={};G.ps={};resetGames();L.confirmNew=false;G.v=gv();}
+ else if(a==="toland"){location.hash="";location.reload();return;}
  else if(a==="solo"){location.hash="solo";location.reload();return;}
  else if(a==="online"){e.preventDefault();location.hash="";location.reload();return;}
  else{var mr=moreAct(a,el,v,t);if(!mr)mr=more2Act(a,el,v,t);if(!mr)mr=more3Act(a,el,v,t);if(!mr)mr=quranAct(a,el,v,t);if(!mr)mr=more4Act(a,el,v,t);if(!mr)mr=saAct(a,el,v,t);if(mr==="local")return;if(!mr)ch=false;}
