@@ -325,6 +325,18 @@ html.big{font-size:125%}html.big .muted{opacity:.95}html.big button{min-height:5
 html.hc{--paper:#fff!important;--card:#fff!important;--card2:#f2f2f2!important;--text:#000!important;--line:#000!important}
 html.hc body{background-image:none!important}html.hc .muted{color:#000!important;opacity:1!important}
 @media (prefers-reduced-motion:reduce){.show .track{animation:none}.rxf{animation-duration:.01s}}
+/* ===== السعلو ===== */
+.saplist{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin:8px 0}
+.sap{border:3px solid var(--line);border-radius:14px;background:var(--card);padding:10px 6px;text-align:center;display:flex;flex-direction:column;gap:2px;position:relative;box-shadow:3px 3px 0 var(--line)}
+.sap.dead{opacity:.4;text-decoration:line-through}.sap.sel{outline:5px solid var(--c1)}.sap i{position:absolute;top:-8px;left:-8px;background:#e2475a;color:#fff;border:2px solid var(--line);border-radius:50%;width:28px;height:28px;display:grid;place-items:center;font-style:normal;font-weight:900}
+button.sap{cursor:pointer}
+.sabig{border:3px solid var(--line);border-radius:22px;padding:20px;text-align:center;box-shadow:5px 5px 0 var(--line);margin-bottom:10px}
+.sabig.night{background:linear-gradient(180deg,#14123a,#3b2f7a);color:#fff}.sabig.day{background:linear-gradient(180deg,#bfe9ff,#fff3cf);color:#17121b}
+.sabig .sky{font-size:4rem}.sabig h2{margin:6px 0}.ann{font-weight:900;font-size:1.2rem}
+.sarole{border:3px solid var(--line);border-radius:18px;background:linear-gradient(135deg,#2a2257,#5b3fc4);color:#fff;padding:16px;margin:10px 0;display:flex;flex-direction:column;gap:4px}
+.sarole span{font-size:3.4rem}.sarole b{font-size:1.8rem}.sarole.small b{font-size:1.2rem}
+.sanar{border-style:dashed}.sanight{background:linear-gradient(180deg,#1d1a4a,#2f2770);color:#fff}
+.tv .sap{font-size:1.4rem}
 :root{--c1:#3b5bff;--c2:#ff8a1f;--c3:#ffc93c;--c4:#12b886;--c5:#a66bff;--c6:#00a7c4;--c7:#ef4444;--paper:#eaf1ff}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#10172e}}:root[data-theme="dark"]{--paper:#10172e}</style>
 </head>
 <body>
@@ -1621,6 +1633,14 @@ ART.qaround='<svg viewBox="0 0 320 180" role="img" aria-label="ما قبلها �
  +'<rect x="70" y="16" width="180" height="36" rx="10" fill="#fff" opacity=".7"/><rect x="70" y="72" width="180" height="36" rx="10" fill="url(#qa-p)"/><rect x="70" y="128" width="180" height="36" rx="10" fill="#fff" opacity=".7"/></g>'
  +'<path d="M232 90H110" stroke="#1f7a5c" stroke-width="7" stroke-linecap="round"/><path d="M232 34H150M232 146H130" stroke="#9aa" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 12"/>'
  +'<g stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"><circle cx="40" cy="60" r="18" fill="#fbc52b"/><path d="M40 70V50M32 58l8-8 8 8" fill="none"/><circle cx="40" cy="120" r="18" fill="#ef4057"/><path d="M40 110v20M32 122l8 8 8-8" fill="none" stroke="#fff"/></g></svg>';
+ART.saalu='<svg viewBox="0 0 320 180" role="img" aria-label="قرية بالليل"><defs><linearGradient id="sa-s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14123a"/><stop offset="1" stop-color="#3b2f7a"/></linearGradient></defs><rect width="320" height="180" fill="url(#sa-s)"/>'
+ +'<g fill="#fff"><circle cx="40" cy="30" r="1.6"/><circle cx="90" cy="18" r="1.2"/><circle cx="150" cy="34" r="1.5"/><circle cx="200" cy="14" r="1.2"/><circle cx="120" cy="60" r="1"/></g>'
+ +'<path d="M262 24a26 26 0 1 0 16 46 20 20 0 1 1-16-46z" fill="#ffe08a"/>'
+ +'<g stroke="#17121b" stroke-width="3" stroke-linejoin="round"><path d="M0 150c40-14 80-14 120-4s80 10 200-6v40H0z" fill="#2a2257"/>'
+ +'<path d="M30 150v-34h40v34z" fill="#c98a4b"/><path d="M24 118l26-22 26 22z" fill="#8a5326"/><rect x="42" y="128" width="14" height="22" fill="#3b210c"/><rect x="34" y="122" width="8" height="8" fill="#ffd35a"/>'
+ +'<path d="M96 152v-44h50v44z" fill="#d8a36a"/><path d="M90 110l31-26 31 26z" fill="#8a5326"/><rect x="104" y="120" width="10" height="10" fill="#ffd35a"/><rect x="128" y="120" width="10" height="10" fill="#3b210c"/>'
+ +'<path d="M230 152v-38h44v38z" fill="#c98a4b"/><path d="M224 116l28-24 28 24z" fill="#8a5326"/><rect x="246" y="130" width="12" height="22" fill="#3b210c"/></g>'
+ +'<path d="M170 150c4-40 10-70 18-80 8 10 14 40 18 80z" fill="#0b0a20" opacity=".9"/><text x="188" y="118" text-anchor="middle" font-size="26" font-weight="900" fill="#ef4057">؟</text></svg>';
 
 /* ===== رسومات فئات لعبة الترتيب ===== */
 var RART=(function(){
@@ -1884,8 +1904,8 @@ function vLobby(){
 
 /* ===== المؤقت العام ===== */
 function secs(at,t){return Math.max(0,Math.round(t*(G.tmul||1))-Math.floor((Date.now()-at)/1000));}
-function tActive(){return genActive()||(G.v==="ka"&&G.ka.q&&!G.ka.rev&&G.ka.t>0&&Date.now()>=G.ka.qAt)||(G.v==="ld"&&G.ld.call&&G.ld.st==="q")||(G.v==="sj"&&G.sj.cur&&G.sj.phase!=="rev"&&sjT()>0)||(G.v==="tf"&&G.tf.on&&G.tf.i>=0&&!G.tf.rev&&G.tf.t>0)||(G.v==="ct"&&G.ct.st==="go"&&G.ct.t>0)||(G.v==="ih"&&G.ih.on&&!G.ih.rev&&G.ih.t>0)||(G.v==="tb"&&G.tb.st==="go"&&G.tb.t>0)||(G.v==="bl"&&G.bl.st==="go"&&G.bl.t>0);}
-function tLeft(){if(genActive())return genLeft();if(G.v==="ka")return secs(G.ka.qAt,G.ka.t);if(G.v==="ld"&&G.ld.call)return secs(G.ld.qAt,30);if(G.v==="sj")return sjLeft();if(G.v==="tf")return secs(G.tf.qAt,G.tf.t);if(G.v==="ct")return secs(G.ct.qAt,G.ct.t);if(G.v==="ih")return secs(G.ih.qAt,G.ih.t);if(G.v==="tb")return secs(G.tb.qAt,G.tb.t);if(G.v==="bl")return secs(G.bl.qAt,G.bl.t);return 0;}
+function tActive(){return (G.v==="sa"&&G.sa.phase==="day"&&G.sa.dt>0&&!(L.presenter&&!L.tv))||genActive()||(G.v==="ka"&&G.ka.q&&!G.ka.rev&&G.ka.t>0&&Date.now()>=G.ka.qAt)||(G.v==="ld"&&G.ld.call&&G.ld.st==="q")||(G.v==="sj"&&G.sj.cur&&G.sj.phase!=="rev"&&sjT()>0)||(G.v==="tf"&&G.tf.on&&G.tf.i>=0&&!G.tf.rev&&G.tf.t>0)||(G.v==="ct"&&G.ct.st==="go"&&G.ct.t>0)||(G.v==="ih"&&G.ih.on&&!G.ih.rev&&G.ih.t>0)||(G.v==="tb"&&G.tb.st==="go"&&G.tb.t>0)||(G.v==="bl"&&G.bl.st==="go"&&G.bl.t>0);}
+function tLeft(){if(G.v==="sa")return secs(G.sa.dayAt,G.sa.dt);if(genActive())return genLeft();if(G.v==="ka")return secs(G.ka.qAt,G.ka.t);if(G.v==="ld"&&G.ld.call)return secs(G.ld.qAt,30);if(G.v==="sj")return sjLeft();if(G.v==="tf")return secs(G.tf.qAt,G.tf.t);if(G.v==="ct")return secs(G.ct.qAt,G.ct.t);if(G.v==="ih")return secs(G.ih.qAt,G.ih.t);if(G.v==="tb")return secs(G.tb.qAt,G.tb.t);if(G.v==="bl")return secs(G.bl.qAt,G.bl.t);return 0;}
 function tmHtml(){var l=tLeft();return '<div class="tl'+(l<=5?' hot':'')+'" id="tm">'+(l>0?ar(l):"انتهى الوقت ⏰")+'</div>';}
 function cyc(v,arr){var i=arr.indexOf(v);return arr[(i+1)%arr.length];}
 function tLbl(t){return t?ar(t)+' ثانية':'بدون وقت';}
@@ -2703,6 +2723,107 @@ function more4Act(a,el,v,t){
  else return false;
  return true;}
 
+/* ===== السعلو وأهل القرية ===== */
+var SAR={s:["السعلو","🌑","يختار كل ليلة واحد من أهل القرية. هدفه يقضي عليهم بدون ما ينكشف."],v:["قروي","🏠","ما عنده قدرة خاصة، بس صوته في النهار يفرق. هدفه يكشف السعلو."],d:["الطبيب","🩺","كل ليلة يختار واحد يحميه من السعلو، ويقدر يحمي نفسه."],e:["المحقق","🔍","كل ليلة يسأل عن لاعب، والراوي يأشر له إذا كان سعلو أو لا."]};
+/* --- تشفير الأدوار عشان ما يشوفها إلا صاحبها --- */
+function b64(u8){var s="";u8=new Uint8Array(u8);for(var i=0;i<u8.length;i++)s+=String.fromCharCode(u8[i]);return btoa(s);}
+function ub64(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+var SUB=window.crypto&&crypto.subtle;
+function saMyKey(){var k=null;try{k=JSON.parse(localStorage.getItem("wg_sakey")||"null");}catch(e){}
+ if(k)return Promise.all([SUB.importKey("jwk",k.priv,{name:"ECDH",namedCurve:"P-256"},false,["deriveKey"]),Promise.resolve(k.pub)]);
+ return SUB.generateKey({name:"ECDH",namedCurve:"P-256"},true,["deriveKey"]).then(function(kp){return Promise.all([SUB.exportKey("jwk",kp.privateKey),SUB.exportKey("jwk",kp.publicKey)]).then(function(j){var pub=j[1].x+"."+j[1].y;try{localStorage.setItem("wg_sakey",JSON.stringify({priv:j[0],pub:pub}));}catch(e){}return [kp.privateKey,pub];});});}
+function saPubImport(s){var p=String(s).split(".");return SUB.importKey("jwk",{kty:"EC",crv:"P-256",x:p[0],y:p[1],ext:true},{name:"ECDH",namedCurve:"P-256"},false,[]);}
+function saAES(priv,pubStr){return saPubImport(pubStr).then(function(pub){return SUB.deriveKey({name:"ECDH",public:pub},priv,{name:"AES-GCM",length:256},false,["encrypt","decrypt"]);});}
+function saEnc(key,obj){var iv=crypto.getRandomValues(new Uint8Array(12));return SUB.encrypt({name:"AES-GCM",iv:iv},key,new TextEncoder().encode(JSON.stringify(obj))).then(function(ct){return {iv:b64(iv),ct:b64(ct)};});}
+function saDec(key,e){return SUB.decrypt({name:"AES-GCM",iv:ub64(e.iv)},key,ub64(e.ct)).then(function(pt){return JSON.parse(new TextDecoder().decode(pt));});}
+/* --- حالة الراوي المحلية (ما تنرسل لأحد) --- */
+function saRolesLoad(){try{var o=JSON.parse(localStorage.getItem("wg_sa_roles")||"null");if(o&&o.id===G.sa.id)return o.r;}catch(e){}return null;}
+function saRolesSave(r){try{localStorage.setItem("wg_sa_roles",JSON.stringify({id:G.sa.id,r:r}));}catch(e){}}
+function saRoles(){if(!L.saR||L.saRid!==G.sa.id){L.saR=saRolesLoad();L.saRid=G.sa.id;}return L.saR;}
+function saPeers(){var m={};if(ROOM)ROOM.peers().forEach(function(p){var n=pname(p),pk=p.presence&&p.presence.sapk;if(n&&!p.isMe)m[n]={pk:pk||null,peer:p.peer};});return m;}
+function saPassNames(){return String(L.saNames!=null?L.saNames:G.sa.names.join("\n")).split(/\n/).map(function(s){return s.trim();}).filter(Boolean).filter(function(s,i,a){return a.indexOf(s)===i;});}
+function saCounts(n){return {s:n<=6?1:n<=10?2:3,d:n>=5,e:n>=6};}
+function saDeal(){var x=G.sa,n=x.names.length,c=saCounts(n),r=[];for(var i=0;i<c.s;i++)r.push("s");if(c.d)r.push("d");if(c.e)r.push("e");while(r.length<n)r.push("v");shuf(r);
+ x.id="g"+Date.now().toString(36);x.alive=x.names.map(function(){return true;});x.round=1;x.phase="deal";x.ann="";x.winner="";x.reveal=null;x.enc={};x.step=0;x.elim=-1;
+ L.saR=r;L.saRid=x.id;saRolesSave(r);L.saPass=0;L.saShow=false;L.saNight={};return x.mode==="phones"?saSend():Promise.resolve();}
+function saSend(){var x=G.sa,r=saRoles(),pe=saPeers();if(!SUB||!r)return Promise.resolve();
+ return SUB.generateKey({name:"ECDH",namedCurve:"P-256"},true,["deriveKey"]).then(function(kp){return SUB.exportKey("jwk",kp.publicKey).then(function(pj){x.hpk=pj.x+"."+pj.y;
+  var jobs=x.names.map(function(nm,i){var p=pe[nm];if(!p||!p.pk)return null;var mates=r[i]==="s"?x.names.filter(function(_,j){return r[j]==="s"&&j!==i;}):[];
+   return saAES(kp.privateKey,p.pk).then(function(k){return saEnc(k,{r:r[i],m:mates,id:x.id});}).then(function(e){e.pk=p.pk.slice(0,12);x.enc[nm]=e;});});
+  return Promise.all(jobs.filter(Boolean));});}).then(function(){commit();render();});}
+function saAliveIdx(role){var r=saRoles()||[];return G.sa.names.map(function(_,i){return i;}).filter(function(i){return G.sa.alive[i]&&(!role||r[i]===role);});}
+function saCheckWin(){var r=saRoles()||[],al=saAliveIdx(),s=al.filter(function(i){return r[i]==="s";}).length,v=al.length-s;
+ if(s===0){G.sa.winner="v";}else if(s>=v){G.sa.winner="s";}if(G.sa.winner){G.sa.phase="end";G.sa.reveal=r.slice();fxSet("conf");momentAdd(G.sa.winner==="v"?"أهل القرية كشفوا السعلو وانتصروا!":"السعلو سيطر على القرية!",G.sa.winner==="v"?"🏠":"🌑");return true;}return false;}
+function saNightSteps(){var r=saRoles()||[],st=["sleep","s"];if(saAliveIdx("d").length)st.push("d");if(saAliveIdx("e").length)st.push("e");st.push("dawn");return st;}
+/* --- الشاشات --- */
+function saPlayerList(opts){var x=G.sa,r=opts&&opts.roles?saRoles():null;return '<div class="saplist">'+x.names.map(function(n,i){var al=x.alive[i],ro=r?SAR[r[i]]:(x.reveal?SAR[x.reveal[i]]:null);
+ return '<'+(opts&&opts.act?'button data-a="'+opts.act+'" data-v="'+i+'"':'div')+' class="sap'+(al?'':' dead')+(opts&&opts.sel===i?' sel':'')+'"'+(opts&&opts.act&&(!al||opts.dis&&opts.dis.indexOf(i)>=0)?' disabled':'')+'><b>'+esc(n)+'</b>'+(ro?'<small>'+ro[1]+' '+ro[0]+'</small>':'')+(al?'':'<small>خارج اللعبة</small>')+(opts&&opts.votes&&opts.votes[i]?'<i>'+ar(opts.votes[i])+'</i>':'')+'</'+(opts&&opts.act?'button':'div')+'>';}).join('')+'</div>';}
+function saVotes(){var v={};(ROOM?ROOM.peers():[]).filter(function(p){return p.presence&&p.presence.sav===G.sa.vr;}).forEach(function(p){var t=p.presence.svt;if(typeof t==="number")v[t]=(v[t]||0)+1;});return v;}
+function vSA(){
+ var x=G.sa,nar=L.presenter&&!L.tv,h=topbar()+'<h1>🌑 السعلو وأهل القرية</h1>';
+ if(!x.on||x.phase==="setup"){
+  var pe=saPeers(),conn=Object.keys(pe);
+  h+='<p class="muted">لعبة تخمين جماعية: بين أهل القرية سعلو متخفّي. بالليل يختار ضحية، وبالنهار أهل القرية يتناقشون ويصوّتون مين يطردون. أنت الراوي، وتشوف كل الأدوار في جوالك (وضع المقدم). الشاشة الكبيرة ما تعرض الأدوار أبداً.</p>';
+  h+='<div class="card"><h2>طريقة توزيع الأدوار</h2><div class="modes"><button class="'+(x.mode!=="pass"?'on':'')+'" data-a="samode" data-k="phones"><span>📱</span><b>كل واحد بجواله</b><small>الدور يوصل مشفّر لجواله</small></button><button class="'+(x.mode==="pass"?'on':'')+'" data-a="samode" data-k="pass"><span>🤲</span><b>مرّر الجوال</b><small>جهاز واحد يدور على الكل</small></button></div></div>';
+  if(x.mode!=="pass"){h+='<div class="card"><h2>اللاعبين المتصلين ('+ar(conn.length)+')</h2><p class="muted">كل لاعب يفتح رابط اللاعبين ويكتب اسمه. أنت ما تدخل كلاعب لأنك الراوي.</p>'+(conn.length?'<div class="chips">'+conn.map(function(n){return '<span class="chip">'+(pe[n].pk?'🔐 ':'⏳ ')+esc(n)+'</span>';}).join('')+'</div>':'<p class="muted">لا أحد للحين…</p>')+'<button class="sm g" data-a="sasync" '+(conn.length?'':'disabled')+'>✓ اعتمد المتصلين</button></div>';}
+  else{h+='<div class="card"><h2>أسماء اللاعبين</h2><textarea data-keep="1" data-sanames="1" rows="4" style="width:100%" placeholder="كل اسم في سطر">'+esc((L.saNames||x.names.join("\n")))+'</textarea></div>';}
+  var n=x.mode==="pass"?saPassNames().length:x.names.length,c=saCounts(n);h+='<div class="card"><b>'+ar(n)+' لاعب</b>'+(n>=4?' · 🌑 '+ar(c.s)+' سعلو'+(c.d?' · 🩺 طبيب':'')+(c.e?' · 🔍 محقق':'')+' · 🏠 '+ar(n-c.s-(c.d?1:0)-(c.e?1:0))+' قروي':'')+'<div class="opt"><span class="n">⏱ وقت النقاش بالنهار</span><button class="sm" data-a="sadt">'+tLbl(x.dt)+'</button></div></div>';
+  return h+(n<4?'<p class="muted">تحتاج ٤ لاعبين على الأقل (الأفضل ٦ أو أكثر).</p>':'')+'<button class="g" style="width:100%;padding:15px;font-size:1.15rem" data-a="sadeal" '+(n>=4?'':'disabled')+'>🎴 وزّع الأدوار</button><div style="height:80px"></div>';}
+ var r=saRoles();
+ if(!nar){/* الشاشة العامة */
+  if(CANEDIT&&!L.tv)h+='<div class="card" style="text-align:center">🎙️ أنت الراوي؟ اضغط <b>وضع المقدم</b> فوق عشان تشوف لوحة الراوي السرية.</div>';
+  var night=x.phase==="night";h+='<div class="sabig '+(night?'night':'day')+'"><div class="sky">'+(night?'🌙':'☀️')+'</div><h2>'+(x.phase==="deal"?'🎴 كل واحد يشوف دوره بسرية':night?'الليل… الكل يغمض عيونه':x.phase==="vote"?'🗳️ وقت التصويت':x.phase==="end"?(x.winner==="v"?'🏠 انتصر أهل القرية!':'🌑 انتصر السعلو!'):'النهار، تناقشوا مين السعلو')+'</h2>'+(x.ann?'<p class="ann">'+esc(x.ann)+'</p>':'')+(x.phase==="day"&&x.dt&&x.dayAt?'<div class="tl" id="tm">'+ar(secs(x.dayAt,x.dt))+'</div>':'')+'</div>';
+  return h+saPlayerList({votes:x.phase==="vote"?saVotes():null})+'<div style="height:80px"></div>';}
+ if(!r)return h+'<div class="card"><b>⚠️ الأدوار محفوظة في جهاز الراوي اللي وزّعها.</b><p class="muted">افتح اللعبة من نفس الجوال، أو وزّع من جديد.</p><button data-a="sanew">🔄 لعبة جديدة</button></div>';
+ h+='<div class="card sanar"><div class="top" style="margin:0"><b>🎙️ لوحة الراوي (سرية)</b><div class="sp"></div><span class="chip">الجولة '+ar(x.round)+'</span></div>'+saPlayerList({roles:true})+'</div>';
+ if(x.phase==="deal"){
+  if(x.mode==="pass"){var i=L.saPass||0;if(i<x.names.length){h+='<div class="card" style="text-align:center"><p class="muted">مرّر الجوال لـ</p><h2 style="font-size:2rem">'+esc(x.names[i])+'</h2>'+(L.saShow?'<div class="sarole"><span>'+SAR[r[i]][1]+'</span><b>'+SAR[r[i]][0]+'</b><small>'+SAR[r[i]][2]+'</small></div><button class="g" style="width:100%;padding:14px" data-a="sapassnx">✓ شفت دوري، أخفه ومرّر</button>':'<button class="g" style="width:100%;padding:16px" data-a="sapassshow">👁️ أنا '+esc(x.names[i])+'، اعرض دوري</button>')+'</div>';return h+'<div style="height:80px"></div>';}}
+  else{var got=Object.keys(x.enc||{}).length,pe2=saPeers();h+='<div class="card"><p>🔐 وصلت الأدوار مشفّرة لـ <b>'+ar(got)+'</b> من '+ar(x.names.length)+'</p>'+(got<x.names.length?'<p class="muted">اللي ما وصلهم: '+x.names.filter(function(n){return !x.enc[n];}).map(function(n){return esc(n)+(pe2[n]&&pe2[n].pk?'':' (غير متصل)');}).join('، ')+'</p>':'')+'<button class="sm" data-a="saresend">🔁 أرسل الأدوار مرة ثانية</button></div>';}
+  return h+bigBtn("sanight","🌙 ابدأ الليل")+'<div style="height:80px"></div>';}
+ if(x.phase==="night"){var steps=saNightSteps(),st=steps[x.step]||"dawn",N=L.saNight||(L.saNight={});
+  var txt={sleep:"🌙 قول: «الكل يغمض عيونه»",s:"🌑 قول: «السعلو يفتح عيونه ويختار ضحيته». اضغط على اللي يأشر عليه:",d:"🩺 قول: «الطبيب يفتح عيونه ويختار مين يحمي»:",e:"🔍 قول: «المحقق يفتح عيونه ويأشر على لاعب»:",dawn:"☀️ قول: «الكل يفتح عيونه»، وبعدها أعلن الصباح"}[st];
+  h+='<div class="card sanight"><h2>'+txt+'</h2>';
+  if(st==="s")h+=saPlayerList({act:"sapick",sel:N.kill});
+  if(st==="d")h+=saPlayerList({act:"sapick",sel:N.save});
+  if(st==="e"){h+=saPlayerList({act:"sapick",sel:N.check});if(N.check!=null)h+='<div class="sarole small"><b>'+esc(x.names[N.check])+': '+(r[N.check]==="s"?'👍 إي، سعلو':'👎 لا، مو سعلو')+'</b><small>أشّر للمحقق بإبهامك بدون صوت</small></div>';}
+  h+='</div>'+bigBtn("sastep",st==="dawn"?"☀️ أعلن الصباح":"التالي ⬅️");return h+'<div style="height:80px"></div>';}
+ if(x.phase==="day")return h+'<div class="card"><h2>☀️ النهار</h2>'+(x.ann?'<p class="ann">'+esc(x.ann)+'</p>':'')+'<p class="muted">خلهم يتناقشون، وبعدين افتح التصويت.</p></div>'+bigBtn("savote","🗳️ افتح التصويت")+'<div style="height:80px"></div>';
+ if(x.phase==="vote"){var vv=saVotes();return h+'<div class="card"><h2>🗳️ التصويت</h2><p class="muted">اللاعبين يصوّتون من جوالاتهم، أو برفع اليد. اضغط على اللي قررت القرية تطرده:</p>'+saPlayerList({act:"saout",votes:vv})+'<button style="width:100%;margin-top:8px" data-a="saout" data-v="-1">🤝 ما طردوا أحد</button></div><div style="height:80px"></div>';}
+ if(x.phase==="end")return h+'<div class="win"><span>انتهت اللعبة</span><b>'+(x.winner==="v"?'🏠 انتصر أهل القرية':'🌑 انتصر السعلو')+'</b></div>'+bigBtn("sanew","🔄 لعبة جديدة")+'<div style="height:80px"></div>';
+ return h;}
+function vPlayerSA(){var x=G.sa;if(!x.on||x.phase==="setup")return '<div class="card" style="text-align:center"><h2>🌑 السعلو وأهل القرية</h2><p class="muted">الراوي يجهّز اللعبة…</p></div>';
+ var me=L.pname||"",mi=x.names.indexOf(me),h='';
+ if(mi<0)return '<div class="card" style="text-align:center"><p class="muted">أنت متفرج في هالجولة'+(me?'':'، اكتب اسمك عشان تنضم الجولة الجاية')+'.</p></div>';
+ if(x.mode==="phones"){var e=x.enc&&x.enc[me];if(!e)h+='<div class="card" style="text-align:center"><p class="muted">⏳ دورك في الطريق…</p></div>';
+  else if(!L.saMine||L.saMine.id!==x.id){saMyKey().then(function(k){return saAES(k[0],x.hpk).then(function(key){return saDec(key,e);});}).then(function(o){L.saMine=o;render();},function(){L.saMine={err:1,id:x.id};render();});h+='<div class="card" style="text-align:center"><p class="muted">🔐 جاري فك التشفير…</p></div>';}
+  else if(L.saMine.err)h+='<div class="card" style="text-align:center"><p>ما قدرت أفتح دورك. اطلب من الراوي «أرسل الأدوار مرة ثانية».</p></div>';
+  else{var R=SAR[L.saMine.r];h+='<div class="card" style="text-align:center"><p class="muted">دورك السري (لا تورّيه أحد)</p>'+(L.saPeek?'<div class="sarole"><span>'+R[1]+'</span><b>'+R[0]+'</b><small>'+R[2]+'</small>'+(L.saMine.m&&L.saMine.m.length?'<small>معك: '+L.saMine.m.map(esc).join('، ')+'</small>':'')+'</div><button class="sm" data-a="sapeek">🙈 أخفه</button>':'<button class="g" style="width:100%;padding:16px" data-a="sapeek">👁️ اضغط عشان تشوف دورك</button>')+'</div>';}}
+ if(!x.alive[mi])h+='<div class="card" style="text-align:center"><b>💤 خرجت من اللعبة</b><p class="muted">تابع بصمت ولا تعطي تلميحات 🤫</p></div>';
+ else if(x.phase==="vote"){var my=L.saV&&L.saV.r===x.vr?L.saV.t:null;h+='<div class="card"><h2>🗳️ صوّت: مين السعلو برأيك؟</h2>'+saPlayerList({act:"savt",sel:my,dis:[mi]})+'</div>';}
+ else if(x.phase==="night")h+='<div class="card sabig night" style="text-align:center"><div class="sky">🌙</div><b>غمّض عيونك… واسمع الراوي</b></div>';
+ if(x.phase==="end")h+='<div class="win"><b>'+(x.winner==="v"?'🏠 انتصر أهل القرية':'🌑 انتصر السعلو')+'</b></div>'+saPlayerList({});
+ return h;}
+function saInitPlayer(){if(!SUB||!ROOM||L.saPk)return;saMyKey().then(function(k){L.saPk=k[1];ROOM.presence({sapk:k[1],name:L.pname||null}).catch(function(){});},function(){});}
+function saAct(a,el,v,t){var x=G.sa,r;
+ if(a==="samode"){x.mode=el.dataset.k;}
+ else if(a==="sasync"){x.names=Object.keys(saPeers());}
+ else if(a==="sadt"){x.dt=cyc(x.dt,[120,180,90,60,0]);}
+ else if(a==="sadeal"){if(x.mode==="pass"){x.names=saPassNames();}x.on=true;saDeal();}
+ else if(a==="saresend"){saSend();return "local";}
+ else if(a==="sapassshow"){L.saShow=true;render();return "local";}
+ else if(a==="sapassnx"){L.saShow=false;L.saPass=(L.saPass||0)+1;render();return "local";}
+ else if(a==="sanight"){x.phase="night";x.step=0;x.ann="";L.saNight={};}
+ else if(a==="sapick"){var st=saNightSteps()[x.step],N=L.saNight||(L.saNight={});if(st==="s")N.kill=v;else if(st==="d")N.save=v;else if(st==="e")N.check=v;render();return "local";}
+ else if(a==="sastep"){var steps=saNightSteps(),cur=steps[x.step];if(cur==="dawn"){var N2=L.saNight||{};if(N2.kill!=null&&N2.kill!==N2.save){x.alive[N2.kill]=false;x.ann="صحت القرية ولقت "+x.names[N2.kill]+" خارج اللعبة 😢";}else x.ann=N2.kill!=null?"السعلو حاول، بس الطبيب أنقذ الضحية! 🩺":"الليلة عدّت بسلام 🌤️";
+  L.saNight={};if(!saCheckWin()){x.phase="day";x.dayAt=Date.now();}}else x.step++;}
+ else if(a==="savote"){x.phase="vote";x.vr="v"+Date.now().toString(36);}
+ else if(a==="saout"){if(v>=0){x.alive[v]=false;x.ann="القرية طردت "+x.names[v];fxSet("shake");}else x.ann="القرية ما طردت أحد";if(!saCheckWin()){x.round++;x.phase="night";x.step=0;L.saNight={};}}
+ else if(a==="sanew"){x.on=false;x.phase="setup";x.enc={};x.reveal=null;}
+ else if(a==="sapeek"){L.saPeek=!L.saPeek;render();return "local";}
+ else if(a==="savt"){if(ROOM){L.saV={r:x.vr,t:v};ROOM.presence({sav:x.vr,svt:v}).catch(function(){});}render();return "local";}
+ else return false;
+ return true;}
+
 var CE=["📿","📖","👶","⚔️","⚡","🏜️","📜","🌍","🌴","👑","🕋","🌐","🕌"];
 var GAMES=[
  {id:"rank",e:"🏆",name:"لعبة الترتيب",desc:"رتّب العناصر وافتح الأغطية واكسب نقاط كل مركز",tags:["أسئلة","جماعي"]},
@@ -2723,6 +2844,7 @@ var GAMES=[
  {id:"journey",name:"رحلة القافلة",desc:"سباق على خريطة، كل إجابة تقدّمك محطات",tags:["أسئلة","تحدي"]},
  {id:"ladder",name:"سلّم الخمسة عشر",desc:"متسابق قدام الكل، ١٥ سؤال ووسائل مساعدة",tags:["أسئلة","تحدي"]},
  {id:"ko",name:"بطولة خروج المغلوب",desc:"قرعة ومباريات لين النهائي",tags:["تحدي","جماعي"]},
+ {id:"saalu",name:"السعلو وأهل القرية",desc:"بين أهل القرية سعلو متخفّي، اكشفوه قبل لا يقضي عليكم",tags:["جماعي","جوال","تحدي"]},
  {id:"qcomplete",name:"أكمل الآية",desc:"بداية آية من المقرر، وأول من يكملها يكسب",tags:["قرآن","جرس"]},
  {id:"qsurah",name:"من أي سورة؟",desc:"آية من المقرر، وأول من يعرف سورتها",tags:["قرآن","جرس"]},
  {id:"qaround",name:"ما قبلها وما بعدها",desc:"اقرأ الآية اللي بعدها أو اللي قبلها",tags:["قرآن","جرس"]}
@@ -2764,7 +2886,7 @@ function freshG(){return {v:"setup",game:"rank",teams:[],players:8,open:{},cat:0
  ka:{on:false,n:10,t:20,deck:[],k:0,q:null,opts:[],ci:0,round:"",qAt:0,rev:false,res:null,lb:{},done:false},
  rh:{on:false,len:20,pos:[],turn:0,st:"pick",q:null,lv:200,gold:{},win:-1,log:""},
  ld:{on:false,team:0,step:0,q:null,opts:[],ci:0,sel:-1,st:"q",hide:[],aud:null,life:{h:0,a:0,c:0},used:{},round:"",call:0,qAt:0,res:0},
- ko:{on:false,rounds:[],cur:null,champ:-1},qr:{sel:{m:"j",j:[30]},kind:"",cur:null,rev:false,k:0,opts:false,dirPref:"r",dir:"a",ch:null},theme:"def",evt:"",indiv:false,fast:null};}
+ ko:{on:false,rounds:[],cur:null,champ:-1},sa:{on:false,phase:"setup",mode:"phones",names:[],alive:[],round:1,ann:"",dt:120,enc:{},hpk:"",id:"",step:0,vr:"",winner:"",reveal:null,dayAt:0},qr:{sel:{m:"j",j:[30]},kind:"",cur:null,rev:false,k:0,opts:false,dirPref:"r",dir:"a",ch:null},theme:"def",evt:"",indiv:false,fast:null};}
 var G=freshG();
 var L={tv:false,snd:false,hist:false,saved:false,presenter:false,panel:false,award:null,filter:"الكل",confirmNew:false,nTeams:4,names:[],mode:"host",myTeam:-1,bzPanel:false,embs:[],ed:null,bq:"",big:(function(){try{return localStorage.getItem("wg_big")==="1";}catch(e){return false;}})(),hc:(function(){try{return localStorage.getItem("wg_hc")==="1";}catch(e){return false;}})(),studio:(function(){try{return localStorage.getItem("wg_studio")!=="0";}catch(e){return true;}})(),tts:(function(){try{return localStorage.getItem("wg_tts")==="1";}catch(e){return false;}})(),pname:(function(){try{return localStorage.getItem("wg_pname")||"";}catch(e){return "";}})(),qf:{c:"ق",q:"",a:"",l:"",nohex:false,v:"400"},qmsg:""};
 var SK="hub2_"+BR.id+(window.WSHIM&&WSHIM.room?"_"+WSHIM.room:"");
@@ -2799,7 +2921,7 @@ function adopt(g){G=Object.assign(freshG(),g);LMAP=null;if(G.teams.length&&L.mod
   db.collection("bank").onSnapshot(function(snap){CUSTOM=snap.docs.map(function(d){var x=d.data()||{};return {id:"c"+d.id,doc:d.id,row:[CATN[x.c]?x.c:subcat(x.c||"ث",String(x.q||"")),String(x.q||""),String(x.a||""),x.l||undefined,"c",[200,400,600].indexOf(x.v)>=0?x.v:400]};});LMAP=null;render();},function(){});
  }).catch(function(){});
  cl.use("room").then(function(r){if(!r)return;ROOM=r;
-  r.onPeers(function(){scanBuzz();try{bzFastCheck();}catch(e){}try{rxScan();}catch(e){}if(L.bzPanel||L.mode==="player"||G.bz.open||G.v==="tf"||G.v==="lobby"||G.v==="ih"||G.v==="nm"||G.v==="ka"||G.v==="ld"||WATCH)render();},function(){ROOM=null;render();});
+  r.onPeers(function(){scanBuzz();try{bzFastCheck();}catch(e){}try{rxScan();}catch(e){}if(L.bzPanel||L.mode==="player"||G.bz.open||G.v==="tf"||G.v==="lobby"||G.v==="ih"||G.v==="nm"||G.v==="ka"||G.v==="ld"||G.v==="sa"||WATCH)render();},function(){ROOM=null;render();});
   if(L.myTeam>=0)r.presence({team:L.myTeam,buzz:null,name:L.pname||null}).catch(function(){});
   render();}).catch(function(){});
 })();
@@ -2854,7 +2976,7 @@ function tvBar(){return evtBanner()+'<div class="tvbar">'+G.teams.map(function(t
 
 function tname(i){var t=G.teams[i];return (t&&t.n||"").trim()||((G.indiv?"اللاعب ":"الفريق ")+ar(i+1));}
 function addPts(i,v){if(!G.teams[i])return;G.teams[i].s+=v;byAdd(i,v);}
-function gv(){return {rank:"hub",where:"wh",hex:"hx",sj:"sj",feud:"fd",whoami:"wm",tf:"tf",link:"lk",count:"ct",ihj:"ih",taboo:"tb",num:"nm",proverb:"pv",blitz:"bl",ka:"ka",journey:"rh",ladder:"ld",ko:"ko",qcomplete:"qc",qsurah:"qs",qaround:"qa"}[G.game]||"hub";}
+function gv(){return {rank:"hub",where:"wh",hex:"hx",sj:"sj",feud:"fd",whoami:"wm",tf:"tf",link:"lk",count:"ct",ihj:"ih",taboo:"tb",num:"nm",proverb:"pv",blitz:"bl",ka:"ka",journey:"rh",ladder:"ld",ko:"ko",qcomplete:"qc",qsurah:"qs",qaround:"qa",saalu:"sa"}[G.game]||"hub";}
 var app=document.getElementById("app");
 var tick=null;
 function focusKey(el){if(!el||!app.contains(el)||!/^(INPUT|TEXTAREA)$/.test(el.tagName))return null;var s=el.tagName.toLowerCase();for(var i=0;i<el.attributes.length;i++){var at=el.attributes[i];if(at.name.indexOf("data-")===0&&at.name!=="data-keep")s+='['+at.name+'="'+String(at.value).replace(/"/g,'\\"')+'"]';}return s===el.tagName.toLowerCase()?null:s;}
@@ -2882,6 +3004,7 @@ function renderInner(){
  else if(v==="wm")h=vWM();else if(v==="lk")h=vLK();else if(v==="tf")h=vTF();else if(v==="ct")h=vCT();else if(v==="lobby")h=vLobby();
  else if(v==="ih")h=vIH();else if(v==="tb")h=vTB();else if(v==="nm")h=vNM();else if(v==="pv")h=vPV();else if(v==="bl")h=vBL();
  else if(v==="qc"||v==="qs"||v==="qa")h=vQK(v);
+ else if(v==="sa")h=vSA();
  else if(v==="ka")h=vKA();else if(v==="rh")h=vRH();else if(v==="ld")h=vLD();else if(v==="ko")h=vKO();
  if(L.myq)h=vMyQ();
  if(L.hist)h=vHist();
@@ -3158,6 +3281,7 @@ function vPlayer(){
  var h='<div class="bar">'+(BR.logo?'<img src="'+BR.logo+'" alt="">':icon("pad","ic bari"))+'<b>'+BR.name+'</b>'+(window.WSHIM?'<span class="pill" dir="ltr">'+esc(WSHIM.room)+'</span>'+syncChip():'')+'<div class="sp"></div>'+(CANEDIT&&!L.visitor?'<button class="sm" data-a="tohost">🎛️ وضع المقدم</button>':'')+'</div>';
  if(!ROOM||!DB)return h+'<div class="card" style="text-align:center"><div style="font-size:3rem">📵</div><h2>جرس الجوال غير متاح على هذا الجهاز</h2><p class="muted">'+(window.WSHIM?'تأكد إنك متصل بالإنترنت ثم حدّث الصفحة.':'جرس الجوال يحتاج حساب Claude. البديل: استخدموا «جرس الطاولة» على جهاز واحد للجميع.')+'</p>'+'<button class="g" style="width:100%;padding:14px" data-a="lbon">🔔 جرس الطاولة</button></div>';
  if(!L.pname&&!L.noname)return h+'<div class="card" style="text-align:center"><h2>👋 وش اسمك؟</h2><p class="muted">عشان يطلع اسمك لو صرت نجم الليلة</p><input data-keep="1" data-pname="1" maxlength="24" style="width:100%;text-align:center;font-size:1.2rem;margin-bottom:10px" placeholder="اسمك"><button class="g" style="width:100%;padding:14px" data-a="setname">تم ✓</button><button class="sm" style="margin-top:10px" data-a="noname">تخطي</button></div>';
+ if(G.v==="sa"){setTimeout(saInitPlayer,0);return h+vPlayerSA();}
  if(!G.teams.length)return h+'<div class="card" style="text-align:center"><div style="font-size:3rem">⏳</div><h2>بانتظار المقدم يجهز الأفرقة</h2></div>';
  if((L.myTeam<0||L.myTeam>=G.teams.length)&&G.indiv&&L.pname){var mi=G.teams.map(function(_,i){return nkey(tname(i));}).indexOf(nkey(L.pname));if(mi>=0){L.myTeam=mi;saveLocal();if(ROOM)ROOM.presence({team:mi,buzz:null,name:L.pname}).catch(function(){});}}
  if(L.myTeam<0||L.myTeam>=G.teams.length){h+='<h1 style="text-align:center">'+(G.indiv?'اختر اسمك':'اختر فريقك')+'</h1>'+(L.pname?'<p class="muted" style="text-align:center">أهلاً '+esc(L.pname)+' · <a href="#" data-a="rename">تغيير الاسم</a></p>':'');
@@ -3256,6 +3380,7 @@ app.addEventListener("input",function(e){var el=e.target;
  if(el.dataset.nmm!==undefined){G.nm.man[+el.dataset.nmm]=el.value;clearTimeout(L.nmT);L.nmT=setTimeout(commit,600);}
  if(el.dataset.bulk){L.bulk=el.value;L.bmsg="";clearTimeout(L.bkT);L.bkT=setTimeout(render,500);}
  if(el.dataset.pkin){L.pkin=el.value;L.pmsg="";}
+ if(el.dataset.sanames){L.saNames=el.value;clearTimeout(L.snT);L.snT=setTimeout(render,400);}
  if(el.dataset.evt){G.evt=el.value.slice(0,40);clearTimeout(L.evT);L.evT=setTimeout(function(){commit();render();},600);}
  if(el.dataset.ai&&el.tagName!=="SELECT"){L.ai=L.ai||{};L.ai[el.dataset.ai]=el.value;}
  if(el.dataset.bq){L.bq=el.value;clearTimeout(L.bqT);L.bqT=setTimeout(function(){var pos=el.selectionStart;render();var n=document.querySelector("[data-bq]");if(n){n.focus();try{n.setSelectionRange(pos,pos);}catch(_){}}},350);}});
@@ -3364,7 +3489,7 @@ app.addEventListener("click",function(e){
  else if(a==="newgo"){G.teams.forEach(function(y){y.s=0});G.open={};G.by={};G.ps={};resetGames();L.confirmNew=false;G.v=gv();}
  else if(a==="solo"){location.hash="solo";location.reload();return;}
  else if(a==="online"){e.preventDefault();location.hash="";location.reload();return;}
- else{var mr=moreAct(a,el,v,t);if(!mr)mr=more2Act(a,el,v,t);if(!mr)mr=more3Act(a,el,v,t);if(!mr)mr=quranAct(a,el,v,t);if(!mr)mr=more4Act(a,el,v,t);if(mr==="local")return;if(!mr)ch=false;}
+ else{var mr=moreAct(a,el,v,t);if(!mr)mr=more2Act(a,el,v,t);if(!mr)mr=more3Act(a,el,v,t);if(!mr)mr=quranAct(a,el,v,t);if(!mr)mr=more4Act(a,el,v,t);if(!mr)mr=saAct(a,el,v,t);if(mr==="local")return;if(!mr)ch=false;}
  if(ch){try{tmTouch();}catch(_){}commit();}else saveLocal();
  render();
 });
