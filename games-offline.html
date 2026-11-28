@@ -370,6 +370,7 @@ html.hc .cat{border:3px solid #000}
 @media (prefers-reduced-motion:reduce){.ggrid>.cat,.cat:hover .art svg{animation:none}}
 .ggrid>.cat b{display:block;min-height:0}
 .cat{border-color:var(--k)}html.hc .cat{border-color:#000}
+.wpk{border:2px dashed var(--c2)}
 :root{--c1:#3b5bff;--c2:#ff8a1f;--c3:#ffc93c;--c4:#12b886;--c5:#6bb0ff;--c6:#00a7c4;--c7:#ef4444;--paper:#eaf1ff}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#10172e}}:root[data-theme="dark"]{--paper:#10172e}</style>
 </head>
 <body>
@@ -1447,6 +1448,7 @@ var PROV=[
 ["تجري الرياح بما","لا تشتهي السفن"],["على نفسها جنت","براقش"],["ما كل ما يتمنى المرء","يدركه"]
 ];
 
+
 window.WSOLO=true;window.WOFFILE=true;
 /* ===== رسومات الألعاب والتصنيفات ===== */
 var INK="#17121b";
@@ -1817,7 +1819,9 @@ var OVRK="wg_ovr_"+BR.id,OVR={},OVRC={};
 try{OVR=JSON.parse(localStorage.getItem(OVRK)||"{}")||{};}catch(e){OVR={};}
 function ovrOf(i){return OVR[bkey(i)]||null;}
 function ovrApply(i,b){var o=ovrOf(i);if(!o||!o.q)return b;if(OVRC[i])return OVRC[i];return (OVRC[i]=[b[0],o.q,o.a||b[2],o.a&&o.a!==b[2]?(b[3]==="-"?"-":undefined):b[3],b[4],b[5]]);}
-function isHidden(i){var o=ovrOf(i);return !!(o&&o.h);}
+function isHidden(i){var o=ovrOf(i);if(o&&o.h)return true;var r=BANK[i];if(r&&typeof G!=="undefined"&&G){if(r[4]==="w"&&G.nowpk)return true;if(r[6]==="d"&&!G.nowpk)return true;}return false;}
+function hasWpk(){return BANK.some(function(r){return r[4]==="w";});}
+function wpkBox(){if(!hasWpk())return "";var on=!G.nowpk,n=BANK.filter(function(r){return r[4]==="w";}).length;return '<div class="card wpk"><div class="top" style="align-items:center;margin:0"><b>📦 باقة أسئلة '+esc(BR.name)+'</b><span class="muted" style="font-size:.85rem">'+ar(n)+' سؤال</span><div class="sp"></div><button class="sm'+(on?" g":"")+'" data-a="wpk">'+(on?"✅ مفعّلة":"⬜ مقفلة")+'</button></div><p class="muted" style="margin:6px 0 0;font-size:.85rem">'+(on?"أسئلتك الخاصة داخلة في كل الألعاب.":"اللعب الحين بأسئلة الموقع العامة فقط.")+'</p></div>';}
 function ovrLocal(){OVRC={};LMAP=null;try{localStorage.setItem(OVRK,JSON.stringify(OVR));}catch(e){}}
 function ovrSet(k,val){if(val)OVR[k]=val;else delete OVR[k];ovrLocal();
  if(DB&&CANEDIT){var d=DB.collection("ovr").doc(k);(val?d.set(val):d.delete()).catch(function(){});}render();}
@@ -1966,6 +1970,7 @@ function vCT(){
 /* ===== أوامر الألعاب الجديدة: ترجع true إذا تعاملت مع الأمر ===== */
 function moreAct(a,el,v,t){
  var w=G.wm,k=G.lk,f=G.tf,c=G.ct;
+ if(a==="wpk"){G.nowpk=!G.nowpk;LMAP=null;return;}
  if(a==="wmk"){if(w.k<5)w.k++;}else if(a==="wmr"){w.rev=true;}else if(a==="wmn"){wmNext();}
  else if(a==="lkk"){if(k.k<4)k.k++;}else if(a==="lkr"){k.rev=true;}else if(a==="lkn"){lkNext();}
  else if(a==="tfn"){f.n=cyc(f.n,[10,15,20,5]);}else if(a==="tft"){f.t=cyc(f.t,[15,20,10,0]);}
@@ -3086,12 +3091,12 @@ var ind=!!G.indiv,h=(canLand()?'<div class="top">'+landBtn()+'</div>':'')+(windo
  if(!ind)h+='<h2 style="margin-top:14px">🙋 عدد اللاعبين كلهم</h2><div class="step"><button data-a="np" data-v="-1">−</button><b>'+ar(G.players)+'</b><button data-a="np" data-v="1">+</button><span class="muted">'+ar(Math.max(1,Math.round(G.players/L.nTeams)))+' لاعبين تقريباً بكل فريق</span></div>';
  h+='</div><div class="card"><h2>'+(ind?'🏷️ أسماء اللاعبين':'🏷️ أسماء الأفرقة وشعاراتها')+'</h2><p class="muted">'+(ind?'اكتب الأسماء، أو خل اللاعبين يدخلون من جوالاتهم بأسمائهم واضغط «أضف المتصلين».':'اضغط الشعار عشان تغيّره')+'</p>'+(ind&&ROOM?'<button class="sm g" style="margin-bottom:8px" data-a="addconn">📲 أضف المتصلين ('+ar(ROOM?ROOM.peers().filter(function(q){return pname(q);}).length:0)+')</button>':'');
  for(var i=0;i<L.nTeams;i++)h+='<div class="trow"><button class="embb" style="--c:'+COL[i%8]+'" data-a="emb" data-v="'+i+'" title="غيّر الشعار">'+icon(EMB[(L.embs[i]!=null?L.embs[i]:i)%EMB.length],"ic emb")+'</button><input data-n="'+i+'" placeholder="'+((ind?"اللاعب ":"الفريق ")+ar(i+1))+'" value="'+esc(L.names[i]||"")+'"></div>';
- return h+'</div><button class="g" style="width:100%;padding:15px;font-size:1.2rem" data-a="start">🚀 ابدأ</button>'+(G.teams.length?'<button style="width:100%;margin-top:10px" data-a="home">رجوع بدون تغيير</button>':'');
+ return h+'</div>'+wpkBox()+'<button class="g" style="width:100%;padding:15px;font-size:1.2rem" data-a="start">🚀 ابدأ</button>'+(G.teams.length?'<button style="width:100%;margin-top:10px" data-a="home">رجوع بدون تغيير</button>':'');
 }
 function vHome(){
  var h='<div class="bar">'+(BR.logo?'<img src="'+BR.logo+'" alt="">':icon("pad","ic bari"))+'<b>'+BR.name+'</b>'+syncChip()+'<div class="sp"></div>'+(window.WSHIM&&CANEDIT?'<button class="sm g" data-a="share">🔗 '+esc(WSHIM.room)+'</button>':'')+'<button class="sm" data-a="setup">👥 الأفرقة</button></div>'+hero(BR.sub);
  h+=evtBanner()+'<div class="top">'+landBtn()+pres()+'<button class="sm" data-a="tvon">📺 شاشة العرض</button><button class="sm'+(L.snd?' g':'')+'" data-a="snd">'+(L.snd?'🔊 الصوت':'🔇 الصوت')+'</button><button class="sm" data-a="lobby">🖥️ شاشة الانتظار</button><button class="sm g" data-a="prog">🎬 السهرة الجاهزة</button><button class="sm'+(L.more?' g':'')+'" data-a="moremenu">☰ المزيد</button></div>';
- if(L.more)h+='<div class="card moremenu"><button class="sm" data-a="hist">📜 السجل</button><button class="sm" data-a="league">🏆 الدوري</button><button class="sm'+(L.tts?' g':'')+'" data-a="ttson" title="الجهاز يقرأ السؤال بصوت">'+(L.tts?'🗣️ القراءة شغّالة':'🗣️ قراءة الأسئلة')+'</button><button class="sm" data-a="lbon">🔔 جرس الطاولة</button><button class="sm" data-a="print">🖨️ بطاقات للطباعة</button><button class="sm" data-a="thpop">🎨 ثيم المناسبة</button><button class="sm'+(studioOn()?' g':'')+'" data-a="studio">🎬 الاستوديو '+(studioOn()?'شغّال':'مقفل')+'</button><button class="sm" data-a="daily">📅 مسابقة اليوم</button><button class="sm" data-a="a11">👓 الوضوح</button><button class="sm" data-a="prac">🎯 تدرّب لحالك</button>'+installBtn()+''+(CANEDIT?'<button class="sm" data-a="myq">📝 أسئلتي'+(CUSTOM.length?' ('+ar(CUSTOM.length)+')':'')+'</button>':'')+(ROOM?'<button class="sm" data-a="toplayer">📱 هذا الجهاز للاعب</button>':'')+'</div>';
+ if(L.more)h+='<div class="card moremenu"><button class="sm" data-a="hist">📜 السجل</button><button class="sm" data-a="league">🏆 الدوري</button><button class="sm'+(L.tts?' g':'')+'" data-a="ttson" title="الجهاز يقرأ السؤال بصوت">'+(L.tts?'🗣️ القراءة شغّالة':'🗣️ قراءة الأسئلة')+'</button><button class="sm" data-a="lbon">🔔 جرس الطاولة</button><button class="sm" data-a="print">🖨️ بطاقات للطباعة</button><button class="sm" data-a="thpop">🎨 ثيم المناسبة</button><button class="sm'+(studioOn()?' g':'')+'" data-a="studio">🎬 الاستوديو '+(studioOn()?'شغّال':'مقفل')+'</button><button class="sm" data-a="daily">📅 مسابقة اليوم</button><button class="sm" data-a="a11">👓 الوضوح</button><button class="sm" data-a="prac">🎯 تدرّب لحالك</button>'+installBtn()+''+(CANEDIT?'<button class="sm" data-a="myq">📝 أسئلتي'+(CUSTOM.length?' ('+ar(CUSTOM.length)+')':'')+'</button>':'')+(ROOM?'<button class="sm" data-a="toplayer">📱 هذا الجهاز للاعب</button>':'')+'</div>';if(L.more)h+=wpkBox();
  if(ROOM&&G.teams.length)h+='<div class="card" style="padding:10px 14px"><b>🔔 الجرس من الجوال</b><div class="muted">اللاعبين يفتحون نفس الرابط من جوالاتهم ويختارون فريقهم. المتصلين الحين: '+ar(players().length)+'</div></div>';
  h+='<h2>اختر لعبتك</h2><div class="chips">';
  FILTERS.forEach(function(f){h+='<button class="'+(L.filter===f?'on':'')+'" data-a="flt" data-f="'+f+'">'+f+'</button>';});
