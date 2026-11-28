@@ -115,7 +115,8 @@ input,select{font:inherit;color:var(--text);background:var(--card);border:3px so
 @media (max-width:520px){.sjboard{grid-template-columns:repeat(2,1fr)!important}}
 html.tvh{font-size:21px}
 .tv.wrap{max-width:1250px}
-.tv button:not(.cover):not(.cv):not(.sjcell):not(.cat):not(.tvx){display:none!important}
+.tv button:not(.cover):not(.cv):not(.sjcell):not(.cat):not(.tvx):not(.kopt):not(.kos){display:none!important}
+.tv .kopt,.tv .kos{pointer-events:none}
 .tv .cat,.tv .sjcell,.tv .cover,.tv .cv,.tv .hexsvg g{pointer-events:none}
 .tv .peekbox,.tv select,.tv input,.tv label,.tv .chips,.tv .top{display:none!important}
 .tv .ov{background:rgba(15,5,25,.45);align-items:center}
@@ -150,7 +151,7 @@ html.tvh{font-size:21px}
 .lnk{font-size:.8rem;word-break:break-all;background:var(--card2);border-radius:10px;padding:6px 8px;margin:6px 0 10px;text-align:left}
 .cat .art{display:block;border:3px solid var(--line,#17121b);border-radius:14px;background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.75),rgba(255,255,255,.25) 70%),var(--k);margin:-2px -2px 10px;overflow:hidden;box-shadow:inset 0 -6px 0 rgba(0,0,0,.08)}
 .cat .art svg{display:block;width:100%;height:auto;transition:transform .25s}
-.cat:hover .art svg{transform:scale(1.05) rotate(-1deg)}
+@media (hover:hover){.cat:hover .art svg{transform:scale(1.05) rotate(-1deg)}}
 .cat .em .ic{width:54px;height:54px;display:block;margin:0 auto 2px;filter:drop-shadow(2px 3px 0 rgba(0,0,0,.18))}
 .ic{display:inline-block;vertical-align:middle}
 .ic.sm{width:26px;height:26px;margin-inline-end:6px}
@@ -343,7 +344,7 @@ button.sap{cursor:pointer}
 /* بطاقات مريحة: خلفية فاتحة ولون خفيف */
 .grid,.ggrid{gap:16px}
 .cat{background:var(--card);color:var(--text);border:2px solid color-mix(in srgb,var(--k) 55%,transparent);border-radius:22px;padding:10px 10px 14px;box-shadow:0 6px 18px -8px color-mix(in srgb,var(--k) 70%,transparent),0 1px 0 rgba(0,0,0,.04);transition:transform .2s,box-shadow .2s}
-.cat:hover{transform:translateY(-3px);box-shadow:0 12px 26px -10px color-mix(in srgb,var(--k) 80%,transparent)}
+@media (hover:hover){.cat:hover{transform:translateY(-3px);box-shadow:0 12px 26px -10px color-mix(in srgb,var(--k) 80%,transparent)}}
 .cat:active{transform:scale(.98);box-shadow:0 3px 10px -6px color-mix(in srgb,var(--k) 70%,transparent)}
 .cat .art{border:0;border-radius:16px;margin:0 0 12px;background:linear-gradient(160deg,color-mix(in srgb,var(--k) 14%,#fff),color-mix(in srgb,var(--k) 32%,#fff));box-shadow:none}
 .cat b{font-size:1.05rem;color:var(--text)}
@@ -359,9 +360,9 @@ html.hc .cat{border:3px solid #000}
 .cat{border-top:6px solid var(--k);position:relative}
 .cat .art{background:radial-gradient(circle,rgba(0,0,0,.05) 1.2px,transparent 1.6px) 0 0/14px 14px,linear-gradient(160deg,#fff8e6,#e9f4ff)}
 .cat b::after{content:"";display:block;width:26px;height:4px;border-radius:4px;background:var(--k);margin:5px auto 0}
-.cat:hover .art svg{animation:wig .6s ease}
+@media (hover:hover){.cat:hover .art svg{animation:wig .6s ease}
 .ggrid>.cat:nth-child(odd):hover{transform:translateY(-4px) rotate(-1.2deg)}
-.ggrid>.cat:nth-child(even):hover{transform:translateY(-4px) rotate(1.2deg)}
+.ggrid>.cat:nth-child(even):hover{transform:translateY(-4px) rotate(1.2deg)}}
 @keyframes wig{30%{transform:scale(1.07) rotate(-2deg)}60%{transform:scale(1.05) rotate(2deg)}100%{transform:scale(1.04)}}
 .ggrid>.cat{animation:pop .45s cubic-bezier(.3,1.5,.5,1) both}
 .ggrid>.cat:nth-child(2n){animation-delay:.05s}.ggrid>.cat:nth-child(3n){animation-delay:.1s}
@@ -1086,51 +1087,7 @@ var CATS=[
 {t:"أكثر ١٠ دول سكاناً في العالم",q:"رتّب أكثر ١٠ دول سكاناً في العالم",i:[["الهند","١٫٤٨ مليار نسمة"],["الصين","١٫٤١ مليار نسمة"],["الولايات المتحدة","٣٤٩ مليون نسمة"],["إندونيسيا","٢٨٨ مليون نسمة"],["باكستان","٢٥٩ مليون نسمة"],["نيجيريا","٢٤٢ مليون نسمة"],["البرازيل","٢١٤ مليون نسمة"],["بنغلاديش","١٧٨ مليون نسمة"],["روسيا","١٤٣ مليون نسمة"],["إثيوبيا","١٣٩ مليون نسمة"]]},
 {t:"أكثر ١٠ دول عربية سكاناً",q:"رتّب أكثر ١٠ دول عربية سكاناً",i:[["مصر","١١٩٫٩ مليون نسمة"],["السودان","٥١٫٩ مليون نسمة"],["الجزائر","٤٨٫١ مليون نسمة"],["العراق","٤٧٫٩ مليون نسمة"],["اليمن","٤٢٫٨ مليون نسمة"],["المغرب","٣٨٫٨ مليون نسمة"],["السعودية","٣٢٫٥ مليون نسمة"],["سوريا","٢٧٫٠ مليون نسمة"],["الصومال","٢٠٫٠ مليون نسمة"],["تونس","١٢٫٤ مليون نسمة"]]}
 ];
-var AN=[
-["الإبل","حيوان","الغاشية ١٧","أفلا ينظرون إلى الإبل كيف خلقت"],
-["الجمل","حيوان","الأعراف ٤٠","حتى يلج الجمل في سم الخياط"],
-["الناقة","حيوان","الأعراف ٧٣","هذه ناقة الله لكم آية"],
-["الجمالات","حيوان","المرسلات ٣٣","كأنه جمالات صفر"],
-["البقر","حيوان","البقرة ٦٧","إن الله يأمركم أن تذبحوا بقرة"],
-["العجل","حيوان","طه ٨٨","عجلا جسدا له خوار"],
-["الضأن والمعز","حيوان","الأنعام ١٤٣","ثمانية أزواج من الضأن اثنين ومن المعز اثنين"],
-["الغنم","حيوان","الأنبياء ٧٨","إذ نفشت فيه غنم القوم"],
-["النعجة","حيوان","ص ٢٣","ولي نعجة واحدة"],
-["الأنعام","حيوان","النحل ٥","والأنعام خلقها لكم فيها دفء ومنافع"],
-["الخيل","حيوان","آل عمران ١٤","والخيل المسومة"],
-["البغال","حيوان","النحل ٨","والخيل والبغال والحمير لتركبوها وزينة"],
-["الحمير","حيوان","لقمان ١٩","إن أنكر الأصوات لصوت الحمير"],
-["الحمار","حيوان","الجمعة ٥","كمثل الحمار يحمل أسفارا"],
-["الحمر المستنفرة","حيوان","المدثر ٥٠","كأنهم حمر مستنفرة"],
-["الكلب","حيوان","الأعراف ١٧٦","فمثله كمثل الكلب إن تحمل عليه يلهث"],
-["القرد","حيوان","البقرة ٦٥","كونوا قردة خاسئين"],
-["الخنزير","حيوان","البقرة ١٧٣","ولحم الخنزير"],
-["الذئب","حيوان","يوسف ١٣","وأخاف أن يأكله الذئب"],
-["الفيل","حيوان","الفيل ١","ألم تر كيف فعل ربك بأصحاب الفيل"],
-["القسورة","حيوان","المدثر ٥١","فرت من قسورة","القسورة هي الأسد على أحد التفسيرين"],
-["الدابة","حيوان","النور ٤٥","والله خلق كل دابة من ماء"],
-["الهدهد","طائر","النمل ٢٠","ما لي لا أرى الهدهد"],
-["الغراب","طائر","المائدة ٣١","فبعث الله غرابا يبحث في الأرض"],
-["الطير","طائر","الملك ١٩","أولم يروا إلى الطير فوقهم صافات"],
-["الطير الأبابيل","طائر","الفيل ٣","وأرسل عليهم طيرا أبابيل"],
-["السلوى","طائر","البقرة ٥٧","وأنزلنا عليكم المن والسلوى","السلوى هي طائر السمان على أحد التفسيرين"],
-["الحوت","بحري","الصافات ١٤٢","فالتقمه الحوت وهو مليم"],
-["النون","بحري","الأنبياء ٨٧","وذا النون إذ ذهب مغاضبا","ذو النون هو يونس عليه السلام وهو صاحب الحوت"],
-["الحيتان","بحري","الأعراف ١٦٣","إذ تأتيهم حيتانهم يوم سبتهم شرعا"],
-["الحية","زواحف","طه ٢٠","فإذا هي حية تسعى"],
-["الثعبان","زواحف","الأعراف ١٠٧","فإذا هي ثعبان مبين"],
-["الجان","زواحف","النمل ١٠","كأنها جان"],
-["الضفادع","برمائي","الأعراف ١٣٣","والقمل والضفادع والدم"],
-["النحل","حشرة","النحل ٦٨","وأوحى ربك إلى النحل"],
-["النمل","حشرة","النمل ١٨","قالت نملة يا أيها النمل ادخلوا مساكنكم"],
-["الجراد","حشرة","القمر ٧","كأنهم جراد منتشر"],
-["القمل","حشرة","الأعراف ١٣٣","فأرسلنا عليهم الطوفان والجراد والقمل"],
-["البعوضة","حشرة","البقرة ٢٦","مثلا ما بعوضة فما فوقها"],
-["الذباب","حشرة","الحج ٧٣","لن يخلقوا ذبابا"],
-["الفراش","حشرة","القارعة ٤","كالفراش المبثوث"],
-["الأرضة","حشرة","سبأ ١٤","دابة الأرض تأكل منسأته","دابة الأرض هي الأرضة على التفسير المشهور"],
-["العنكبوت","عنكبيات","العنكبوت ٤١","كمثل العنكبوت اتخذت بيتا"]
-];
+var AN=[["الإبل", "حيوان", "الغاشية ١٧", ""], ["الجمل", "حيوان", "الأعراف ٤٠", ""], ["الناقة", "حيوان", "الأعراف ٧٣", ""], ["الجمالات", "حيوان", "المرسلات ٣٣", ""], ["البقر", "حيوان", "البقرة ٦٧", ""], ["العجل", "حيوان", "طه ٨٨", ""], ["الضأن والمعز", "حيوان", "الأنعام ١٤٣", ""], ["الغنم", "حيوان", "الأنبياء ٧٨", ""], ["النعجة", "حيوان", "ص ٢٣", ""], ["الأنعام", "حيوان", "النحل ٥", ""], ["الخيل", "حيوان", "آل عمران ١٤", ""], ["البغال", "حيوان", "النحل ٨", ""], ["الحمير", "حيوان", "لقمان ١٩", ""], ["الحمار", "حيوان", "الجمعة ٥", ""], ["الحمر المستنفرة", "حيوان", "المدثر ٥٠", ""], ["الكلب", "حيوان", "الأعراف ١٧٦", ""], ["القرد", "حيوان", "البقرة ٦٥", ""], ["الخنزير", "حيوان", "البقرة ١٧٣", ""], ["الذئب", "حيوان", "يوسف ١٣", ""], ["الفيل", "حيوان", "الفيل ١", ""], ["القسورة", "حيوان", "المدثر ٥١", "", "القسورة هي الأسد على أحد التفسيرين"], ["الدابة", "حيوان", "النور ٤٥", ""], ["الهدهد", "طائر", "النمل ٢٠", ""], ["الغراب", "طائر", "المائدة ٣١", ""], ["الطير", "طائر", "الملك ١٩", ""], ["الطير الأبابيل", "طائر", "الفيل ٣", ""], ["السلوى", "طائر", "البقرة ٥٧", "", "السلوى هي طائر السمان على أحد التفسيرين"], ["الحوت", "بحري", "الصافات ١٤٢", ""], ["النون", "بحري", "الأنبياء ٨٧", "", "ذو النون هو يونس عليه السلام وهو صاحب الحوت"], ["الحيتان", "بحري", "الأعراف ١٦٣", ""], ["الحية", "زواحف", "طه ٢٠", ""], ["الثعبان", "زواحف", "الأعراف ١٠٧", ""], ["الجان", "زواحف", "النمل ١٠", ""], ["الضفادع", "برمائي", "الأعراف ١٣٣", ""], ["النحل", "حشرة", "النحل ٦٨", ""], ["النمل", "حشرة", "النمل ١٨", ""], ["الجراد", "حشرة", "القمر ٧", ""], ["القمل", "حشرة", "الأعراف ١٣٣", ""], ["البعوضة", "حشرة", "البقرة ٢٦", ""], ["الذباب", "حشرة", "الحج ٧٣", ""], ["الفراش", "حشرة", "القارعة ٤", ""], ["الأرضة", "حشرة", "سبأ ١٤", "", "دابة الأرض هي الأرضة على التفسير المشهور"], ["العنكبوت", "عنكبيات", "العنكبوت ٤١", ""]];
 var FEUD=[
 ["اذكر شيئاً يأخذه الناس معهم في رحلة البر",[["الخيمة",30],["الحطب",22],["القهوة والشاي",18],["الفراش",12],["الطعام",10],["الكراسي",8]]],
 ["اذكر شيئاً تفعله بعد الاستيقاظ مباشرة",[["الصلاة",30],["غسل الوجه",26],["شرب الماء",16],["إعداد القهوة",12],["تفقد الجوال",10],["ترتيب السرير",6]]],
@@ -1172,7 +1129,7 @@ var PACKQ=[
 ["ر","في أي سنة هجرية كان فتح مكة في رمضان؟","٨هـ","-",600],
 ["ر","ما السورة التي سُمّيت باسم الليلة المباركة في رمضان؟","القدر",null,200],
 ["ر","في أي سورة وردت آيات فرض الصيام؟","البقرة",null,200],
-["ر","«كُتب عليكم الصيام كما كُتب على...» أكمل الآية","الذين من قبلكم","-",400],
+["ر","ما اسم العيد الذي يأتي بعد شهر رمضان؟","عيد الفطر",null,400],
 ["ر","ما العبادة التي يلزم فيها المسلم المسجد في العشر الأواخر؟","الاعتكاف",null,200],
 ["ر","كان النبي ﷺ يفطر على رطبات، فإن لم يجد فتمرات، فإن لم يجد فعلى ماذا؟","الماء",null,400],
 ["ر","ما اسم صلاة الليل في رمضان التي تُصلّى بعد العشاء؟","التراويح",null,200],
@@ -1185,28 +1142,28 @@ var PACKQ=[
 ["ر","«من صام رمضان إيماناً واحتساباً...» أكمل الحديث","غُفر له ما تقدم من ذنبه","-",600],
 ["ز","كم عدد أيام الأسبوع؟","٧","-",200],
 ["ز","ما الحيوان الذي يُسمّى سفينة الصحراء؟","الجمل",null,200],
-["ز","كم عدد أرجل العنكبوت؟","٨","-",200],
+["ز","كم عدد أرجل الحشرة؟","٦","-",200],
 ["ز","ما أكبر كوكب في المجموعة الشمسية؟","المشتري",null,400],
 ["ز","كم عدد الصلوات المفروضة في اليوم؟","٥","-",200],
-["ز","ما أول سورة في المصحف؟","الفاتحة",null,200],
-["ز","ما آخر سورة في المصحف؟","الناس",null,200],
+["ز","ما السورة التي نقرؤها في كل ركعة من الصلاة؟","الفاتحة",null,200],
+["ز","كم عدد الشهور في السنة؟","١٢","-",200],
 ["ز","ما الكوكب الذي نعيش عليه؟","الأرض",null,200],
 ["ز","ماذا تصنع النحلة؟","العسل",null,200],
 ["ز","ما الفصل الذي يأتي بعد الشتاء؟","الربيع",null,200],
 ["ز","كم عدد أصابع اليدين معاً؟","١٠","-",200],
-["ز","ما الحيوان الملقّب بملك الغابة؟","الأسد",null,200],
+["ز","كم عدد ساعات اليوم الواحد؟","٢٤","-",200],
 ["ز","ما الشكل الذي له ثلاثة أضلاع؟","المثلث",null,200],
-["ز","ما أسرع حيوان بري؟","الفهد",null,400],
+["ز","كم عدد أضلاع المربع؟","٤","-",400],
 ["ز","كم دقيقة في الساعة؟","٦٠","-",200],
 ["ز","ما الطائر الذي يقلّد كلام الإنسان؟","الببغاء",null,200],
-["ز","كم عدد أركان الإسلام؟","٥","-",200],
+["ز","ما لون الموز عندما ينضج؟","الأصفر",null,200],
 ["ز","ما الحيوان الأطول رقبة؟","الزرافة",null,200],
 ["ز","ما أكبر حيوان في العالم؟","الحوت الأزرق",null,400],
 ["ز","كم عدد ألوان قوس المطر المشهورة؟","٧","-",400],
 ["ز","ما الذي يتكوّن من هيدروجين وأكسجين ونشربه كل يوم؟","الماء",null,400],
-["ز","كم قلباً للأخطبوط؟","٣","-",600],
+["ز","كم عدد أسنان الحليب عند الطفل؟","٢٠","-",600],
 ["ز","ما أصغر كوكب في المجموعة الشمسية؟","عطارد",null,600],
-["ز","كم عدد عظام جسم الإنسان البالغ؟","٢٠٦","-",600],
+["ز","ما اسم الآلة التي نرى بها النجوم البعيدة؟","التلسكوب",null,600],
 ["ز","ما الطائر الذي لا يطير ويعيش في الأماكن الباردة ويسبح جيداً؟","البطريق",null,400],
 ["ش","ما النجم الذي يدل على جهة الشمال؟","الجدي",null,400],
 ["ش","«بنات نعش» الكبرى جزء من أي مجموعة نجمية؟","الدب الأكبر",null,600],
@@ -1279,7 +1236,7 @@ var WHO=[
 ["نوح عليه السلام","نبي",["أنا من أولي العزم من الرسل","دعوت قومي ٩٥٠ سنة","ابني لم يركب معي","صنعت سفينة بأمر الله","نجّاني الله من الطوفان"]],
 ["سليمان عليه السلام","نبي",["أنا نبي وملك","ورثت أبي داود","سُخّرت لي الريح","فهمت كلام النمل والطير","أرسلت كتاباً إلى ملكة سبأ"]],
 ["القلب","جسم الإنسان",["أنا عضو في جسمك","أعمل بدون توقف","عندي أربع حجرات","أضخ الدم","«إذا صلحت صلح الجسد كله»"]],
-["الماء","علوم",["ليس لي لون ولا طعم ولا رائحة","أتجمد عند الصفر المئوي","أتكوّن من هيدروجين وأكسجين","«وجعلنا من... كل شيء حي»","تشربني كل يوم"]],
+["الماء","علوم",["ليس لي لون ولا طعم ولا رائحة","أتجمد عند الصفر المئوي","أتكوّن من هيدروجين وأكسجين","القرآن ذكر أن الله جعل منّي أصل كل شيء حي","تشربني كل يوم"]],
 ["التمر","طعام",["أنا من ثمار الجزيرة العربية","تحملني النخلة","العجوة والسكري من أنواعي","يفطر عليّ الصائمون","أنا التمر"]],
 ["القهوة العربية","ضيافة",["أُقدَّم للضيف أول ما يجلس","أُصب في فنجال صغير","يُضاف لي الهيل","دلّتي رمز للكرم","أنا القهوة"]],
 ["البوصلة","أداة",["أنا أداة صغيرة","فيّ إبرة","أتأثر بالمغناطيس","يستعملني المسافر والبحّار","أدلّك على الشمال"]],
@@ -2224,11 +2181,11 @@ function TW(){return G.indiv?"لاعب":"فريق";}
 function TWS(){return G.indiv?"اللاعبين":"الفرق";}
 
 /* ---------- خيارات متعددة من البنك ---------- */
-var QKW=["عاصمة","عملة","سورة","نبي","صحاب","غزوة","حيوان","طائر","حشرة","كوكب","دولة","مدينة","نهر","بحر","جبل","قارة","صلاة","شهر","لون","عضو","خليفة","ملك","معركة","لغة","عنصر","غاز","عظم","جهاز","فاكهة","نبات","محيط","جزيرة","صحراء","زوج","ابن","بنت","أم ","أبو","عام","سنة","قرن"];
-function qFeat(q){q=String(q||"");var w=q.trim().split(/\s+/)[0]||"";var ks=QKW.filter(function(k){return q.indexOf(k)>=0;});return {w:w,k:ks};}
+var QKW=["عاصمة","عملة","سورة","نبي","صحاب","غزوة","حيوان","طائر","حشرة","كوكب","دولة","مدينة","نهر","بحر","جبل","قارة","صلاة","شهر","لون","عضو","خليفة","ملك","معركة","لغة","عنصر","غاز","عظم","جهاز","فاكهة","نبات","محيط","جزيرة","صحراء","زوج","ابن","بنت","أم ","أبو","عام","سنة","قرن","حضارة","إمبراطورية","مخترع","اخترع","شاعر","كتاب","مؤلف","مسجد","قبيلة","عالم","طبيب","رحّالة","مستكشف","ميناء","برج","قلعة","وادي","منطقة","محافظة","معدن","فيتامين","كيلو","متر"];
+function qFeat(q){q=String(q||"");var ws=q.trim().split(/\s+/),w=ws[0]||"";var ks=QKW.filter(function(k){return q.indexOf(k)>=0;});return {w:w,w2:ws.slice(0,2).join(" "),k:ks};}
 function optsFor(id){var r=Q(id);if(!r)return {o:[],c:0};var F0=qFeat(r[1]);var ans=String(r[2]).trim(),k0=nkey(ans),len=ans.length,wc=ans.split(/\s+/).length,num=/^[\d٠-٩]/.test(ans),al=/^ال/.test(ans),seen={};seen[k0]=1;
  var sc=[];allIds().forEach(function(x){var q=Q(x);if(!q||!q[2])return;var a=String(q[2]).trim(),k=nkey(a);if(!a||seen[k]||a.length>40||/[()]/.test(a))return;seen[k]=1;
-  var w=a.split(/\s+/).length,s=0,F=qFeat(q[1]);if(q[0]===r[0])s+=2;if(F.w===F0.w)s+=1.5;F0.k.forEach(function(k){if(F.k.indexOf(k)>=0)s+=4;});s+=w===wc?2:Math.abs(w-wc)===1?1:-1;var rt=a.length/Math.max(1,len);if(rt>.65&&rt<1.5)s+=2;if(/^[\d٠-٩]/.test(a)===num)s+=num?4:1;else s-=4;if(/^ال/.test(a)===al)s+=1;s+=Math.random()*1.5;sc.push([s,a]);});
+  var w=a.split(/\s+/).length,s=0,F=qFeat(q[1]);if(q[0]===r[0])s+=2;if(F.w===F0.w)s+=1.5;if(F.w2===F0.w2)s+=3;F0.k.forEach(function(k){if(F.k.indexOf(k)>=0)s+=4;});s+=w===wc?2:Math.abs(w-wc)===1?1:-1;var rt=a.length/Math.max(1,len);if(rt>.65&&rt<1.5)s+=2;if(/^[\d٠-٩]/.test(a)===num)s+=num?4:1;else s-=4;if(/^ال/.test(a)===al)s+=1;s+=Math.random()*1.5;sc.push([s,a]);});
  sc.sort(function(a,b){return b[0]-a[0];});var top=shuf(sc.slice(0,8)).slice(0,3).map(function(x){return x[1];});
  var o=shuf(top.concat([ans]));return {o:o,c:o.indexOf(ans)};}
 var KSH=["▲","◆","●","■"],KCL=["#e2475a","#2a6fdb","#e8a10c","#1d9e6a"];
@@ -2377,7 +2334,7 @@ function aiAvail(){return !!(window.claude&&window.claude.use&&!window.WSHIM&&DB
 function aiGen(){var g=L.ai||(L.ai={});if(!g.topic||!g.topic.trim()){g.msg="اكتب الموضوع";render();return;}
  g.busy=true;g.msg="جاري التوليد… (ممكن ياخذ دقيقة)";g.list=null;render();
  var lvTxt={"200":"سهلة","400":"متوسطة","600":"صعبة","mix":"منوّعة بين السهل والمتوسط والصعب"}[g.lv||"mix"];
- var prompt="أنت معدّ مسابقات عربي محترف ودقيق جداً. اكتب "+(g.n||10)+" سؤال مسابقة باللغة العربية الفصحى المبسطة عن: «"+g.topic.trim()+"». الصعوبة: "+lvTxt+".\nالشروط الصارمة:\n- كل معلومة صحيحة ومتفق عليها ومشهورة، ولا تكتب أي سؤال فيه خلاف بين العلماء أو المؤرخين أو معلومة غير مؤكدة.\n- في الأسئلة الدينية: التزم بما هو ثابت في القرآن والسنة الصحيحة فقط، بأدب واحترام.\n- لا تكتب أي شيء عن الموسيقى أو الأغاني أو الأفلام أو المسلسلات أو كرة القدم أو المشاهير أو القمار أو الرهان.\n- الجواب قصير جداً (كلمة إلى أربع كلمات)، والسؤال واضح وله جواب واحد فقط.\n- لا تكرر الأسئلة.\nأرجع JSON فقط بهذا الشكل: {\"questions\":[{\"q\":\"السؤال\",\"a\":\"الجواب\",\"v\":200}]} حيث v هي 200 للسهل و400 للمتوسط و600 للصعب.";
+ var prompt="أنت معدّ مسابقات عربي محترف ودقيق جداً. اكتب "+(g.n||10)+" سؤال مسابقة باللغة العربية الفصحى المبسطة عن: «"+g.topic.trim()+"». الصعوبة: "+lvTxt+".\nالشروط الصارمة:\n- كل معلومة صحيحة ومتفق عليها ومشهورة، ولا تكتب أي سؤال فيه خلاف بين العلماء أو المؤرخين أو معلومة غير مؤكدة.\n- في الأسئلة الدينية: التزم بما هو ثابت في القرآن والسنة الصحيحة فقط، بأدب واحترام.\n- لا تكتب أي شيء عن الموسيقى أو الأغاني أو الأفلام أو المسلسلات أو كرة القدم أو المشاهير أو القمار أو الرهان.\n- لا تكتب نص أي آية قرآنية ولا تطلب إكمال آية؛ تقدر تذكر اسم السورة فقط.\n- الجواب قصير جداً (كلمة إلى أربع كلمات)، والسؤال واضح وله جواب واحد فقط.\n- لا تكرر الأسئلة.\nأرجع JSON فقط بهذا الشكل: {\"questions\":[{\"q\":\"السؤال\",\"a\":\"الجواب\",\"v\":200}]} حيث v هي 200 للسهل و400 للمتوسط و600 للصعب.";
  claude.use("sample").then(function(s){if(!s)throw {code:"x"};return s.json(prompt,{modelTier:"default"});}).then(function(res){var arr=(res&&res.questions)||res;if(!Array.isArray(arr))throw {code:"fmt"};
   g.list=arr.filter(function(x){return x&&x.q&&x.a;}).slice(0,60).map(function(x){return {q:String(x.q).slice(0,300),a:String(x.a).slice(0,200),v:[200,400,600].indexOf(+x.v)>=0?+x.v:400,on:true};});g.busy=false;g.msg=g.list.length?"راجع الأسئلة، وشيل علامة ✓ عن أي سؤال ما تبيه":"ما طلع شي، جرّب صياغة ثانية";render();})
  .catch(function(e){g.busy=false;g.msg=e&&e.code==="not_granted"?"ما انعطى الإذن لاستخدام الذكاء الاصطناعي":e&&e.code==="rate_limited"?"محاولات كثيرة، انتظر شوي وجرّب":"صار خطأ في التوليد، جرّب مرة ثانية";render();});}
@@ -2400,7 +2357,7 @@ function dailySub(){if(DLY.sub||!window.WSHIM||!WSHIM.xsub)return;DLY.sub=true;W
 function dailyPublish(){var n=L.dn||5,ids=preferFresh(kaPool());shuf(ids);var d=today(),qs=ids.slice(0,n).map(function(id){var r=Q(id),oc=optsFor(id);markSeen(qkey(id));return {q:r[1],o:oc.o,x:dEnc(oc.c,r[1])};});WSHIM.xpub("daily/"+d+"/q",{d:d,qs:qs,at:Date.now()},true);DLY.q[d]={d:d,qs:qs};render();}
 function dScore(d,ans){var q=DLY.q[d];if(!q||!ans||!ans.a)return {c:0,ms:0};var c=0;q.qs.forEach(function(x,i){if(ans.a[i]===dDec(x.x,x.q))c++;});return {c:c,ms:(ans.ms||[]).reduce(function(a,b){return a+(+b||0);},0)};}
 function vDailyHost(){var h='<div class="top"><button class="sm" data-a="home">🏠 الألعاب</button><div class="sp"></div>'+syncChip()+'</div><h1>📅 مسابقة اليوم</h1>';
- if(!window.WSHIM||!WSHIM.xpub)return h+'<div class="card"><p>مسابقة اليوم تشتغل في رابط GitHub، لأن اللاعبين يدخلونها من بيوتهم بدون حساب.</p></div>';
+ if(!window.WSHIM||!WSHIM.xpub)return h+'<div class="card"><p>'+(window.WOFFILE?'مسابقة اليوم تحتاج نت. افتح رابط الموقع وانت متصل.':window.WSOLO?'مسابقة اليوم تحتاج غرفة متصلة. ارجع للبداية واختر «أنشئ غرفة».</p><p>'+landBtn():'مسابقة اليوم تشتغل في رابط الموقع، لأن اللاعبين يدخلونها من بيوتهم بدون حساب.')+'</p></div>';
  dailySub();var d=today(),q=DLY.q[d],lk=WSHIM.links().player+"&d=1";
  h+='<p class="muted">أسئلة يومية ينزلها المقدم، والشباب يجاوبون من بيوتهم بأي وقت في اليوم، مرة وحدة لكل جوال. الترتيب حسب الإجابات الصحيحة ثم السرعة، وفيه ترتيب للشهر كامل.</p>';
  h+='<div class="card"><h2>🔗 رابط مسابقة اليوم</h2>'+qrSvg(lk)+'<div class="lnk" dir="ltr">'+esc(lk)+'</div><button class="g" style="width:100%" data-a="dcopy">📋 انسخ الرابط</button></div>';
@@ -2549,6 +2506,14 @@ function quranAct(a,el,v,t){var x=G.qr;
  else if(a==="qhint"){x.k=(x.k||0)+1;}
  else return false;
  return true;}
+/* آية لعبة «أين ذُكر» تُجلب من المصدر الموثّق، ولا تُكتب من الذاكرة */
+var ANSN={"آل عمران":3,"الأعراف":7,"الأنبياء":21,"الأنعام":6,"البقرة":2,"الجمعة":62,"الحج":22,"الصافات":37,"العنكبوت":29,"الغاشية":88,"الفيل":105,"القارعة":101,"القمر":54,"المائدة":5,"المدثر":74,"المرسلات":77,"الملك":67,"النحل":16,"النمل":27,"النور":24,"سبأ":34,"ص":38,"طه":20,"لقمان":31,"يوسف":12};
+var ANV={},ANL={};
+function anRef(r){var m=String(r).match(/^(.+?)\s+([٠-٩0-9]+)$/);if(!m)return null;var s=ANSN[m[1].trim()];var a=parseInt(m[2].replace(/[٠-٩]/g,function(d){return "٠١٢٣٤٥٦٧٨٩".indexOf(d);}),10);return s&&a?[s,a]:null;}
+function anAyah(ref){var p=anRef(ref);if(!p)return {st:"x"};var k=p[0]+":"+p[1];if(ANV[k])return {st:"ok",t:ANV[k]};
+ if(!ANL[k]){ANL[k]=1;qPart("surah",p[0]).then(function(l){var v=(l||[]).filter(function(x){return x[1]===p[1];})[0];if(v){ANV[k]=v[2];}else ANL[k]=2;render();}).catch(function(){ANL[k]=2;render();});}
+ return {st:ANL[k]===2?"err":"load"};}
+function anAyahHtml(ref,big){var r=anAyah(ref);if(r.st==="ok")return '<div class="ayah'+(big?'':' sm')+'">'+esc(r.t)+'</div>';if(r.st==="load")return '<div class="muted">⏳ جاري جلب الآية…</div>';return '<div class="muted">افتح المصحف على '+esc(ref)+'</div>';}
 
 /* ================= الانتشار والتجربة ================= */
 var SITE_URL="https://azzamsaud1.github.io/watad-games/";
@@ -2565,7 +2530,7 @@ function vInstallHelp(){return '<div class="ov" data-a="instx"><div class="sheet
 function showcase(){var ids=["sj","hex","ka","journey","ladder","qcomplete","ihj","feud","taboo","tf","rank","blitz"];var cards=ids.filter(function(i){return ART[i];}).map(function(i){var g=GAMES.filter(function(x){return x.id===i;})[0];return '<div class="shc"><span class="art">'+ART[i]+'</span><b>'+esc(g?g.name:"")+'</b></div>';}).join('');return '<div class="show"><div class="track">'+cards+cards+'</div></div>';}
 function vLanding(){
  var h='<div class="land">'+hero("منصة ألعاب ومسابقات للجلسات والمجالس، بدون حسابات ولا تطبيقات");
- h+='<div class="lstats"><div><b>'+ar(GAMES.length)+'</b><span>لعبة</span></div><div><b>'+ar(BANK.length)+'+</b><span>سؤال</span></div><div><b>٣٠</b><span>لاعب بنفس الوقت</span></div><div><b>٠</b><span>تسجيل أو تحميل</span></div></div>';
+ h+='<div class="lstats"><div><b>'+ar(GAMES.length)+'</b><span>لعبة</span></div><div><b>'+ar(BANK.length)+'+</b><span>سؤال</span></div><div><b>٣٠</b><span>لاعب بنفس الوقت</span></div><div><b style="font-size:1.25rem">مجاني</b><span>بدون تسجيل</span></div></div>';
  h+=showcase();
  h+='<div class="lgrid"><button class="lbig g" data-a="demo"><span>▶️</span><b>جرّب الحين</b><small>لعبة تجريبية فورية بدون تجهيز</small></button><button class="lbig" data-a="mkroom"><span>✨</span><b>أنشئ غرفة</b><small>لك رابط مقدم وللشباب رابط لاعبين</small></button><button class="lbig" data-a="prac"><span>🎯</span><b>تدرّب لحالك</b><small>تحدَّ نفسك وحافظ على سلسلتك</small></button><button class="lbig" data-a="solo"><span>📴</span><b>جهاز واحد</b><small>بدون إنترنت مع جرس الطاولة</small></button></div>';
  h+='<div class="card"><h2>🙋 عندك رمز غرفة؟</h2><div class="trow"><input id="jcode" placeholder="رمز الغرفة" style="text-align:center;font-size:1.3rem;letter-spacing:4px" maxlength="8" autocomplete="off"><button class="g" data-a="join">دخول</button></div></div>';
@@ -3032,8 +2997,10 @@ function syncChip(){
 function pres(){return '<button class="sm'+(L.presenter?' g':'')+'" data-a="pres" title="يظهر الإجابات على هذا الجهاز فقط">'+(L.presenter?'👁️ وضع المقدم':'🙈 وضع العرض')+'</button>';}
 function logo(){return BR.logo?'<img src="'+BR.logo+'" alt="'+BR.name+'">':'<span class="em">'+icon("pad","ic hero")+'</span>';}
 function hero(sub){return '<div class="hero">'+logo()+'<h1>'+BR.name+'</h1><p>'+sub+'</p></div>';}
+function canLand(){return !!(window.WSHIM||(window.WSOLO&&!window.WOFFILE));}
+function landBtn(){return canLand()?'<button class="sm" data-a="toland">⬅️ رجوع للبداية</button>':'';}
 function vSetup(){
-var ind=!!G.indiv,h=(window.WSHIM&&CANEDIT?'<div class="bzstrip live"><span>غرفتك: <b dir="ltr">'+esc(WSHIM.room)+'</b></span><div class="sp"></div><button class="sm" data-a="share">🔗 روابط اللاعبين والشاشة</button></div>':'')+hero("جهّز الجلسة وابدأ");
+var ind=!!G.indiv,h=(canLand()?'<div class="top">'+landBtn()+'</div>':'')+(window.WSHIM&&CANEDIT?'<div class="bzstrip live"><span>غرفتك: <b dir="ltr">'+esc(WSHIM.room)+'</b></span><div class="sp"></div><button class="sm" data-a="share">🔗 روابط اللاعبين والشاشة</button></div>':'')+hero("جهّز الجلسة وابدأ");
  h+='<div class="card"><h2>🎮 طريقة اللعب</h2><div class="modes"><button class="'+(ind?'':'on')+'" data-a="indiv" data-v="0"><span>👥</span><b>فرق</b><small>كل مجموعة فريق</small></button><button class="'+(ind?'on':'')+'" data-a="indiv" data-v="1"><span>🙋</span><b>فردي</b><small>كل شخص يلعب لنفسه</small></button></div></div>';
  h+='<div class="card"><h2>'+(ind?'🙋 عدد اللاعبين':'👥 عدد الأفرقة')+'</h2><div class="step"><button data-a="nt" data-v="-1">−</button><b>'+ar(L.nTeams)+'</b><button data-a="nt" data-v="1">+</button><span class="muted">من ٢ إلى '+(ind?'٣٠':'٨')+'</span></div>';
  if(!ind)h+='<h2 style="margin-top:14px">🙋 عدد اللاعبين كلهم</h2><div class="step"><button data-a="np" data-v="-1">−</button><b>'+ar(G.players)+'</b><button data-a="np" data-v="1">+</button><span class="muted">'+ar(Math.max(1,Math.round(G.players/L.nTeams)))+' لاعبين تقريباً بكل فريق</span></div>';
@@ -3043,7 +3010,7 @@ var ind=!!G.indiv,h=(window.WSHIM&&CANEDIT?'<div class="bzstrip live"><span>غر
 }
 function vHome(){
  var h='<div class="bar">'+(BR.logo?'<img src="'+BR.logo+'" alt="">':icon("pad","ic bari"))+'<b>'+BR.name+'</b>'+syncChip()+'<div class="sp"></div>'+(window.WSHIM&&CANEDIT?'<button class="sm g" data-a="share">🔗 '+esc(WSHIM.room)+'</button>':'')+'<button class="sm" data-a="setup">👥 الأفرقة</button></div>'+hero(BR.sub);
- h+=evtBanner()+'<div class="top">'+pres()+'<button class="sm" data-a="tvon">📺 شاشة العرض</button><button class="sm'+(L.snd?' g':'')+'" data-a="snd">'+(L.snd?'🔊 الصوت':'🔇 الصوت')+'</button><button class="sm" data-a="lobby">🖥️ شاشة الانتظار</button><button class="sm g" data-a="prog">🎬 السهرة الجاهزة</button><button class="sm'+(L.more?' g':'')+'" data-a="moremenu">☰ المزيد</button></div>';
+ h+=evtBanner()+'<div class="top">'+landBtn()+pres()+'<button class="sm" data-a="tvon">📺 شاشة العرض</button><button class="sm'+(L.snd?' g':'')+'" data-a="snd">'+(L.snd?'🔊 الصوت':'🔇 الصوت')+'</button><button class="sm" data-a="lobby">🖥️ شاشة الانتظار</button><button class="sm g" data-a="prog">🎬 السهرة الجاهزة</button><button class="sm'+(L.more?' g':'')+'" data-a="moremenu">☰ المزيد</button></div>';
  if(L.more)h+='<div class="card moremenu"><button class="sm" data-a="hist">📜 السجل</button><button class="sm" data-a="league">🏆 الدوري</button><button class="sm'+(L.tts?' g':'')+'" data-a="ttson" title="الجهاز يقرأ السؤال بصوت">'+(L.tts?'🗣️ القراءة شغّالة':'🗣️ قراءة الأسئلة')+'</button><button class="sm" data-a="lbon">🔔 جرس الطاولة</button><button class="sm" data-a="print">🖨️ بطاقات للطباعة</button><button class="sm" data-a="thpop">🎨 ثيم المناسبة</button><button class="sm'+(studioOn()?' g':'')+'" data-a="studio">🎬 الاستوديو '+(studioOn()?'شغّال':'مقفل')+'</button><button class="sm" data-a="daily">📅 مسابقة اليوم</button><button class="sm" data-a="a11">👓 الوضوح</button><button class="sm" data-a="prac">🎯 تدرّب لحالك</button>'+installBtn()+''+(CANEDIT?'<button class="sm" data-a="myq">📝 أسئلتي'+(CUSTOM.length?' ('+ar(CUSTOM.length)+')':'')+'</button>':'')+(ROOM?'<button class="sm" data-a="toplayer">📱 هذا الجهاز للاعب</button>':'')+'</div>';
  if(ROOM&&G.teams.length)h+='<div class="card" style="padding:10px 14px"><b>🔔 الجرس من الجوال</b><div class="muted">اللاعبين يفتحون نفس الرابط من جوالاتهم ويختارون فريقهم. المتصلين الحين: '+ar(players().length)+'</div></div>';
  h+='<h2>اختر لعبتك</h2><div class="chips">';
@@ -3076,8 +3043,8 @@ function vWH(){
  var a=AN[G.wh.cur];
  var h=topbar()+'<h1>📖 أين ذُكر في القرآن؟</h1><p class="muted">أول فريق يذكر الآية المقصودة يكسب نقطة</p>';
  h+='<div class="card" style="text-align:center"><span class="chip">'+a[1]+'</span><div class="word">'+a[0]+'</div><h2>في أي آية ذُكر؟</h2>';
- if(G.wh.rev)h+='<div class="win" style="margin:10px 0 0"><span>'+a[2]+'</span><b style="font-size:1.4rem">«'+a[3]+'»</b>'+(a[4]?'<div style="font-size:.9rem">'+a[4]+'</div>':'')+'</div>';
- else h+=peekBox(a[2]+' «'+a[3]+'»');
+ if(G.wh.rev)h+='<div class="win" style="margin:10px 0 0;display:block"><b style="font-size:1.3rem">'+a[2]+'</b>'+anAyahHtml(a[2],1)+(a[4]?'<div style="font-size:.9rem">'+a[4]+'</div>':'')+'</div>';
+ else h+=peekBox(a[2]);
  h+='</div>'+bzStrip();
  h+=G.wh.rev?'<button class="g" style="width:100%;padding:15px;font-size:1.1rem;margin-bottom:8px" data-a="aw" data-v="1">⭐ أعطِ نقطة لفريق</button><button style="width:100%;padding:13px" data-a="wdraw">التالي ⬅️</button>':'<button class="g" style="width:100%;padding:15px;font-size:1.1rem;margin-bottom:8px" data-a="wr">👀 اعرض الجواب</button><button style="width:100%;padding:13px" data-a="wdraw">تخطي ⬅️</button>';
  return h+'<p class="muted" style="text-align:center;margin-top:10px">السؤال '+ar(AN.length-G.wh.d.length)+' من '+ar(AN.length)+'</p><div style="height:80px"></div>';
@@ -3251,7 +3218,7 @@ function vFD(){
  var h=topbar()+'<h1>👨‍👩‍👧‍👦 '+BR.feud+'</h1>';
  h+='<div class="card" style="text-align:center"><h2 style="font-size:1.35rem">'+q[0]+'</h2><div class="x">'+(f.strikes?'❌'.repeat(f.strikes):'')+'</div><div class="muted">رصيد الجولة: <b style="color:var(--c1);font-size:1.3rem">'+ar(fdBank())+'</b></div></div>'+bzStrip();
  q[1].forEach(function(a,i){var o=f.rev[i],peek=!o&&L.presenter;h+='<div class="fdrow'+(o||peek?' open':'')+'"><span class="no">'+ar(i+1)+'</span><span class="a">'+a[0]+(peek?' <small class="peek">مخفي</small>':'')+'</span><span class="p">'+ar(a[1])+'</span>'+(peek?'<button class="sm" style="margin-inline-end:8px" data-a="fdrv" data-v="'+i+'">👁️</button>':'')+(o||peek?'':'<button class="cv" data-a="fdrv" data-v="'+i+'">❓ إجابة رقم '+ar(i+1)+'</button>')+'</div>';});
- h+='<div class="top" style="margin-top:10px"><button data-a="fdx" '+(f.strikes>=3?'disabled':'')+'>❌ خطأ</button><button data-a="fdall">👁️ اكشف الكل</button><div class="sp"></div>';
+ h+='<div class="top" style="margin-top:10px"><button data-a="fdx" '+(f.strikes>=3?'disabled':'')+'>❌ خطأ</button><button data-a="fdall">👁️ اكشف الكل</button></div><div class="top" style="justify-content:center;align-items:center"><span class="muted" style="font-size:.85rem">مضاعفة النقاط:</span>';
  [1,2,3].forEach(function(m){h+='<button class="sm'+(f.mult===m?' g':'')+'" data-a="fdm" data-v="'+m+'">×'+ar(m)+'</button>';});
  h+='</div><p class="muted">أعطِ رصيد الجولة لـ:</p><div class="fdgive">'+G.teams.map(function(t,i){return '<button class="g" style="background:'+COL[i%8]+';color:#17121b" data-a="fdg" data-v="'+i+'">'+emb(i)+esc(tname(i))+'</button>';}).join('')+'</div><button style="width:100%" data-a="fdn">السؤال التالي ⬅️</button><p class="muted" style="text-align:center">الإجابات والنقاط تقديرية لتسلية الجلسة</p><div style="height:80px"></div>';
  return h;
@@ -3481,6 +3448,7 @@ app.addEventListener("click",function(e){
  else if(a==="finish"){fxSet("conf");G.v="win";L.confirmNew=false;L.saved=false;}
  else if(a==="newask"){L.confirmNew=true;ch=false;}
  else if(a==="newgo"){G.teams.forEach(function(y){y.s=0});G.open={};G.by={};G.ps={};resetGames();L.confirmNew=false;G.v=gv();}
+ else if(a==="toland"){location.hash="";location.reload();return;}
  else if(a==="solo"){location.hash="solo";location.reload();return;}
  else if(a==="online"){e.preventDefault();location.hash="";location.reload();return;}
  else{var mr=moreAct(a,el,v,t);if(!mr)mr=more2Act(a,el,v,t);if(!mr)mr=more3Act(a,el,v,t);if(!mr)mr=quranAct(a,el,v,t);if(!mr)mr=more4Act(a,el,v,t);if(!mr)mr=saAct(a,el,v,t);if(mr==="local")return;if(!mr)ch=false;}
