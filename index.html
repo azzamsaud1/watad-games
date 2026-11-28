@@ -342,6 +342,7 @@ button.sap{cursor:pointer}
 .sarole span{font-size:3.4rem}.sarole b{font-size:1.8rem}.sarole.small b{font-size:1.2rem}
 .sanar{border-style:dashed}.sanight{background:linear-gradient(180deg,#1d1a4a,#2f2770);color:#fff}
 .tv .sap{font-size:1.4rem}
+.offchip{text-align:center;font-weight:800;font-size:.9rem;border:2px dashed var(--line);border-radius:12px;padding:6px 10px;margin:8px 0;background:var(--card2)}.offchip.ok{border-style:solid;background:#d6f5e3;color:#17121b}
 </style>
 </head>
 <body>
@@ -1594,7 +1595,7 @@ var PROV=[
 /* ===== النسخة المستقلة: مزامنة عبر MQTT عام، بدون حسابات ===== */
 (function(){
  if(window.claude&&window.claude.use)return;
- try{if("serviceWorker" in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js").catch(function(){});}catch(e){}
+ try{if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="127.0.0.1"))navigator.serviceWorker.register("sw.js").catch(function(){});}catch(e){}
  var BROKERS=["wss://broker.hivemq.com:8884/mqtt","wss://broker.emqx.io:8084/mqtt","wss://test.mosquitto.org:8081/mqtt"];
  try{var qb=new URLSearchParams(location.search).get("broker");if(qb)BROKERS=[qb];}catch(e){}
  function hp(){var o={};location.hash.replace(/^#/,"").split("&").forEach(function(kv){var p=kv.split("=");if(p[0])o[p[0]]=decodeURIComponent(p[1]||"");});return o;}
@@ -2781,7 +2782,7 @@ function qSelCard(){var x=G.qr,s=x.sel||{m:"j",j:[30]},h='<div class="card qsel"
  return h+'</div>';}
 function qAyah(t,cls){return '<div class="ayah '+(cls||'')+'">'+esc(t)+'</div>';}
 function qRef(v){return '<span class="chip">'+esc(qSName(v[0]))+' · آية '+ar(v[1])+'</span>';}
-function qState(list){var k=qSelKey(G.qr.sel);if(QE[k])return '<div class="card" style="text-align:center"><b>⚠️ تعذّر جلب الآيات</b><p class="muted">'+(window.WSHIM?'تأكد من اتصال الإنترنت وجرّب مرة ثانية.':'ألعاب القرآن تجيب النص الموثّق من الإنترنت، وتشتغل في رابط GitHub. نسخة Claude ما تسمح بالاتصال الخارجي.')+'</p><button class="g" data-a="qretry">🔄 جرّب مرة ثانية</button></div>';
+function qState(list){var k=qSelKey(G.qr.sel);if(QE[k])return '<div class="card" style="text-align:center"><b>⚠️ تعذّر جلب الآيات</b><p class="muted">'+(window.WOFFILE?'نسخة الملف تحتاج إنترنت لألعاب القرآن. في رابط الموقع تشتغل بدون نت بعد أول دخول.':window.WSHIM?'تأكد من اتصال الإنترنت وجرّب مرة ثانية.':'ألعاب القرآن تجيب النص الموثّق من الإنترنت، وتشتغل في رابط GitHub. نسخة Claude ما تسمح بالاتصال الخارجي.')+'</p><button class="g" data-a="qretry">🔄 جرّب مرة ثانية</button></div>';
  if(!list)return '<div class="card" style="text-align:center"><div class="spin"></div><p class="muted">جاري تحميل الآيات من المصدر الموثّق…</p></div>';return "";}
 function vQK(kind){
  var x=G.qr,title={qc:"📖 أكمل الآية",qs:"🕌 من أي سورة؟",qa:"↕️ ما قبلها وما بعدها"}[kind],desc={qc:"تطلع بداية آية، وأول من يكملها صح يكسب. تقدر تكشف كلمة زيادة كمساعدة.",qs:"تطلع آية كاملة، وأول من يعرف سورتها يكسب.",qa:"تطلع آية، والمطلوب قراءة الآية اللي بعدها أو اللي قبلها."}[kind];
@@ -2832,7 +2833,7 @@ function vLanding(){
  h+='<div class="lgrid"><button class="lbig g" data-a="demo"><span>▶️</span><b>جرّب الحين</b><small>لعبة تجريبية فورية بدون تجهيز</small></button><button class="lbig" data-a="mkroom"><span>✨</span><b>أنشئ غرفة</b><small>لك رابط مقدم وللشباب رابط لاعبين</small></button><button class="lbig" data-a="prac"><span>🎯</span><b>تدرّب لحالك</b><small>تحدَّ نفسك وحافظ على سلسلتك</small></button><button class="lbig" data-a="solo"><span>📴</span><b>جهاز واحد</b><small>بدون إنترنت مع جرس الطاولة</small></button></div>';
  h+='<div class="card"><h2>🙋 عندك رمز غرفة؟</h2><div class="trow"><input id="jcode" placeholder="رمز الغرفة" style="text-align:center;font-size:1.3rem;letter-spacing:4px" maxlength="8" autocomplete="off"><button class="g" data-a="join">دخول</button></div></div>';
  h+='<div class="feat">'+[["📱","جرس من الجوال","كل لاعب يضغط من جواله، وتطلع السرعة بالأجزاء من الثانية"],["🖥️","شاشة عرض","افتح الشاشة الكبيرة ويتحدث كل شي لحاله"],["🎬","سهرة جاهزة","برنامج كامل يمشي معك خطوة بخطوة"],["🏆","دوري وألقاب","نتائج تتجمع من ليلة لليلة"]].map(function(f){return '<div><span>'+f[0]+'</span><b>'+f[1]+'</b><small>'+f[2]+'</small></div>';}).join('')+'</div>';
- h+='<div style="text-align:center;margin:14px 0">'+installBtn()+'</div></div>';
+ h+='<div style="text-align:center;margin:14px 0;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">'+installBtn()+'<a class="btn" href="offline.html" download="وتد-بدون-نت.html">📥 نسخة ملف بدون نت</a></div>'+offChip()+'</div>';
  return h;}
 
 /* ---------- السهرة الجاهزة ---------- */
@@ -2931,6 +2932,21 @@ function more4Act(a,el,v,t){
  else if(a==="aiweek"){L.ai=L.ai||{n:20,lv:"mix"};L.ai.topic=weekTopic();L.ai.n=20;render();return "local";}
  else return false;
  return true;}
+
+/* ---------- التجهيز الكامل للاستخدام بدون نت (رابط GitHub) ---------- */
+var OFFV="o2",OFFP=null;
+function offReady(){try{return localStorage.getItem("wg_off")===OFFV;}catch(e){return false;}}
+function offlinePrep(){if(!window.WSHIM||offReady()||OFFP||!("serviceWorker" in navigator)||!navigator.onLine||!(location.protocol==="https:"||location.hostname==="127.0.0.1"))return;
+ navigator.serviceWorker.ready.then(function(){return new Promise(function(r){if(navigator.serviceWorker.controller)return r();navigator.serviceWorker.addEventListener("controllerchange",function(){r();},{once:true});setTimeout(r,8000);});}).then(function(){
+  var U=["https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js","https://api.alquran.cloud/v1/surah"],i;for(i=1;i<=30;i++)U.push("https://api.alquran.cloud/v1/juz/"+i+"/quran-uthmani");for(i=1;i<=114;i++)U.push("https://api.alquran.cloud/v1/surah/"+i+"/quran-uthmani");
+  OFFP={d:0,n:U.length+1};render();
+  var fcss="https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap";
+  fetch(fcss).then(function(r){return r.text();}).then(function(t){var m=t.match(/url\((https:[^)]+)\)/g)||[];return Promise.all(m.map(function(u){return fetch(u.slice(4,-1)).catch(function(){});}));}).catch(function(){}).then(function(){OFFP.d++;});
+  var k=0,fails=0;(function next(){if(k>=U.length){if(fails<5){try{localStorage.setItem("wg_off",OFFV);}catch(e){}}OFFP=null;render();return;}
+   var u=U[k++];fetch(u,{mode:u.indexOf("cdnjs")>0?"no-cors":"cors"}).then(function(r){if(!r.ok&&r.type!=="opaque")fails++;},function(){fails++;}).then(function(){OFFP.d++;if(OFFP.d%8===0)render();setTimeout(next,260);});})();});}
+function offChip(){if(!window.WSHIM)return '';if(OFFP)return '<div class="offchip">📥 جاري تجهيز الموقع للاستخدام بدون نت… '+ar(Math.round(OFFP.d*100/OFFP.n))+'٪</div>';return offReady()?'<div class="offchip ok">✅ جاهز يشتغل بدون نت، حتى ألعاب القرآن</div>':'';}
+setTimeout(function(){try{offlinePrep();}catch(e){}},3500);
+window.addEventListener("online",function(){setTimeout(function(){try{offlinePrep();}catch(e){}},2000);});
 
 /* ===== السعلو وأهل القرية ===== */
 var SAR={s:["السعلو","🌑","يختار كل ليلة واحد من أهل القرية. هدفه يقضي عليهم بدون ما ينكشف."],v:["أهل القرية","🏠","ما عنده قدرة خاصة، بس صوته في النهار يفرق. هدفه يكشف السعلو."],d:["الطبيب","🩺","كل ليلة يختار واحد يحميه من السعلو، ويقدر يحمي نفسه، بس ما يحمي نفس الشخص ليلتين ورا بعض."],e:["المحقق","🔍","كل ليلة يسأل عن لاعب، والراوي يأشر له إذا كان سعلو أو لا."],j:["الجاسوس","🕶️","يفتح عيونه مع السعلو بالليل وهم يحسبونه واحد منهم. هو في الحقيقة مع أهل القرية."],l:["الرابط","🔗","مرة وحدة باللعبة يربط لاعبين ببعض، ويصير مصيرهم واحد: إذا خرج واحد خرج الثاني معه."],w:["المبدّل","🔄","مرة وحدة باللعبة، من الجولة الثانية وبعد، يبدّل دور لاعبين ببعض."]};
@@ -3297,7 +3313,7 @@ function vHome(){
  FILTERS.forEach(function(f){h+='<button class="'+(L.filter===f?'on':'')+'" data-a="flt" data-f="'+f+'">'+f+'</button>';});
  h+='</div><div class="grid ggrid">';
  GAMES.forEach(function(g,i){if(L.filter!=="الكل"&&g.tags.indexOf(L.filter)<0)return;var k=KC[i%KC.length];h+='<button class="cat" style="--k:'+k[0]+';--on:'+k[1]+'" data-a="game" data-id="'+g.id+'"><span class="art">'+(ART[g.id]||"")+'</span><b>'+g.name+'</b><small>'+g.desc+'</small><div>'+g.tags.map(function(t){return '<span class="tag">'+t+'</span>'}).join('')+'</div></button>';});
- return h+'</div><div class="stats"><div><b>'+ar(GAMES.length)+'</b><span class="muted">ألعاب</span></div><div><b>'+ar(BANK.length+CUSTOM.length)+'</b><span class="muted">سؤال في البنك</span></div><div><b>'+ar(CATS.length+FEUD.length)+'</b><span class="muted">فئة واستبيان</span></div></div>'+(newThisWeek()?'<div class="card" style="text-align:center">🆕 <b>جديد هالأسبوع: '+ar(newThisWeek())+' سؤال</b></div>':'')+'<div class="card" style="padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="n" style="flex:1">♻️ الموقع يتجنب الأسئلة اللي انسألت قبل. المستعمل لين الحين: <b>'+ar(seenCount())+'</b></span><button class="sm" data-a="seenreset">'+(L.seenAsk?'متأكد؟ صفّرها':'تصفير')+'</button></div>'+(window.WSOLO?'<p class="muted" style="text-align:center">📴 وضع جهاز واحد بدون إنترنت. <a href="#" data-a="online">ارجع للغرف الأونلاين</a></p>':'')+'<div style="height:80px"></div>';
+ return h+'</div><div class="stats"><div><b>'+ar(GAMES.length)+'</b><span class="muted">ألعاب</span></div><div><b>'+ar(BANK.length+CUSTOM.length)+'</b><span class="muted">سؤال في البنك</span></div><div><b>'+ar(CATS.length+FEUD.length)+'</b><span class="muted">فئة واستبيان</span></div></div>'+(newThisWeek()?'<div class="card" style="text-align:center">🆕 <b>جديد هالأسبوع: '+ar(newThisWeek())+' سؤال</b></div>':'')+'<div class="card" style="padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="n" style="flex:1">♻️ الموقع يتجنب الأسئلة اللي انسألت قبل. المستعمل لين الحين: <b>'+ar(seenCount())+'</b></span><button class="sm" data-a="seenreset">'+(L.seenAsk?'متأكد؟ صفّرها':'تصفير')+'</button></div>'+(window.WSOLO?'<p class="muted" style="text-align:center">📴 وضع جهاز واحد بدون إنترنت.'+(location.protocol==="file:"||window.WOFFILE?' للجرس من الجوالات افتح الموقع: azzamsaud1.github.io/watad-games':' <a href="#" data-a="online">ارجع للغرف الأونلاين</a>')+'</p>':'')+offChip()+'<div style="height:80px"></div>';
 }
 function topbar(){return '<div class="top"><button class="sm" data-a="home">🏠 الألعاب</button>'+pres()+tmCtl()+'<div class="sp"></div><button class="sm" data-a="finish">🏁 إنهاء وإعلان الفائز</button></div>'+koChip()+genTimer();}
 function cnt(ci){return (G.open[ci]||[]).length;}
