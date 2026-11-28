@@ -2937,7 +2937,7 @@ var SAR={s:["السعلو","🌑","يختار كل ليلة واحد من أهل
 /* --- تشفير الأدوار عشان ما يشوفها إلا صاحبها --- */
 function b64(u8){var s="";u8=new Uint8Array(u8);for(var i=0;i<u8.length;i++)s+=String.fromCharCode(u8[i]);return btoa(s);}
 function ub64(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
-function saDesc(k){if(k==="d"&&(G.sa.cfg||{}).dm==="x")return "معك إبرتين، كل وحدة مرة وحدة باللعبة: 💉 إبرة حماية تنقذ ضحية السعلو (الراوي يأشر لك عليها)، و☠️ إبرة سم تخرج أي لاعب تختاره.";return SAR[k][2];}
+function saDesc(k){if(k==="d"&&(G.sa.cfg||{}).dm==="x")return "معك إبرتين، كل وحدة مرة وحدة باللعبة، وتستخدم وحدة بس في الليلة أو تتخطى: 💉 إبرة حماية تنقذ ضحية السعلو (الراوي يأشر لك عليها)، و☠️ إبرة سم تخرج أي لاعب تختاره.";return SAR[k][2];}
 var SUB=window.crypto&&crypto.subtle;
 function saMyKey(){var k=null;try{k=JSON.parse(localStorage.getItem("wg_sakey")||"null");}catch(e){}
  if(k)return Promise.all([SUB.importKey("jwk",k.priv,{name:"ECDH",namedCurve:"P-256"},false,["deriveKey"]),Promise.resolve(k.pub)]);
@@ -2986,7 +2986,7 @@ function vSA(){
   var n=x.mode==="pass"?saPassNames().length:x.names.length,c=saCounts(n),cf=saCfg(),vil=n-c.s-saSpecials(c),ok=n>=4&&vil>=1;
   h+='<div class="card"><h2>🎭 الأدوار ('+ar(n)+' لاعب)</h2><div class="opt"><span class="n">🌑 عدد السعالي</span><div class="step"><button data-a="sas" data-v="-1">−</button><b>'+ar(c.s)+'</b><button data-a="sas" data-v="1">+</button></div></div>'+(cf.s?'':'<p class="muted" style="margin:0">العدد المقترح لـ'+ar(n)+' لاعب. غيّره بالأزرار.</p>');
   ["d","e","j","l","w"].forEach(function(k){h+='<div class="opt"><span class="n">'+SAR[k][1]+' '+SAR[k][0]+'<br><small class="muted">'+SAR[k][2]+'</small></span><button class="sm'+(cf[k]?' g':'')+'" data-a="sarole" data-k="'+k+'">'+(cf[k]?'✓ موجود':'＋ أضفه')+'</button></div>';});
-  h+=(cf.d?'<div class="card" style="background:var(--card2)"><b>🩺 نوع الطبيب</b><div class="modes" style="margin-top:6px"><button class="'+(cf.dm!=="x"?'on':'')+'" data-a="sadm" data-k="n"><span>🛡️</span><b>عادي</b><small>يحمي واحد كل ليلة، وما يكرر نفس الشخص ليلتين ورا بعض</small></button><button class="'+(cf.dm==="x"?'on':'')+'" data-a="sadm" data-k="x"><span>💉</span><b>الإبرتين</b><small>إبرة حماية وإبرة سم، كل وحدة مرة باللعبة، ويعرف ضحية السعلو</small></button></div></div>':'')+'<p><b>🏠 أهل القرية: '+ar(Math.max(0,vil))+'</b></p><div class="opt"><span class="n">⏱ وقت النقاش بالنهار</span><button class="sm" data-a="sadt">'+tLbl(x.dt)+'</button></div></div>';
+  h+=(cf.d?'<div class="card" style="background:var(--card2)"><b>🩺 نوع الطبيب</b><div class="modes" style="margin-top:6px"><button class="'+(cf.dm!=="x"?'on':'')+'" data-a="sadm" data-k="n"><span>🛡️</span><b>عادي</b><small>يحمي واحد كل ليلة، وما يكرر نفس الشخص ليلتين ورا بعض</small></button><button class="'+(cf.dm==="x"?'on':'')+'" data-a="sadm" data-k="x"><span>💉</span><b>الإبرتين</b><small>إبرة حماية وإبرة سم، كل وحدة مرة باللعبة، وحدة بس في الليلة، ويعرف ضحية السعلو</small></button></div></div>':'')+'<p><b>🏠 أهل القرية: '+ar(Math.max(0,vil))+'</b></p><div class="opt"><span class="n">⏱ وقت النقاش بالنهار</span><button class="sm" data-a="sadt">'+tLbl(x.dt)+'</button></div></div>';
   return h+(n<4?'<p class="muted">تحتاج ٤ لاعبين على الأقل (الأفضل ٦ أو أكثر).</p>':vil<1?'<p class="muted">الأدوار أكثر من اللاعبين، شيل دور أو قلّل السعالي.</p>':'')+'<button class="g" style="width:100%;padding:15px;font-size:1.15rem" data-a="sadeal" '+(ok?'':'disabled')+'>🎴 وزّع الأدوار</button><div style="height:80px"></div>';}
  var r=saRoles();
  if(!nar){/* الشاشة العامة */
@@ -3008,7 +3008,7 @@ function vSA(){
   if(st==="s")h+=saPlayerList({act:"sapick",sel:N.kill});
   if(st==="d"){var T3=saSt()||{};if(saCfg().dm==="x"){var dn=T3.dn||{};h+=(N.kill!=null?'<p>ضحية السعلو: <b>'+esc(x.names[N.kill])+'</b> (أشّر للطبيب عليه)</p>':'<p class="muted">السعلو ما اختار أحد</p>');
    h+='<div class="opt"><span class="n">💉 إبرة الحماية '+(dn.p?'<small class="muted">(انستخدمت)</small>':'')+'</span><button class="sm'+(N.prot?' g':'')+'" data-a="saprot" '+(dn.p||N.kill==null?'disabled':'')+'>'+(N.prot?'✓ يحمي '+esc(x.names[N.kill]||''):'استخدمها')+'</button></div>';
-   h+='<div class="opt"><span class="n">☠️ إبرة السم '+(dn.k?'<small class="muted">(انستخدمت)</small>':'— اضغط على اللاعب اللي يأشر عليه')+'</span></div>'+(dn.k?'':saPlayerList({act:"sapoison",sel:N.poison}));}
+   h+='<p class="muted" style="margin:6px 0">إبرة وحدة بس في الليلة، أو تخطي.</p><div class="opt"><span class="n">☠️ إبرة السم '+(dn.k?'<small class="muted">(انستخدمت)</small>':'— اضغط على اللاعب اللي يأشر عليه')+'</span></div>'+(dn.k?'':saPlayerList({act:"sapoison",sel:N.poison}));}
   else{var bl=T3.ls!=null&&T3.lsr===x.round-1?[T3.ls]:[];h+=saPlayerList({act:"sapick",sel:N.save,dis:bl})+(bl.length?'<p class="muted">ما يقدر يحمي '+esc(x.names[bl[0]])+' لأنه حماه الليلة اللي فاتت.</p>':'');}}
   if(st==="e"){h+=saPlayerList({act:"sapick",sel:N.check});if(N.check!=null)h+='<div class="sarole small"><b>'+esc(x.names[N.check])+': '+(r[N.check]==="s"?'👍 إي، سعلو':'👎 لا، مو سعلو')+'</b><small>أشّر للمحقق بإبهامك بدون صوت</small></div>';}
   h+='</div>'+bigBtn("sastep",st==="dawn"?"☀️ أعلن الصباح":(st==="l"||st==="w")&&(N[st]||[]).length<2?"كمّل بدون ⬅️":"التالي ⬅️");return h+'<div style="height:80px"></div>';}
@@ -3043,14 +3043,14 @@ function saAct(a,el,v,t){var x=G.sa,r;
  else if(a==="sapick2"){var st2=saNightSteps()[x.step],N3=L.saNight||(L.saNight={}),arr=N3[st2]||(N3[st2]=[]),ix=arr.indexOf(v);if(ix>=0)arr.splice(ix,1);else{arr.push(v);if(arr.length>2)arr.shift();}render();return "local";}
  else if(a==="saswnx"){L.saShow=false;L.saSwapShow.shift();render();return "local";}
  else if(a==="sadm"){saCfg().dm=el.dataset.k;}
- else if(a==="saprot"){var Np=L.saNight||(L.saNight={});Np.prot=!Np.prot;render();return "local";}
- else if(a==="sapoison"){var Nq=L.saNight||(L.saNight={});Nq.poison=Nq.poison===v?null:v;render();return "local";}
+ else if(a==="saprot"){var Np=L.saNight||(L.saNight={});Np.prot=!Np.prot;if(Np.prot)Np.poison=null;render();return "local";}
+ else if(a==="sapoison"){var Nq=L.saNight||(L.saNight={});Nq.poison=Nq.poison===v?null:v;if(Nq.poison!=null)Nq.prot=false;render();return "local";}
  else if(a==="sapick"){var st=saNightSteps()[x.step],N=L.saNight||(L.saNight={});if(st==="s")N.kill=v;else if(st==="d")N.save=v;else if(st==="e")N.check=v;render();return "local";}
  else if(a==="sastep"){var steps=saNightSteps(),cur=steps[x.step],T2=saSt();
   if(cur==="l"){var lk=(L.saNight||{}).l;if(lk&&lk.length===2){T2.link=lk.slice();T2.lu=true;saSave();}x.step++;}
   else if(cur==="w"){var sw=(L.saNight||{}).w;if(sw&&sw.length===2){var tmp=T2.r[sw[0]];T2.r[sw[0]]=T2.r[sw[1]];T2.r[sw[1]]=tmp;T2.wu=true;T2.sw=sw.slice();saSave();if(x.mode==="phones")setTimeout(saSend,0);else L.saSwapShow=sw.slice();}x.step++;}
   else if(cur==="dawn"){var N2=L.saNight||{},T4=saSt(),xm=saCfg().dm==="x",saved=false,parts=[];
-   if(xm){T4.dn=T4.dn||{};if(N2.prot&&N2.kill!=null&&!T4.dn.p){T4.dn.p=1;N2.save=N2.kill;}if(N2.poison!=null&&!T4.dn.k)T4.dn.k=1;else N2.poison=null;}
+   if(xm){T4.dn=T4.dn||{};if(N2.prot&&N2.kill!=null&&!T4.dn.p){T4.dn.p=1;N2.save=N2.kill;}if(N2.prot&&N2.poison!=null)N2.poison=null;if(N2.poison!=null&&!T4.dn.k)T4.dn.k=1;else N2.poison=null;}
    else if(N2.save!=null){T4.ls=N2.save;T4.lsr=x.round;}
    saSave();
    if(N2.kill!=null){if(N2.kill===N2.save)saved=true;else parts.push(saOutTxt(saKill(N2.kill)));}
