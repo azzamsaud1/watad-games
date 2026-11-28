@@ -2724,7 +2724,7 @@ function more4Act(a,el,v,t){
  return true;}
 
 /* ===== السعلو وأهل القرية ===== */
-var SAR={s:["السعلو","🌑","يختار كل ليلة واحد من أهل القرية. هدفه يقضي عليهم بدون ما ينكشف."],v:["قروي","🏠","ما عنده قدرة خاصة، بس صوته في النهار يفرق. هدفه يكشف السعلو."],d:["الطبيب","🩺","كل ليلة يختار واحد يحميه من السعلو، ويقدر يحمي نفسه."],e:["المحقق","🔍","كل ليلة يسأل عن لاعب، والراوي يأشر له إذا كان سعلو أو لا."]};
+var SAR={s:["السعلو","🌑","يختار كل ليلة واحد من أهل القرية. هدفه يقضي عليهم بدون ما ينكشف."],v:["قروي","🏠","ما عنده قدرة خاصة، بس صوته في النهار يفرق. هدفه يكشف السعلو."],d:["الطبيب","🩺","كل ليلة يختار واحد يحميه من السعلو، ويقدر يحمي نفسه."],e:["المحقق","🔍","كل ليلة يسأل عن لاعب، والراوي يأشر له إذا كان سعلو أو لا."],j:["الجاسوس","🕶️","يفتح عيونه مع السعلو بالليل وهم يحسبونه واحد منهم. هو في الحقيقة مع أهل القرية."],l:["الرابط","🔗","مرة وحدة باللعبة يربط لاعبين ببعض، ويصير مصيرهم واحد: إذا خرج واحد خرج الثاني معه."],w:["المبدّل","🔄","مرة وحدة باللعبة، من الجولة الثانية وبعد، يبدّل دور لاعبين ببعض."]};
 /* --- تشفير الأدوار عشان ما يشوفها إلا صاحبها --- */
 function b64(u8){var s="";u8=new Uint8Array(u8);for(var i=0;i<u8.length;i++)s+=String.fromCharCode(u8[i]);return btoa(s);}
 function ub64(s){var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
@@ -2737,27 +2737,33 @@ function saAES(priv,pubStr){return saPubImport(pubStr).then(function(pub){return
 function saEnc(key,obj){var iv=crypto.getRandomValues(new Uint8Array(12));return SUB.encrypt({name:"AES-GCM",iv:iv},key,new TextEncoder().encode(JSON.stringify(obj))).then(function(ct){return {iv:b64(iv),ct:b64(ct)};});}
 function saDec(key,e){return SUB.decrypt({name:"AES-GCM",iv:ub64(e.iv)},key,ub64(e.ct)).then(function(pt){return JSON.parse(new TextDecoder().decode(pt));});}
 /* --- حالة الراوي المحلية (ما تنرسل لأحد) --- */
-function saRolesLoad(){try{var o=JSON.parse(localStorage.getItem("wg_sa_roles")||"null");if(o&&o.id===G.sa.id)return o.r;}catch(e){}return null;}
-function saRolesSave(r){try{localStorage.setItem("wg_sa_roles",JSON.stringify({id:G.sa.id,r:r}));}catch(e){}}
-function saRoles(){if(!L.saR||L.saRid!==G.sa.id){L.saR=saRolesLoad();L.saRid=G.sa.id;}return L.saR;}
+function saSt(){if(!L.saSt||L.saSt.id!==G.sa.id){var o=null;try{o=JSON.parse(localStorage.getItem("wg_sa_roles")||"null");}catch(e){}L.saSt=o&&o.id===G.sa.id&&o.r?o:null;}return L.saSt;}
+function saSave(){try{localStorage.setItem("wg_sa_roles",JSON.stringify(L.saSt));}catch(e){}}
+function saRoles(){var t=saSt();return t?t.r:null;}
 function saPeers(){var m={};if(ROOM)ROOM.peers().forEach(function(p){var n=pname(p),pk=p.presence&&p.presence.sapk;if(n&&!p.isMe)m[n]={pk:pk||null,peer:p.peer};});return m;}
 function saPassNames(){return String(L.saNames!=null?L.saNames:G.sa.names.join("\n")).split(/\n/).map(function(s){return s.trim();}).filter(Boolean).filter(function(s,i,a){return a.indexOf(s)===i;});}
-function saCounts(n){return {s:n<=6?1:n<=10?2:3,d:n>=5,e:n>=6};}
-function saDeal(){var x=G.sa,n=x.names.length,c=saCounts(n),r=[];for(var i=0;i<c.s;i++)r.push("s");if(c.d)r.push("d");if(c.e)r.push("e");while(r.length<n)r.push("v");shuf(r);
+function saDefS(n){return n<=6?1:n<=10?2:n<=15?3:Math.round(n/5);}
+function saCfg(){var c=G.sa.cfg||(G.sa.cfg={s:0,d:true,e:true,j:false,l:false,w:false});return c;}
+function saCounts(n){var c=saCfg();return {s:Math.max(1,Math.min(c.s||saDefS(n),Math.max(1,Math.floor((n-1)/2)))),d:c.d,e:c.e,j:c.j,l:c.l,w:c.w};}
+function saSpecials(c){return (c.d?1:0)+(c.e?1:0)+(c.j?1:0)+(c.l?1:0)+(c.w?1:0);}
+function saDeal(){var x=G.sa,n=x.names.length,c=saCounts(n),r=[];for(var i=0;i<c.s;i++)r.push("s");["d","e","j","l","w"].forEach(function(k){if(c[k])r.push(k);});while(r.length<n)r.push("v");r=r.slice(0,n);shuf(r);
  x.id="g"+Date.now().toString(36);x.alive=x.names.map(function(){return true;});x.round=1;x.phase="deal";x.ann="";x.winner="";x.reveal=null;x.enc={};x.step=0;x.elim=-1;
- L.saR=r;L.saRid=x.id;saRolesSave(r);L.saPass=0;L.saShow=false;L.saNight={};return x.mode==="phones"?saSend():Promise.resolve();}
+ L.saSt={id:x.id,r:r,link:null,lu:false,wu:false,sw:null};saSave();L.saPass=0;L.saShow=false;L.saNight={};return x.mode==="phones"?saSend():Promise.resolve();}
 function saSend(){var x=G.sa,r=saRoles(),pe=saPeers();if(!SUB||!r)return Promise.resolve();
  return SUB.generateKey({name:"ECDH",namedCurve:"P-256"},true,["deriveKey"]).then(function(kp){return SUB.exportKey("jwk",kp.publicKey).then(function(pj){x.hpk=pj.x+"."+pj.y;
-  var jobs=x.names.map(function(nm,i){var p=pe[nm];if(!p||!p.pk)return null;var mates=r[i]==="s"?x.names.filter(function(_,j){return r[j]==="s"&&j!==i;}):[];
+  var jobs=x.names.map(function(nm,i){var p=pe[nm];if(!p||!p.pk)return null;var mates=r[i]==="s"?x.names.filter(function(_,j){return (r[j]==="s"||r[j]==="j")&&j!==i;}):r[i]==="j"?x.names.filter(function(_,j){return r[j]==="s";}):[];
    return saAES(kp.privateKey,p.pk).then(function(k){return saEnc(k,{r:r[i],m:mates,id:x.id});}).then(function(e){e.pk=p.pk.slice(0,12);x.enc[nm]=e;});});
   return Promise.all(jobs.filter(Boolean));});}).then(function(){commit();render();});}
 function saAliveIdx(role){var r=saRoles()||[];return G.sa.names.map(function(_,i){return i;}).filter(function(i){return G.sa.alive[i]&&(!role||r[i]===role);});}
 function saCheckWin(){var r=saRoles()||[],al=saAliveIdx(),s=al.filter(function(i){return r[i]==="s";}).length,v=al.length-s;
  if(s===0){G.sa.winner="v";}else if(s>=v){G.sa.winner="s";}if(G.sa.winner){G.sa.phase="end";G.sa.reveal=r.slice();fxSet("conf");momentAdd(G.sa.winner==="v"?"أهل القرية كشفوا السعلو وانتصروا!":"السعلو سيطر على القرية!",G.sa.winner==="v"?"🏠":"🌑");return true;}return false;}
-function saNightSteps(){var r=saRoles()||[],st=["sleep","s"];if(saAliveIdx("d").length)st.push("d");if(saAliveIdx("e").length)st.push("e");st.push("dawn");return st;}
+function saNightSteps(){if(G.sa.steps&&G.sa.steps.length&&G.sa.stepsR===G.sa.round)return G.sa.steps;return saNightCalc();}
+function saNightCalc(){var t=saSt()||{},st=["sleep"];if(saAliveIdx("l").length&&!t.lu)st.push("l");st.push("s");if(saAliveIdx("d").length)st.push("d");if(saAliveIdx("e").length)st.push("e");if(G.sa.round>=2&&saAliveIdx("w").length&&!t.wu)st.push("w");st.push("dawn");return st;}
+function saKill(i){var x=G.sa,t=saSt()||{},out=[];if(!x.alive[i])return out;x.alive[i]=false;out.push(x.names[i]);if(t.link&&t.link.indexOf(i)>=0){var o=t.link[0]===i?t.link[1]:t.link[0];if(x.alive[o]){x.alive[o]=false;out.push(x.names[o]);}}return out;}
+function saOutTxt(out){return out.length>1?out[0]+"، ومعه "+out[1]+" لأن مصيرهم واحد 🔗":out[0];}
 /* --- الشاشات --- */
 function saPlayerList(opts){var x=G.sa,r=opts&&opts.roles?saRoles():null;return '<div class="saplist">'+x.names.map(function(n,i){var al=x.alive[i],ro=r?SAR[r[i]]:(x.reveal?SAR[x.reveal[i]]:null);
- return '<'+(opts&&opts.act?'button data-a="'+opts.act+'" data-v="'+i+'"':'div')+' class="sap'+(al?'':' dead')+(opts&&opts.sel===i?' sel':'')+'"'+(opts&&opts.act&&(!al||opts.dis&&opts.dis.indexOf(i)>=0)?' disabled':'')+'><b>'+esc(n)+'</b>'+(ro?'<small>'+ro[1]+' '+ro[0]+'</small>':'')+(al?'':'<small>خارج اللعبة</small>')+(opts&&opts.votes&&opts.votes[i]?'<i>'+ar(opts.votes[i])+'</i>':'')+'</'+(opts&&opts.act?'button':'div')+'>';}).join('')+'</div>';}
+ return '<'+(opts&&opts.act?'button data-a="'+opts.act+'" data-v="'+i+'"':'div')+' class="sap'+(al?'':' dead')+(opts&&(opts.sel===i||opts.mark&&opts.mark.indexOf(i)>=0)?' sel':'')+'"'+(opts&&opts.act&&(!al||opts.dis&&opts.dis.indexOf(i)>=0)?' disabled':'')+'><b>'+esc(n)+'</b>'+(ro?'<small>'+ro[1]+' '+ro[0]+'</small>':'')+(al?'':'<small>خارج اللعبة</small>')+(opts&&opts.votes&&opts.votes[i]?'<i>'+ar(opts.votes[i])+'</i>':'')+'</'+(opts&&opts.act?'button':'div')+'>';}).join('')+'</div>';}
 function saVotes(){var v={};(ROOM?ROOM.peers():[]).filter(function(p){return p.presence&&p.presence.sav===G.sa.vr;}).forEach(function(p){var t=p.presence.svt;if(typeof t==="number")v[t]=(v[t]||0)+1;});return v;}
 function vSA(){
  var x=G.sa,nar=L.presenter&&!L.tv,h=topbar()+'<h1>🌑 السعلو وأهل القرية</h1>';
@@ -2767,26 +2773,32 @@ function vSA(){
   h+='<div class="card"><h2>طريقة توزيع الأدوار</h2><div class="modes"><button class="'+(x.mode!=="pass"?'on':'')+'" data-a="samode" data-k="phones"><span>📱</span><b>كل واحد بجواله</b><small>الدور يوصل مشفّر لجواله</small></button><button class="'+(x.mode==="pass"?'on':'')+'" data-a="samode" data-k="pass"><span>🤲</span><b>مرّر الجوال</b><small>جهاز واحد يدور على الكل</small></button></div></div>';
   if(x.mode!=="pass"){h+='<div class="card"><h2>اللاعبين المتصلين ('+ar(conn.length)+')</h2><p class="muted">كل لاعب يفتح رابط اللاعبين ويكتب اسمه. أنت ما تدخل كلاعب لأنك الراوي.</p>'+(conn.length?'<div class="chips">'+conn.map(function(n){return '<span class="chip">'+(pe[n].pk?'🔐 ':'⏳ ')+esc(n)+'</span>';}).join('')+'</div>':'<p class="muted">لا أحد للحين…</p>')+'<button class="sm g" data-a="sasync" '+(conn.length?'':'disabled')+'>✓ اعتمد المتصلين</button></div>';}
   else{h+='<div class="card"><h2>أسماء اللاعبين</h2><textarea data-keep="1" data-sanames="1" rows="4" style="width:100%" placeholder="كل اسم في سطر">'+esc((L.saNames||x.names.join("\n")))+'</textarea></div>';}
-  var n=x.mode==="pass"?saPassNames().length:x.names.length,c=saCounts(n);h+='<div class="card"><b>'+ar(n)+' لاعب</b>'+(n>=4?' · 🌑 '+ar(c.s)+' سعلو'+(c.d?' · 🩺 طبيب':'')+(c.e?' · 🔍 محقق':'')+' · 🏠 '+ar(n-c.s-(c.d?1:0)-(c.e?1:0))+' قروي':'')+'<div class="opt"><span class="n">⏱ وقت النقاش بالنهار</span><button class="sm" data-a="sadt">'+tLbl(x.dt)+'</button></div></div>';
-  return h+(n<4?'<p class="muted">تحتاج ٤ لاعبين على الأقل (الأفضل ٦ أو أكثر).</p>':'')+'<button class="g" style="width:100%;padding:15px;font-size:1.15rem" data-a="sadeal" '+(n>=4?'':'disabled')+'>🎴 وزّع الأدوار</button><div style="height:80px"></div>';}
+  var n=x.mode==="pass"?saPassNames().length:x.names.length,c=saCounts(n),cf=saCfg(),vil=n-c.s-saSpecials(c),ok=n>=4&&vil>=1;
+  h+='<div class="card"><h2>🎭 الأدوار ('+ar(n)+' لاعب)</h2><div class="opt"><span class="n">🌑 عدد السعالي</span><div class="step"><button data-a="sas" data-v="-1">−</button><b>'+ar(c.s)+'</b><button data-a="sas" data-v="1">+</button></div></div>'+(cf.s?'':'<p class="muted" style="margin:0">العدد المقترح لـ'+ar(n)+' لاعب. غيّره بالأزرار.</p>');
+  ["d","e","j","l","w"].forEach(function(k){h+='<div class="opt"><span class="n">'+SAR[k][1]+' '+SAR[k][0]+'<br><small class="muted">'+SAR[k][2]+'</small></span><button class="sm'+(cf[k]?' g':'')+'" data-a="sarole" data-k="'+k+'">'+(cf[k]?'✓ موجود':'＋ أضفه')+'</button></div>';});
+  h+='<p><b>🏠 قرويين: '+ar(Math.max(0,vil))+'</b></p><div class="opt"><span class="n">⏱ وقت النقاش بالنهار</span><button class="sm" data-a="sadt">'+tLbl(x.dt)+'</button></div></div>';
+  return h+(n<4?'<p class="muted">تحتاج ٤ لاعبين على الأقل (الأفضل ٦ أو أكثر).</p>':vil<1?'<p class="muted">الأدوار أكثر من اللاعبين، شيل دور أو قلّل السعالي.</p>':'')+'<button class="g" style="width:100%;padding:15px;font-size:1.15rem" data-a="sadeal" '+(ok?'':'disabled')+'>🎴 وزّع الأدوار</button><div style="height:80px"></div>';}
  var r=saRoles();
  if(!nar){/* الشاشة العامة */
   if(CANEDIT&&!L.tv)h+='<div class="card" style="text-align:center">🎙️ أنت الراوي؟ اضغط <b>وضع المقدم</b> فوق عشان تشوف لوحة الراوي السرية.</div>';
   var night=x.phase==="night";h+='<div class="sabig '+(night?'night':'day')+'"><div class="sky">'+(night?'🌙':'☀️')+'</div><h2>'+(x.phase==="deal"?'🎴 كل واحد يشوف دوره بسرية':night?'الليل… الكل يغمض عيونه':x.phase==="vote"?'🗳️ وقت التصويت':x.phase==="end"?(x.winner==="v"?'🏠 انتصر أهل القرية!':'🌑 انتصر السعلو!'):'النهار، تناقشوا مين السعلو')+'</h2>'+(x.ann?'<p class="ann">'+esc(x.ann)+'</p>':'')+(x.phase==="day"&&x.dt&&x.dayAt?'<div class="tl" id="tm">'+ar(secs(x.dayAt,x.dt))+'</div>':'')+'</div>';
   return h+saPlayerList({votes:x.phase==="vote"?saVotes():null})+'<div style="height:80px"></div>';}
  if(!r)return h+'<div class="card"><b>⚠️ الأدوار محفوظة في جهاز الراوي اللي وزّعها.</b><p class="muted">افتح اللعبة من نفس الجوال، أو وزّع من جديد.</p><button data-a="sanew">🔄 لعبة جديدة</button></div>';
- h+='<div class="card sanar"><div class="top" style="margin:0"><b>🎙️ لوحة الراوي (سرية)</b><div class="sp"></div><span class="chip">الجولة '+ar(x.round)+'</span></div>'+saPlayerList({roles:true})+'</div>';
+ var T=saSt();h+='<div class="card sanar"><div class="top" style="margin:0"><b>🎙️ لوحة الراوي (سرية)</b><div class="sp"></div><span class="chip">الجولة '+ar(x.round)+'</span></div>'+saPlayerList({roles:true})+(T&&T.link?'<p>🔗 مربوطين: <b>'+esc(x.names[T.link[0]])+'</b> و<b>'+esc(x.names[T.link[1]])+'</b></p>':'')+(T&&T.sw?'<p>🔄 تبدّل دور: <b>'+esc(x.names[T.sw[0]])+'</b> و<b>'+esc(x.names[T.sw[1]])+'</b></p>':'')+'</div>';
+ if(L.saSwapShow&&L.saSwapShow.length&&x.mode==="pass"){var si=L.saSwapShow[0];h+='<div class="card" style="text-align:center"><p class="muted">🔄 مرّر الجوال لـ (تبدّل دوره)</p><h2>'+esc(x.names[si])+'</h2>'+(L.saShow?'<div class="sarole"><span>'+SAR[r[si]][1]+'</span><b>'+SAR[r[si]][0]+'</b><small>دورك الجديد</small></div><button class="g" style="width:100%" data-a="saswnx">✓ شفته، التالي</button>':'<button class="g" style="width:100%;padding:14px" data-a="sapassshow">👁️ اعرض دوري الجديد</button>')+'</div>';return h+'<div style="height:80px"></div>';}
  if(x.phase==="deal"){
-  if(x.mode==="pass"){var i=L.saPass||0;if(i<x.names.length){h+='<div class="card" style="text-align:center"><p class="muted">مرّر الجوال لـ</p><h2 style="font-size:2rem">'+esc(x.names[i])+'</h2>'+(L.saShow?'<div class="sarole"><span>'+SAR[r[i]][1]+'</span><b>'+SAR[r[i]][0]+'</b><small>'+SAR[r[i]][2]+'</small></div><button class="g" style="width:100%;padding:14px" data-a="sapassnx">✓ شفت دوري، أخفه ومرّر</button>':'<button class="g" style="width:100%;padding:16px" data-a="sapassshow">👁️ أنا '+esc(x.names[i])+'، اعرض دوري</button>')+'</div>';return h+'<div style="height:80px"></div>';}}
+  if(x.mode==="pass"){var i=L.saPass||0;if(i<x.names.length){h+='<div class="card" style="text-align:center"><p class="muted">مرّر الجوال لـ</p><h2 style="font-size:2rem">'+esc(x.names[i])+'</h2>'+(L.saShow?'<div class="sarole"><span>'+SAR[r[i]][1]+'</span><b>'+SAR[r[i]][0]+'</b><small>'+SAR[r[i]][2]+'</small>'+(function(){var m=r[i]==="s"?x.names.filter(function(_,j){return (r[j]==="s"||r[j]==="j")&&j!==i;}):r[i]==="j"?x.names.filter(function(_,j){return r[j]==="s";}):[];return m.length?'<small>'+(r[i]==="j"?'السعلو: ':'معك: ')+m.map(esc).join('، ')+'</small>':'';})()+'</div><button class="g" style="width:100%;padding:14px" data-a="sapassnx">✓ شفت دوري، أخفه ومرّر</button>':'<button class="g" style="width:100%;padding:16px" data-a="sapassshow">👁️ أنا '+esc(x.names[i])+'، اعرض دوري</button>')+'</div>';return h+'<div style="height:80px"></div>';}}
   else{var got=Object.keys(x.enc||{}).length,pe2=saPeers();h+='<div class="card"><p>🔐 وصلت الأدوار مشفّرة لـ <b>'+ar(got)+'</b> من '+ar(x.names.length)+'</p>'+(got<x.names.length?'<p class="muted">اللي ما وصلهم: '+x.names.filter(function(n){return !x.enc[n];}).map(function(n){return esc(n)+(pe2[n]&&pe2[n].pk?'':' (غير متصل)');}).join('، ')+'</p>':'')+'<button class="sm" data-a="saresend">🔁 أرسل الأدوار مرة ثانية</button></div>';}
   return h+bigBtn("sanight","🌙 ابدأ الليل")+'<div style="height:80px"></div>';}
  if(x.phase==="night"){var steps=saNightSteps(),st=steps[x.step]||"dawn",N=L.saNight||(L.saNight={});
-  var txt={sleep:"🌙 قول: «الكل يغمض عيونه»",s:"🌑 قول: «السعلو يفتح عيونه ويختار ضحيته». اضغط على اللي يأشر عليه:",d:"🩺 قول: «الطبيب يفتح عيونه ويختار مين يحمي»:",e:"🔍 قول: «المحقق يفتح عيونه ويأشر على لاعب»:",dawn:"☀️ قول: «الكل يفتح عيونه»، وبعدها أعلن الصباح"}[st];
+  var hasJ=saAliveIdx("j").length>0;
+  var txt={sleep:"🌙 قول: «الكل يغمض عيونه»",l:"🔗 قول: «الرابط يفتح عيونه ويختار اثنين يربطهم». (مرة وحدة باللعبة، يقدر يأجلها) اضغط على الاثنين:",w:"🔄 قول: «المبدّل يفتح عيونه، تبي تبدّل دور اثنين؟». (مرة وحدة باللعبة) اضغط على الاثنين أو كمّل بدون تبديل:",s:"🌑 قول: «السعلو يفتح عيونه ويختار ضحيته»"+(hasJ?" (الجاسوس يفتح معهم)":"")+". اضغط على اللي يأشرون عليه:",d:"🩺 قول: «الطبيب يفتح عيونه ويختار مين يحمي»:",e:"🔍 قول: «المحقق يفتح عيونه ويأشر على لاعب»:",dawn:"☀️ قول: «الكل يفتح عيونه»، وبعدها أعلن الصباح"}[st];
   h+='<div class="card sanight"><h2>'+txt+'</h2>';
+  if(st==="l"||st==="w"){var pk=N[st]||[];h+=saPlayerList({act:"sapick2",sel:-1,mark:pk});if(pk.length===2)h+='<p><b>'+esc(x.names[pk[0]])+' '+(st==="l"?'🔗':'🔄')+' '+esc(x.names[pk[1]])+'</b></p>';}
   if(st==="s")h+=saPlayerList({act:"sapick",sel:N.kill});
   if(st==="d")h+=saPlayerList({act:"sapick",sel:N.save});
   if(st==="e"){h+=saPlayerList({act:"sapick",sel:N.check});if(N.check!=null)h+='<div class="sarole small"><b>'+esc(x.names[N.check])+': '+(r[N.check]==="s"?'👍 إي، سعلو':'👎 لا، مو سعلو')+'</b><small>أشّر للمحقق بإبهامك بدون صوت</small></div>';}
-  h+='</div>'+bigBtn("sastep",st==="dawn"?"☀️ أعلن الصباح":"التالي ⬅️");return h+'<div style="height:80px"></div>';}
+  h+='</div>'+bigBtn("sastep",st==="dawn"?"☀️ أعلن الصباح":(st==="l"||st==="w")&&(N[st]||[]).length<2?"كمّل بدون ⬅️":"التالي ⬅️");return h+'<div style="height:80px"></div>';}
  if(x.phase==="day")return h+'<div class="card"><h2>☀️ النهار</h2>'+(x.ann?'<p class="ann">'+esc(x.ann)+'</p>':'')+'<p class="muted">خلهم يتناقشون، وبعدين افتح التصويت.</p></div>'+bigBtn("savote","🗳️ افتح التصويت")+'<div style="height:80px"></div>';
  if(x.phase==="vote"){var vv=saVotes();return h+'<div class="card"><h2>🗳️ التصويت</h2><p class="muted">اللاعبين يصوّتون من جوالاتهم، أو برفع اليد. اضغط على اللي قررت القرية تطرده:</p>'+saPlayerList({act:"saout",votes:vv})+'<button style="width:100%;margin-top:8px" data-a="saout" data-v="-1">🤝 ما طردوا أحد</button></div><div style="height:80px"></div>';}
  if(x.phase==="end")return h+'<div class="win"><span>انتهت اللعبة</span><b>'+(x.winner==="v"?'🏠 انتصر أهل القرية':'🌑 انتصر السعلو')+'</b></div>'+bigBtn("sanew","🔄 لعبة جديدة")+'<div style="height:80px"></div>';
@@ -2795,9 +2807,9 @@ function vPlayerSA(){var x=G.sa;if(!x.on||x.phase==="setup")return '<div class="
  var me=L.pname||"",mi=x.names.indexOf(me),h='';
  if(mi<0)return '<div class="card" style="text-align:center"><p class="muted">أنت متفرج في هالجولة'+(me?'':'، اكتب اسمك عشان تنضم الجولة الجاية')+'.</p></div>';
  if(x.mode==="phones"){var e=x.enc&&x.enc[me];if(!e)h+='<div class="card" style="text-align:center"><p class="muted">⏳ دورك في الطريق…</p></div>';
-  else if(!L.saMine||L.saMine.id!==x.id){saMyKey().then(function(k){return saAES(k[0],x.hpk).then(function(key){return saDec(key,e);});}).then(function(o){L.saMine=o;render();},function(){L.saMine={err:1,id:x.id};render();});h+='<div class="card" style="text-align:center"><p class="muted">🔐 جاري فك التشفير…</p></div>';}
+  else if(!L.saMine||L.saMine.id!==x.id||L.saMine.ct!==e.ct){var prev=L.saMine&&L.saMine.id===x.id?L.saMine.r:null;saMyKey().then(function(k){return saAES(k[0],x.hpk).then(function(key){return saDec(key,e);});}).then(function(o){o.ct=e.ct;if(prev&&prev!==o.r){o.changed=1;L.saPeek=false;}L.saMine=o;render();},function(){L.saMine={err:1,id:x.id};render();});h+='<div class="card" style="text-align:center"><p class="muted">🔐 جاري فك التشفير…</p></div>';}
   else if(L.saMine.err)h+='<div class="card" style="text-align:center"><p>ما قدرت أفتح دورك. اطلب من الراوي «أرسل الأدوار مرة ثانية».</p></div>';
-  else{var R=SAR[L.saMine.r];h+='<div class="card" style="text-align:center"><p class="muted">دورك السري (لا تورّيه أحد)</p>'+(L.saPeek?'<div class="sarole"><span>'+R[1]+'</span><b>'+R[0]+'</b><small>'+R[2]+'</small>'+(L.saMine.m&&L.saMine.m.length?'<small>معك: '+L.saMine.m.map(esc).join('، ')+'</small>':'')+'</div><button class="sm" data-a="sapeek">🙈 أخفه</button>':'<button class="g" style="width:100%;padding:16px" data-a="sapeek">👁️ اضغط عشان تشوف دورك</button>')+'</div>';}}
+  else{var R=SAR[L.saMine.r];h+='<div class="card" style="text-align:center">'+(L.saMine.changed?'<p style="font-weight:900;color:var(--c1)">🔄 دورك تبدّل! شوف دورك الجديد</p>':'')+'<p class="muted">دورك السري (لا تورّيه أحد)</p>'+(L.saPeek?'<div class="sarole"><span>'+R[1]+'</span><b>'+R[0]+'</b><small>'+R[2]+'</small>'+(L.saMine.m&&L.saMine.m.length?'<small>'+(L.saMine.r==="j"?'السعلو: ':'معك: ')+L.saMine.m.map(esc).join('، ')+'</small>':'')+'</div><button class="sm" data-a="sapeek">🙈 أخفه</button>':'<button class="g" style="width:100%;padding:16px" data-a="sapeek">👁️ اضغط عشان تشوف دورك</button>')+'</div>';}}
  if(!x.alive[mi])h+='<div class="card" style="text-align:center"><b>💤 خرجت من اللعبة</b><p class="muted">تابع بصمت ولا تعطي تلميحات 🤫</p></div>';
  else if(x.phase==="vote"){var my=L.saV&&L.saV.r===x.vr?L.saV.t:null;h+='<div class="card"><h2>🗳️ صوّت: مين السعلو برأيك؟</h2>'+saPlayerList({act:"savt",sel:my,dis:[mi]})+'</div>';}
  else if(x.phase==="night")h+='<div class="card sabig night" style="text-align:center"><div class="sky">🌙</div><b>غمّض عيونك… واسمع الراوي</b></div>';
@@ -2812,12 +2824,19 @@ function saAct(a,el,v,t){var x=G.sa,r;
  else if(a==="saresend"){saSend();return "local";}
  else if(a==="sapassshow"){L.saShow=true;render();return "local";}
  else if(a==="sapassnx"){L.saShow=false;L.saPass=(L.saPass||0)+1;render();return "local";}
- else if(a==="sanight"){x.phase="night";x.step=0;x.ann="";L.saNight={};}
+ else if(a==="sanight"){x.phase="night";x.step=0;x.ann="";L.saNight={};x.steps=saNightCalc();x.stepsR=x.round;}
+ else if(a==="sas"){var cf=saCfg(),n0=x.mode==="pass"?saPassNames().length:x.names.length;cf.s=Math.max(1,Math.min(Math.max(1,Math.floor((n0-1)/2)),(cf.s||saDefS(n0))+v));}
+ else if(a==="sarole"){var cf2=saCfg();cf2[el.dataset.k]=!cf2[el.dataset.k];}
+ else if(a==="sapick2"){var st2=saNightSteps()[x.step],N3=L.saNight||(L.saNight={}),arr=N3[st2]||(N3[st2]=[]),ix=arr.indexOf(v);if(ix>=0)arr.splice(ix,1);else{arr.push(v);if(arr.length>2)arr.shift();}render();return "local";}
+ else if(a==="saswnx"){L.saShow=false;L.saSwapShow.shift();render();return "local";}
  else if(a==="sapick"){var st=saNightSteps()[x.step],N=L.saNight||(L.saNight={});if(st==="s")N.kill=v;else if(st==="d")N.save=v;else if(st==="e")N.check=v;render();return "local";}
- else if(a==="sastep"){var steps=saNightSteps(),cur=steps[x.step];if(cur==="dawn"){var N2=L.saNight||{};if(N2.kill!=null&&N2.kill!==N2.save){x.alive[N2.kill]=false;x.ann="صحت القرية ولقت "+x.names[N2.kill]+" خارج اللعبة 😢";}else x.ann=N2.kill!=null?"السعلو حاول، بس الطبيب أنقذ الضحية! 🩺":"الليلة عدّت بسلام 🌤️";
+ else if(a==="sastep"){var steps=saNightSteps(),cur=steps[x.step],T2=saSt();
+  if(cur==="l"){var lk=(L.saNight||{}).l;if(lk&&lk.length===2){T2.link=lk.slice();T2.lu=true;saSave();}x.step++;}
+  else if(cur==="w"){var sw=(L.saNight||{}).w;if(sw&&sw.length===2){var tmp=T2.r[sw[0]];T2.r[sw[0]]=T2.r[sw[1]];T2.r[sw[1]]=tmp;T2.wu=true;T2.sw=sw.slice();saSave();if(x.mode==="phones")setTimeout(saSend,0);else L.saSwapShow=sw.slice();}x.step++;}
+  else if(cur==="dawn"){var N2=L.saNight||{};if(N2.kill!=null&&N2.kill!==N2.save){x.ann="صحت القرية ولقت "+saOutTxt(saKill(N2.kill))+" خارج اللعبة 😢";}else x.ann=N2.kill!=null?"السعلو حاول، بس الطبيب أنقذ الضحية! 🩺":"الليلة عدّت بسلام 🌤️";
   L.saNight={};if(!saCheckWin()){x.phase="day";x.dayAt=Date.now();}}else x.step++;}
  else if(a==="savote"){x.phase="vote";x.vr="v"+Date.now().toString(36);}
- else if(a==="saout"){if(v>=0){x.alive[v]=false;x.ann="القرية طردت "+x.names[v];fxSet("shake");}else x.ann="القرية ما طردت أحد";if(!saCheckWin()){x.round++;x.phase="night";x.step=0;L.saNight={};}}
+ else if(a==="saout"){if(v>=0){x.ann="القرية طردت "+saOutTxt(saKill(v));fxSet("shake");}else x.ann="القرية ما طردت أحد";if(!saCheckWin()){x.round++;x.phase="night";x.step=0;L.saNight={};x.steps=saNightCalc();x.stepsR=x.round;}}
  else if(a==="sanew"){x.on=false;x.phase="setup";x.enc={};x.reveal=null;}
  else if(a==="sapeek"){L.saPeek=!L.saPeek;render();return "local";}
  else if(a==="savt"){if(ROOM){L.saV={r:x.vr,t:v};ROOM.presence({sav:x.vr,svt:v}).catch(function(){});}render();return "local";}
