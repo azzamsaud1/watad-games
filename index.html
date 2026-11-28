@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>وتد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#fbc52b">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -289,6 +290,17 @@ html[data-occ="sc"]{--paper:#e6f6ff;--card2:#cdeeff;--c1:#1c6fd1;--pri:#ffd23f}
 html[data-occ="cr"]{--paper:#eef4ec;--card2:#d9ecd3;--c1:#1f7a4f;--pri:#f2c14e}
 html[data-occ="tr"]{--paper:#fff1dd;--card2:#ffe0b5;--c1:#b5562b;--pri:#ffb84d}
 @media (prefers-color-scheme:dark){html[data-occ]:not([data-occ="def"]):not([data-theme="light"]){--paper:#241228;--card2:#4b2c56}}
+/* ===== ألعاب القرآن ===== */
+.ayah{font-family:"Amiri Quran","Amiri","Traditional Arabic","Scheherazade New",serif;font-size:1.9rem;line-height:2.5;margin:12px 0;color:var(--text);word-spacing:2px}
+.ayah.sm{font-size:1.25rem;line-height:2.1;display:block}
+.ayah.ans{border-top:3px dashed var(--c4);padding-top:8px;color:var(--c4)}
+.qcard{background:linear-gradient(180deg,var(--card),color-mix(in srgb,var(--card) 88%,#e8d39a))}
+.qask{font-weight:900;font-size:1.15rem;margin:6px 0;color:var(--c1)}
+.jgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:8px}.jgrid button{padding:8px 0!important}
+.chip.big{font-size:1.05rem;padding:6px 12px}
+.spin{width:38px;height:38px;border:5px solid var(--card2);border-top-color:var(--c1);border-radius:50%;margin:10px auto;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tv .ayah{font-size:3rem}.tv .ayah.sm{font-size:1.6rem}
 </style>
 </head>
 <body>
@@ -1777,6 +1789,18 @@ ART.ko='<svg viewBox="0 0 320 180" role="img" aria-label="جدول بطولة"><
  +'<path d="M70 34h30v30h30M70 94h30V64M70 116h30v30h30M70 176h30v-30M130 64h30v41h30M130 146h30v-41"/></g>'
  +'<g stroke="'+INK+'" stroke-width="2.5">'+[[30,34,"#e2475a"],[30,94,"#2a6fdb"],[30,116,"#e8a10c"],[30,166,"#1d9e6a"]].map(function(q){return '<rect x="'+(q[0]-14)+'" y="'+(q[1]-12)+'" width="56" height="22" rx="6" fill="'+q[2]+'"/>';}).join('')+'<rect x="116" y="53" width="30" height="20" rx="6" fill="#fff"/><rect x="116" y="135" width="30" height="20" rx="6" fill="#fff"/></g>'
  +'<g transform="translate(240 100)" stroke="'+INK+'" stroke-width="3.5" stroke-linejoin="round"><path d="M-30-40h60v12c0 26-14 42-30 42S-30-2-30-28z" fill="#fbc52b"/><path d="M-30-30c-16 0-18 26 2 28M30-30c16 0 18 26-2 28" fill="none"/><path d="M-8 14h16v14h-16z" fill="#fbc52b"/><path d="M-22 28h44l4 12h-52z" fill="#c98a3a"/></g><path d="M222 66c2 14 6 22 12 26" stroke="#fff" stroke-width="4" fill="none" opacity=".7"/></svg>';
+ART.qcomplete='<svg viewBox="0 0 320 180" role="img" aria-label="سطر يكتمل"><defs><linearGradient id="qc-p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf3"/><stop offset="1" stop-color="#efe0bd"/></linearGradient></defs><g stroke="'+INK+'" stroke-width="3" stroke-linejoin="round">'
+ +'<rect x="40" y="30" width="240" height="120" rx="16" fill="url(#qc-p)"/><rect x="52" y="42" width="216" height="96" rx="10" fill="none" stroke="#c9962a" stroke-width="2.5"/></g>'
+ +'<g stroke-linecap="round"><path d="M250 74H150" stroke="#1f7a5c" stroke-width="8"/><path d="M136 74h-12M112 74h-12M88 74h-12" stroke="#ef4057" stroke-width="8" stroke-dasharray="1 0"/><path d="M250 104H190" stroke="#1f7a5c" stroke-width="8" opacity=".35"/></g>'
+ +'<circle cx="100" cy="74" r="5" fill="#ef4057"/><g transform="translate(270 40)"><circle r="18" fill="#fbc52b" stroke="'+INK+'" stroke-width="3"/><text y="7" text-anchor="middle" font-size="20" font-weight="900" fill="'+INK+'">…</text></g></svg>';
+ART.qsurah='<svg viewBox="0 0 320 180" role="img" aria-label="أي سورة"><defs><linearGradient id="qs-d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3fd0a0"/><stop offset="1" stop-color="#0d7a52"/></linearGradient><linearGradient id="qs-p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf3"/><stop offset="1" stop-color="#efe0bd"/></linearGradient></defs>'
+ +'<g stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"><rect x="30" y="54" width="150" height="96" rx="14" fill="url(#qs-p)"/><path d="M160 80H50M160 104H70M160 128H90" stroke="#1f7a5c" stroke-width="6" stroke-linecap="round"/>'
+ +'<rect x="200" y="96" width="90" height="56" fill="#fff8ea"/><path d="M212 96c0-26 15-38 33-42 18 4 33 16 33 42z" fill="url(#qs-d)"/><path d="M245 54V40"/></g><path d="M240 34a6 6 0 1 0 10 0" fill="none" stroke="#f4c542" stroke-width="3"/>'
+ +'<g transform="translate(100 34)"><circle r="22" fill="#2cc9d0" stroke="'+INK+'" stroke-width="3"/><text y="10" text-anchor="middle" font-size="28" font-weight="900" fill="#fff" stroke="'+INK+'" stroke-width="1">؟</text></g></svg>';
+ART.qaround='<svg viewBox="0 0 320 180" role="img" aria-label="ما قبلها وما بعدها"><defs><linearGradient id="qa-p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffdf3"/><stop offset="1" stop-color="#efe0bd"/></linearGradient></defs><g stroke="'+INK+'" stroke-width="3" stroke-linejoin="round">'
+ +'<rect x="70" y="16" width="180" height="36" rx="10" fill="#fff" opacity=".7"/><rect x="70" y="72" width="180" height="36" rx="10" fill="url(#qa-p)"/><rect x="70" y="128" width="180" height="36" rx="10" fill="#fff" opacity=".7"/></g>'
+ +'<path d="M232 90H110" stroke="#1f7a5c" stroke-width="7" stroke-linecap="round"/><path d="M232 34H150M232 146H130" stroke="#9aa" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 12"/>'
+ +'<g stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"><circle cx="40" cy="60" r="18" fill="#fbc52b"/><path d="M40 70V50M32 58l8-8 8 8" fill="none"/><circle cx="40" cy="120" r="18" fill="#ef4057"/><path d="M40 110v20M32 122l8 8 8-8" fill="none" stroke="#fff"/></g></svg>';
 
 /* ===== رسومات فئات لعبة الترتيب ===== */
 var RART=(function(){
@@ -2379,9 +2403,9 @@ function more2Act(a,el,v,t){
  return true;}
 
 /* ===== مؤقت موحّد لكل الألعاب ===== */
-var TMDEF={rank:60,where:30,hex:20,feud:45,whoami:30,link:30,num:30,proverb:20};
+var TMDEF={qcomplete:30,qsurah:30,qaround:30,rank:60,where:30,hex:20,feud:45,whoami:30,link:30,num:30,proverb:20};
 var TMOPT=[0,10,15,20,30,45,60,90,120];
-function gameOfView(){var v=G.v;return {q:"rank",hub:"rank",wh:"where",hx:"hex",fd:"feud",wm:"whoami",lk:"link",nm:"num",pv:"proverb",sj:"sj",tf:"tf",ct:"count",ih:"ihj",tb:"taboo",bl:"blitz"}[v]||"";}
+function gameOfView(){var v=G.v;return {qc:"qcomplete",qs:"qsurah",qa:"qaround",q:"rank",hub:"rank",wh:"where",hx:"hex",fd:"feud",wm:"whoami",lk:"link",nm:"num",pv:"proverb",sj:"sj",tf:"tf",ct:"count",ih:"ihj",tb:"taboo",bl:"blitz"}[v]||"";}
 function tmOwn(g){return {sj:[G.sj,"t"],tf:[G.tf,"t"],count:[G.ct,"t"],ihj:[G.ih,"t"],taboo:[G.tb,"t"],blitz:[G.bl,"t"]}[g]||null;}
 function tmGet(g){var o=tmOwn(g);if(o)return o[0][o[1]]||0;G.tmx=G.tmx||{};return G.tmx[g]!=null?G.tmx[g]:(TMDEF[g]||0);}
 function tmSet(g,v){var o=tmOwn(g);if(o){o[0][o[1]]=v;return;}G.tmx=G.tmx||{};G.tmx[g]=v;G.tmat=Date.now();}
@@ -2394,6 +2418,7 @@ function genKey(){var v=G.v,x;
  if(v==="lk"){x=G.lk;return x.cur>=0&&!x.rev?"lk:"+x.cur+":"+x.k:"";}
  if(v==="nm"){x=G.nm;return x.round&&!x.rev?"nm:"+x.round:"";}
  if(v==="pv"){x=G.pv;return x.cur>=0&&!x.rev?"pv:"+x.cur:"";}
+ if(v==="qc"||v==="qs"||v==="qa"){x=G.qr;return x.cur&&x.kind===v&&!x.rev?v+":"+x.cur.join(":")+":"+(v==="qc"?0:x.k||0):"";}
  return "";}
 function genActive(){var g=gameOfView();return !tmOwn(g)&&!!G.tmk&&G.tmk===genKey()&&tmGet(g)>0;}
 function genLeft(){return secs(G.tmat||0,tmGet(gameOfView()));}
@@ -2648,6 +2673,94 @@ function more3Act(a,el,v,t){
  else return false;
  return true;}
 
+/* ===== ألعاب القرآن: النص يُجلب من مصدر موثّق، لا يُكتب يدوياً ===== */
+var QAPI={
+ meta:function(){return qFetchJ("https://api.alquran.cloud/v1/surah").then(function(j){return j.data.map(function(s){return {n:s.number,name:s.name,c:s.numberOfAyahs};});})
+  .catch(function(){return qFetchJ("https://api.quran.com/api/v4/chapters?language=ar").then(function(j){return j.chapters.map(function(s){return {n:s.id,name:"سورة "+s.name_arabic,c:s.verses_count};});});});},
+ surah:function(n){return qFetchJ("https://api.alquran.cloud/v1/surah/"+n+"/quran-uthmani").then(function(j){return j.data.ayahs.map(function(a){return [n,a.numberInSurah,qClean(n,a.numberInSurah,a.text)];});})
+  .catch(function(){return qFetchJ("https://api.quran.com/api/v4/quran/verses/uthmani?chapter_number="+n).then(function(j){return j.verses.map(function(v){var k=v.verse_key.split(":");return [+k[0],+k[1],qClean(+k[0],+k[1],v.text_uthmani)];});});});},
+ juz:function(n){return qFetchJ("https://api.alquran.cloud/v1/juz/"+n+"/quran-uthmani").then(function(j){return j.data.ayahs.map(function(a){return [a.surah.number,a.numberInSurah,qClean(a.surah.number,a.numberInSurah,a.text)];});})
+  .catch(function(){return qFetchJ("https://api.quran.com/api/v4/quran/verses/uthmani?juz_number="+n).then(function(j){return j.verses.map(function(v){var k=v.verse_key.split(":");return [+k[0],+k[1],qClean(+k[0],+k[1],v.text_uthmani)];});});});}
+};
+function qFetchJ(u){return fetch(u).then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.json();}).then(function(j){if(!j)throw new Error("empty");return j;});}
+function qNorm(s){return String(s||"").replace(/[ؐ-ًؚ-ٰٟۖ-ۭـ]/g,"").replace(/[ٱأإآ]/g,"ا").replace(/ى/g,"ي").replace(/\s+/g," ").trim();}
+function qClean(s,a,t){t=String(t||"").replace(/﻿/g,"").trim();
+ if(a===1&&s!==1&&s!==9){var w=t.split(/\s+/);if(w.length>4&&qNorm(w[0])==="بسم"&&qNorm(w[3]).indexOf("رحيم")>=0)t=w.slice(4).join(" ");}
+ return t;}
+function qWords(t){return String(t).replace(/^۞\s*/,"").split(/\s+/).filter(Boolean);}
+var QM=null,QC={},QL={};
+function qCacheGet(k){try{var v=localStorage.getItem("wq_"+k);return v?JSON.parse(v):null;}catch(e){return null;}}
+function qCacheSet(k,v){try{localStorage.setItem("wq_"+k,JSON.stringify(v));}catch(e){}}
+function qMeta(){if(QM)return Promise.resolve(QM);var c=qCacheGet("meta");if(c&&c.length===114){QM=c;return Promise.resolve(c);}return QAPI.meta().then(function(m){if(m&&m.length===114){QM=m;qCacheSet("meta",m);}return QM;});}
+function qPart(kind,n){var k=kind+n,c=qCacheGet(k);if(c&&c.length)return Promise.resolve(c);return QAPI[kind](n).then(function(a){if(a&&a.length)qCacheSet(k,a);return a;});}
+function qSelKey(s){s=s||{};return s.m==="s"?"s"+s.f+"-"+s.t:"j"+(s.j||[30]).join(",");}
+function qSelName(s){s=s||{};if(s.m==="s"){var a=qSName(s.f),b=qSName(s.t);return s.f===s.t?a:a+" ← "+b;}var j=(s.j||[30]).slice().sort(function(a,b){return a-b;});return j.length===1?(j[0]===30?"جزء عمّ":j[0]===29?"جزء تبارك":"الجزء "+ar(j[0])):"الأجزاء: "+j.map(ar).join("، ");}
+function qSName(n){var m=QM&&QM[n-1];return m?m.name.replace(/^سُورَةُ\s*|^سورة\s*/,""):"سورة "+ar(n);}
+function qLoad(sel){var k=qSelKey(sel);if(QC[k])return Promise.resolve(QC[k]);if(QL[k])return QL[k];
+ var jobs=[];if(sel&&sel.m==="s"){for(var i=Math.min(sel.f,sel.t);i<=Math.max(sel.f,sel.t);i++)jobs.push(["surah",i]);}else (sel&&sel.j&&sel.j.length?sel.j:[30]).forEach(function(j){jobs.push(["juz",j]);});
+ var out=[],idx=0;function run(){if(idx>=jobs.length)return Promise.resolve();var jb=jobs[idx++];return qPart(jb[0],jb[1]).then(function(a){out=out.concat(a);return new Promise(function(r){setTimeout(r,120);});}).then(run);}
+ QL[k]=qMeta().catch(function(){return null;}).then(run).then(function(){var seen={},list=[];out.forEach(function(x){var id=x[0]+":"+x[1];if(!seen[id]){seen[id]=1;list.push(x);}});list.sort(function(a,b){return a[0]-b[0]||a[1]-b[1];});QC[k]=list;delete QL[k];render();return list;})
+  .catch(function(e){delete QL[k];QE[k]=1;render();throw e;});return QL[k];}
+var QE={};
+function qList(){var s=G.qr.sel,k=qSelKey(s);if(QC[k])return QC[k];if(!QL[k]&&!QE[k])qLoad(s).catch(function(){});return null;}
+function qFind(list,ref){if(!ref)return -1;for(var i=0;i<list.length;i++)if(list[i][0]===ref[0]&&list[i][1]===ref[1])return i;return -1;}
+
+/* اختيار الآية */
+function qPick(kind){var x=G.qr,list=QC[qSelKey(x.sel)];if(!list||!list.length)return;
+ var normCount={};if(kind==="qs")list.forEach(function(v){var k=qNorm(v[2]);normCount[k]=normCount[k]||{};normCount[k][v[0]]=1;});
+ var cand=[];list.forEach(function(v,i){var w=qWords(v[2]).length;
+  if(kind==="qc"&&w<5)return;
+  if(kind==="qs"&&(w<4||Object.keys(normCount[qNorm(v[2])]).length>1))return;
+  if(kind==="qa"){var prev=list[i-1],next=list[i+1],hasPrev=prev&&prev[0]===v[0]&&prev[1]===v[1]-1,hasNext=next&&next[0]===v[0]&&next[1]===v[1]+1;if(!hasPrev&&!hasNext)return;}
+  cand.push(i);});
+ if(!cand.length)cand=list.map(function(_,i){return i;});
+ var fresh=cand.filter(function(i){return !isSeen("y"+list[i][0]+":"+list[i][1]);});if(fresh.length)cand=fresh;
+ var i=cand[Math.floor(Math.random()*cand.length)],v=list[i];x.cur=[v[0],v[1]];x.kind=kind;x.rev=false;x.k=0;markSeen("y"+v[0]+":"+v[1]);
+ if(kind==="qa"){var pv=list[i-1],nx=list[i+1],okP=pv&&pv[0]===v[0]&&pv[1]===v[1]-1,okN=nx&&nx[0]===v[0]&&nx[1]===v[1]+1;x.dir=okP&&okN?(x.dirPref==="b"?"b":x.dirPref==="a"?"a":(Math.random()<.5?"a":"b")):(okN?"a":"b");}
+ if(kind==="qs"&&x.opts){var ss={};list.forEach(function(q){ss[q[0]]=1;});var pool=Object.keys(ss).map(Number).filter(function(n){return n!==v[0];});if(pool.length<3)for(var n=1;n<=114&&pool.length<12;n++)if(n!==v[0]&&pool.indexOf(n)<0)pool.push(n);shuf(pool);x.ch=shuf(pool.slice(0,3).concat([v[0]]));}else x.ch=null;}
+
+/* الواجهة */
+function qSelCard(){var x=G.qr,s=x.sel||{m:"j",j:[30]},h='<div class="card qsel"><div class="top" style="margin:0"><b>📖 المقرر: '+esc(qSelName(s))+'</b><div class="sp"></div><button class="sm" data-a="qselt">'+(L.qsel?'إغلاق':'✏️ تغيير')+'</button></div>';
+ if(!L.qsel)return h+'</div>';
+ h+='<div class="chips" style="margin-top:8px"><button class="'+(s.m!=="s"?'on':'')+'" data-a="qmode" data-k="j">بالأجزاء</button><button class="'+(s.m==="s"?'on':'')+'" data-a="qmode" data-k="s">بالسور</button></div>';
+ if(s.m!=="s"){h+='<div class="jgrid">';for(var j=30;j>=1;j--)h+='<button class="sm'+((s.j||[]).indexOf(j)>=0?' g':'')+'" data-a="qjuz" data-v="'+j+'">'+ar(j)+'</button>';h+='</div>';}
+ else{if(!QM){qMeta().then(render,function(){});return h+'<p class="muted">جاري تحميل أسماء السور…</p></div>';}
+  var opt=function(sel){return QM.map(function(m){return '<option value="'+m.n+'"'+(m.n===sel?' selected':'')+'>'+ar(m.n)+'. '+esc(qSName(m.n))+'</option>';}).join('');};
+  h+='<div class="opt"><span class="n">من سورة</span><select data-qs="f">'+opt(s.f||78)+'</select></div><div class="opt"><span class="n">إلى سورة</span><select data-qs="t">'+opt(s.t||114)+'</select></div>';}
+ return h+'</div>';}
+function qAyah(t,cls){return '<div class="ayah '+(cls||'')+'">'+esc(t)+'</div>';}
+function qRef(v){return '<span class="chip">'+esc(qSName(v[0]))+' · آية '+ar(v[1])+'</span>';}
+function qState(list){var k=qSelKey(G.qr.sel);if(QE[k])return '<div class="card" style="text-align:center"><b>⚠️ تعذّر جلب الآيات</b><p class="muted">'+(window.WSHIM?'تأكد من اتصال الإنترنت وجرّب مرة ثانية.':'ألعاب القرآن تجيب النص الموثّق من الإنترنت، وتشتغل في رابط GitHub. نسخة Claude ما تسمح بالاتصال الخارجي.')+'</p><button class="g" data-a="qretry">🔄 جرّب مرة ثانية</button></div>';
+ if(!list)return '<div class="card" style="text-align:center"><div class="spin"></div><p class="muted">جاري تحميل الآيات من المصدر الموثّق…</p></div>';return "";}
+function vQK(kind){
+ var x=G.qr,title={qc:"📖 أكمل الآية",qs:"🕌 من أي سورة؟",qa:"↕️ ما قبلها وما بعدها"}[kind],desc={qc:"تطلع بداية آية، وأول من يكملها صح يكسب. تقدر تكشف كلمة زيادة كمساعدة.",qs:"تطلع آية كاملة، وأول من يعرف سورتها يكسب.",qa:"تطلع آية، والمطلوب قراءة الآية اللي بعدها أو اللي قبلها."}[kind];
+ var h=topbar()+'<h1>'+title+'</h1><p class="muted">'+desc+'</p>'+qSelCard(),list=qList(),st=qState(list);if(st)return h+st+'<div style="height:80px"></div>';
+ if(!list.length)return h+'<div class="card">ما فيه آيات في هذا المقرر.</div>';
+ if(x.kind!==kind||!x.cur||qFind(list,x.cur)<0){return h+'<div class="card" style="text-align:center"><p>'+ar(list.length)+' آية في المقرر</p>'+(kind==="qs"?'<div class="opt"><span class="n">خيارات للصغار (٤ سور)</span><button class="sm'+(x.opts?' g':'')+'" data-a="qopts">'+(x.opts?'شغّالة':'مقفلة')+'</button></div>':'')+(kind==="qa"?'<div class="opt"><span class="n">المطلوب</span><button class="sm" data-a="qdir">'+({a:"الآية اللي بعدها",b:"الآية اللي قبلها",r:"عشوائي"}[x.dirPref||"r"])+'</button></div>':'')+bigBtn("qgo","▶️ ابدأ",kind)+'</div><div style="height:80px"></div>';}
+ var i=qFind(list,x.cur),v=list[i],w=qWords(v[2]);
+ h+='<div class="card qcard" style="text-align:center">';
+ if(kind==="qc"){var n=Math.min(w.length,Math.max(2,Math.ceil(w.length*.4))+(x.k||0));h+=qRef(v)+(x.rev?qAyah(v[2]):qAyah(w.slice(0,n).join(" ")+" …"))+(x.rev?'':peekBox('<span class="ayah sm">'+esc(v[2])+'</span>'));}
+ else if(kind==="qs"){h+=qAyah(v[2])+(x.rev?'<div class="win" style="margin:8px 0 0"><b style="font-size:1.6rem">'+esc(qSName(v[0]))+'</b><span>آية '+ar(v[1])+'</span></div>':peekBox(esc(qSName(v[0]))+' · آية '+ar(v[1])));
+  if(x.ch&&!x.rev)h+='<div class="chips" style="justify-content:center">'+x.ch.map(function(n,ii){return '<span class="chip big" style="background:'+KCL[ii]+';color:#fff">'+KSH[ii]+' '+esc(qSName(n))+'</span>';}).join('')+'</div>';}
+ else{var t=x.dir==="a"?list[i+1]:list[i-1];h+=qRef(v)+qAyah(v[2])+'<div class="qask">'+(x.dir==="a"?'⬇️ اقرأ الآية اللي بعدها':'⬆️ اقرأ الآية اللي قبلها')+'</div>'+(t?(x.rev?qAyah(t[2],"ans"):peekBox('<span class="ayah sm">'+esc(t[2])+'</span>')):'');}
+ h+='</div>'+bzStrip();
+ if(!x.rev){h+=(kind==="qc"&&w.length>Math.max(2,Math.ceil(w.length*.4))+(x.k||0)?'<button style="width:100%;margin-bottom:8px" data-a="qhint">➕ اكشف كلمة زيادة</button>':'')+bigBtn("qrev","👀 اعرض الجواب");}
+ else h+=bigBtn("aw","⭐ أعطِ نقطة لفريق",1);
+ h+='<button style="width:100%;padding:13px" data-a="qnext" data-v="'+kind+'">'+(x.rev?'الآية التالية ⬅️':'تخطي ⬅️')+'</button>';
+ return h+'<p class="muted" style="text-align:center;font-size:.8rem">النص بالرسم العثماني من مصدر موثّق (AlQuran Cloud / Quran.com)</p><div style="height:80px"></div>';}
+function quranAct(a,el,v,t){var x=G.qr;
+ if(a==="qselt"){L.qsel=!L.qsel;render();return "local";}
+ else if(a==="qmode"){var m=el.dataset.k;x.sel=m==="s"?{m:"s",f:78,t:114}:{m:"j",j:[30]};x.cur=null;}
+ else if(a==="qjuz"){var s=x.sel&&x.sel.m!=="s"?x.sel:{m:"j",j:[]};var jj=(s.j||[]).slice(),ix=jj.indexOf(v);if(ix>=0){if(jj.length>1)jj.splice(ix,1);}else jj.push(v);x.sel={m:"j",j:jj};x.cur=null;}
+ else if(a==="qretry"){QE={};render();return "local";}
+ else if(a==="qopts"){x.opts=!x.opts;}
+ else if(a==="qdir"){x.dirPref=cyc(x.dirPref||"r",["r","a","b"]);}
+ else if(a==="qgo"||a==="qnext"){qPick(el.dataset.v||x.kind);}
+ else if(a==="qrev"){x.rev=true;}
+ else if(a==="qhint"){x.k=(x.k||0)+1;}
+ else return false;
+ return true;}
+
 var CE=["📿","📖","👶","⚔️","⚡","🏜️","📜","🌍","🌴","👑","🕋","🌐","🕌"];
 var GAMES=[
  {id:"rank",e:"🏆",name:"لعبة الترتيب",desc:"رتّب العناصر وافتح الأغطية واكسب نقاط كل مركز",tags:["أسئلة","جماعي"]},
@@ -2667,9 +2780,12 @@ var GAMES=[
  {id:"ka",name:"الكل ضد الكل",desc:"كل لاعب يجاوب من جواله، والأسرع والأصح يتصدّر",tags:["أسئلة","جوال","جماعي"]},
  {id:"journey",name:"رحلة القافلة",desc:"سباق على خريطة، كل إجابة تقدّمك محطات",tags:["أسئلة","تحدي"]},
  {id:"ladder",name:"سلّم الخمسة عشر",desc:"متسابق قدام الكل، ١٥ سؤال ووسائل مساعدة",tags:["أسئلة","تحدي"]},
- {id:"ko",name:"بطولة خروج المغلوب",desc:"قرعة ومباريات لين النهائي",tags:["تحدي","جماعي"]}
+ {id:"ko",name:"بطولة خروج المغلوب",desc:"قرعة ومباريات لين النهائي",tags:["تحدي","جماعي"]},
+ {id:"qcomplete",name:"أكمل الآية",desc:"بداية آية من المقرر، وأول من يكملها يكسب",tags:["قرآن","جرس"]},
+ {id:"qsurah",name:"من أي سورة؟",desc:"آية من المقرر، وأول من يعرف سورتها",tags:["قرآن","جرس"]},
+ {id:"qaround",name:"ما قبلها وما بعدها",desc:"اقرأ الآية اللي بعدها أو اللي قبلها",tags:["قرآن","جرس"]}
 ];
-var FILTERS=["الكل","أسئلة","حروف","استبيان","تحدي","جماعي","جرس","جوال"];
+var FILTERS=["الكل","قرآن","أسئلة","حروف","استبيان","تحدي","جماعي","جرس","جوال"];
 var KC=BR.kc,COL=BR.col;
 var D="٠١٢٣٤٥٦٧٨٩";
 function ar(n){return String(n).replace(/\d/g,function(d){return D[d]});}
@@ -2706,7 +2822,7 @@ function freshG(){return {v:"setup",game:"rank",teams:[],players:8,open:{},cat:0
  ka:{on:false,n:10,t:20,deck:[],k:0,q:null,opts:[],ci:0,round:"",qAt:0,rev:false,res:null,lb:{},done:false},
  rh:{on:false,len:20,pos:[],turn:0,st:"pick",q:null,lv:200,gold:{},win:-1,log:""},
  ld:{on:false,team:0,step:0,q:null,opts:[],ci:0,sel:-1,st:"q",hide:[],aud:null,life:{h:0,a:0,c:0},used:{},round:"",call:0,qAt:0,res:0},
- ko:{on:false,rounds:[],cur:null,champ:-1},theme:"def",evt:"",indiv:false,fast:null};}
+ ko:{on:false,rounds:[],cur:null,champ:-1},qr:{sel:{m:"j",j:[30]},kind:"",cur:null,rev:false,k:0,opts:false,dirPref:"r",dir:"a",ch:null},theme:"def",evt:"",indiv:false,fast:null};}
 var G=freshG();
 var L={tv:false,snd:false,hist:false,saved:false,presenter:false,panel:false,award:null,filter:"الكل",confirmNew:false,nTeams:4,names:[],mode:"host",myTeam:-1,bzPanel:false,embs:[],ed:null,bq:"",studio:(function(){try{return localStorage.getItem("wg_studio")!=="0";}catch(e){return true;}})(),tts:(function(){try{return localStorage.getItem("wg_tts")==="1";}catch(e){return false;}})(),pname:(function(){try{return localStorage.getItem("wg_pname")||"";}catch(e){return "";}})(),qf:{c:"ق",q:"",a:"",l:"",nohex:false,v:"400"},qmsg:""};
 var SK="hub2_"+BR.id+(window.WSHIM&&WSHIM.room?"_"+WSHIM.room:"");
@@ -2796,7 +2912,7 @@ function tvBar(){return evtBanner()+'<div class="tvbar">'+G.teams.map(function(t
 
 function tname(i){var t=G.teams[i];return (t&&t.n||"").trim()||((G.indiv?"اللاعب ":"الفريق ")+ar(i+1));}
 function addPts(i,v){if(!G.teams[i])return;G.teams[i].s+=v;byAdd(i,v);}
-function gv(){return {rank:"hub",where:"wh",hex:"hx",sj:"sj",feud:"fd",whoami:"wm",tf:"tf",link:"lk",count:"ct",ihj:"ih",taboo:"tb",num:"nm",proverb:"pv",blitz:"bl",ka:"ka",journey:"rh",ladder:"ld",ko:"ko"}[G.game]||"hub";}
+function gv(){return {rank:"hub",where:"wh",hex:"hx",sj:"sj",feud:"fd",whoami:"wm",tf:"tf",link:"lk",count:"ct",ihj:"ih",taboo:"tb",num:"nm",proverb:"pv",blitz:"bl",ka:"ka",journey:"rh",ladder:"ld",ko:"ko",qcomplete:"qc",qsurah:"qs",qaround:"qa"}[G.game]||"hub";}
 var app=document.getElementById("app");
 var tick=null;
 function focusKey(el){if(!el||!app.contains(el)||!/^(INPUT|TEXTAREA)$/.test(el.tagName))return null;var s=el.tagName.toLowerCase();for(var i=0;i<el.attributes.length;i++){var at=el.attributes[i];if(at.name.indexOf("data-")===0&&at.name!=="data-keep")s+='['+at.name+'="'+String(at.value).replace(/"/g,'\\"')+'"]';}return s===el.tagName.toLowerCase()?null:s;}
@@ -2821,6 +2937,7 @@ function renderInner(){
  else if(v==="win")h=vWin();else if(v==="wh")h=vWH();else if(v==="hx")h=vHX();else if(v==="sj")h=vSJ();else if(v==="fd")h=vFD();
  else if(v==="wm")h=vWM();else if(v==="lk")h=vLK();else if(v==="tf")h=vTF();else if(v==="ct")h=vCT();else if(v==="lobby")h=vLobby();
  else if(v==="ih")h=vIH();else if(v==="tb")h=vTB();else if(v==="nm")h=vNM();else if(v==="pv")h=vPV();else if(v==="bl")h=vBL();
+ else if(v==="qc"||v==="qs"||v==="qa")h=vQK(v);
  else if(v==="ka")h=vKA();else if(v==="rh")h=vRH();else if(v==="ld")h=vLD();else if(v==="ko")h=vKO();
  if(L.myq)h=vMyQ();
  if(L.hist)h=vHist();
@@ -3200,6 +3317,7 @@ app.addEventListener("input",function(e){var el=e.target;
  if(el.dataset.ai&&el.tagName!=="SELECT"){L.ai=L.ai||{};L.ai[el.dataset.ai]=el.value;}
  if(el.dataset.bq){L.bq=el.value;clearTimeout(L.bqT);L.bqT=setTimeout(function(){var pos=el.selectionStart;render();var n=document.querySelector("[data-bq]");if(n){n.focus();try{n.setSelectionRange(pos,pos);}catch(_){}}},350);}});
 app.addEventListener("change",function(e){var el=e.target;
+ if(el.dataset.qs){var s=G.qr.sel&&G.qr.sel.m==="s"?G.qr.sel:{m:"s",f:78,t:114};s[el.dataset.qs]=+el.value;G.qr.sel={m:"s",f:s.f||78,t:s.t||114};G.qr.cur=null;commit();render();return;}
  if(el.dataset.ai){L.ai=L.ai||{};L.ai[el.dataset.ai]=el.value;}
  if(el.dataset.tn!==undefined){commit();}
  if(el.dataset.fd){G.fd[el.dataset.fd]=+el.value;commit();render();}
@@ -3303,7 +3421,7 @@ app.addEventListener("click",function(e){
  else if(a==="newgo"){G.teams.forEach(function(y){y.s=0});G.open={};G.by={};G.ps={};resetGames();L.confirmNew=false;G.v=gv();}
  else if(a==="solo"){location.hash="solo";location.reload();return;}
  else if(a==="online"){e.preventDefault();location.hash="";location.reload();return;}
- else{var mr=moreAct(a,el,v,t);if(!mr)mr=more2Act(a,el,v,t);if(!mr)mr=more3Act(a,el,v,t);if(mr==="local")return;if(!mr)ch=false;}
+ else{var mr=moreAct(a,el,v,t);if(!mr)mr=more2Act(a,el,v,t);if(!mr)mr=more3Act(a,el,v,t);if(!mr)mr=quranAct(a,el,v,t);if(mr==="local")return;if(!mr)ch=false;}
  if(ch){try{tmTouch();}catch(_){}commit();}else saveLocal();
  render();
 });
